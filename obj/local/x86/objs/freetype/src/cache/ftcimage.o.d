@@ -1,0 +1,164 @@
+obj/local/x86/objs/freetype/src/cache/ftcimage.o: \
+ jni/../jni/freetype/src/cache/ftcimage.c \
+ jni/../jni/freetype/include/ft2build.h \
+ jni/../jni/freetype/include/freetype/config/ftheader.h \
+ jni/../jni/freetype/include/freetype/internal/internal.h \
+ jni/../jni/freetype/include/freetype/ftcache.h \
+ jni/../jni/freetype/include/freetype/ftglyph.h \
+ jni/../jni/freetype/include/freetype/freetype.h \
+ jni/../jni/freetype/include/freetype/config/ftconfig.h \
+ jni/../jni/freetype/include/freetype/config/ftoption.h \
+ jni/../jni/freetype/include/freetype/config/ftstdlib.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/limits.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/cdefs.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/cdefs_elf.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/limits.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/limits.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/internal_types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/limits.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/syslimits.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/string.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/malloc.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/stdio.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/_types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/_types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/posix_types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/stddef.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/compiler.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/asm/posix_types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/asm/posix_types_32.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/asm/types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/types.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/stdint.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/kernel.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/sysmacros.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/stdlib.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/alloca.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/strings.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/memory.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/setjmp.h \
+ /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/setjmp.h \
+ jni/../jni/freetype/include/freetype/fterrors.h \
+ jni/../jni/freetype/include/freetype/ftmoderr.h \
+ jni/../jni/freetype/include/freetype/fterrdef.h \
+ jni/../jni/freetype/include/freetype/fttypes.h \
+ jni/../jni/freetype/include/freetype/ftsystem.h \
+ jni/../jni/freetype/include/freetype/ftimage.h \
+ jni/../jni/freetype/src/cache/ftcimage.h \
+ jni/../jni/freetype/src/cache/ftcglyph.h \
+ jni/../jni/freetype/src/cache/ftcmanag.h \
+ jni/../jni/freetype/src/cache/ftcmru.h \
+ jni/../jni/freetype/src/cache/ftccache.h \
+ jni/../jni/freetype/include/freetype/internal/ftmemory.h \
+ jni/../jni/freetype/src/cache/ftccback.h \
+ jni/../jni/freetype/src/cache/ftcsbits.h \
+ jni/../jni/freetype/src/cache/ftcerror.h
+
+jni/../jni/freetype/include/ft2build.h:
+
+jni/../jni/freetype/include/freetype/config/ftheader.h:
+
+jni/../jni/freetype/include/freetype/internal/internal.h:
+
+jni/../jni/freetype/include/freetype/ftcache.h:
+
+jni/../jni/freetype/include/freetype/ftglyph.h:
+
+jni/../jni/freetype/include/freetype/freetype.h:
+
+jni/../jni/freetype/include/freetype/config/ftconfig.h:
+
+jni/../jni/freetype/include/freetype/config/ftoption.h:
+
+jni/../jni/freetype/include/freetype/config/ftstdlib.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/limits.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/cdefs.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/cdefs_elf.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/limits.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/limits.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/internal_types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/limits.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/syslimits.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/string.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/malloc.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/stdio.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/_types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/_types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/posix_types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/stddef.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/linux/compiler.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/asm/posix_types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/asm/posix_types_32.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/asm/types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/types.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/stdint.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/kernel.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/sys/sysmacros.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/stdlib.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/alloca.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/strings.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/memory.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/setjmp.h:
+
+/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-x86/usr/include/machine/setjmp.h:
+
+jni/../jni/freetype/include/freetype/fterrors.h:
+
+jni/../jni/freetype/include/freetype/ftmoderr.h:
+
+jni/../jni/freetype/include/freetype/fterrdef.h:
+
+jni/../jni/freetype/include/freetype/fttypes.h:
+
+jni/../jni/freetype/include/freetype/ftsystem.h:
+
+jni/../jni/freetype/include/freetype/ftimage.h:
+
+jni/../jni/freetype/src/cache/ftcimage.h:
+
+jni/../jni/freetype/src/cache/ftcglyph.h:
+
+jni/../jni/freetype/src/cache/ftcmanag.h:
+
+jni/../jni/freetype/src/cache/ftcmru.h:
+
+jni/../jni/freetype/src/cache/ftccache.h:
+
+jni/../jni/freetype/include/freetype/internal/ftmemory.h:
+
+jni/../jni/freetype/src/cache/ftccback.h:
+
+jni/../jni/freetype/src/cache/ftcsbits.h:
+
+jni/../jni/freetype/src/cache/ftcerror.h:
