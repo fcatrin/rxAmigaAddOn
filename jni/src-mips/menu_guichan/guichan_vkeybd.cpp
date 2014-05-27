@@ -1,1 +1,0 @@
-../../src/menu_guichan/guichan_vkeybd.cpp

@@ -1,1 +1,0 @@
-../../src/menu_guichan/sdltruetypefont.cpp
