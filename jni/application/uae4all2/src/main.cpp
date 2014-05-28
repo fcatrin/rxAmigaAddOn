@@ -1,5 +1,6 @@
 int kickstart=1;
 int oldkickstart=-1;	/* reload KS at startup */
+char kickstarts_dir[300] = {0,};
 
 extern char launchDir[300];
 
@@ -18,6 +19,9 @@ extern "C" int main( int argc, char *argv[] );
 #include <assert.h>
 #ifdef USE_UAE4ALL_VKBD
 #include "vkbd.h"
+#endif
+#ifdef ANDROIDSDL
+#include <android/log.h>
 #endif
 #include "config.h"
 #include "uae.h"
@@ -211,6 +215,12 @@ void real_main (int argc, char **argv)
 #endif
 	);
 #endif
+
+    char *customConfig = NULL;
+    for(int i=0; i<argc; i++) {
+    	if (!strcmp(argv[i], "-conf") && i+1<argc) customConfig = argv[++i];
+    }
+
 	getcwd(launchDir,250);
     /* PocketUAE prefs */
     default_prefs_uae (&currprefs);
@@ -220,7 +230,9 @@ void real_main (int argc, char **argv)
 #endif
 		// Set everthing to default and clear HD settings
 		SetDefaultMenuSettings(1);
-    loadconfig (1);
+
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","customconfig %s", customConfig==NULL?"null":customConfig);
+    loadconfigcustom (1, customConfig);
 
     if (! graphics_setup ()) {
 		exit (1);
@@ -266,6 +278,10 @@ void real_main (int argc, char **argv)
 
     m68k_init(0);
     gui_update ();
+
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 ready %s", uae4all_image_file0);
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 ready %s", uae4all_image_file1);
+
 
 #ifdef GP2X
     switch_to_hw_sdl(1);

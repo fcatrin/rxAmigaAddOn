@@ -613,9 +613,11 @@ abstract class DifferentTouchInput
 
 class DemoRenderer extends GLSurfaceView_SDL.Renderer
 {
-	public DemoRenderer(MainActivity _context)
+	String customConfig;
+	public DemoRenderer(MainActivity _context, String customConfig)
 	{
 		context = _context;
+		this.customConfig = customConfig;
 	}
 	
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -676,8 +678,11 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 		if(Globals.AudioBufferConfig >= 2)
 			Thread.currentThread().setPriority( (Thread.NORM_PRIORITY + Thread.MIN_PRIORITY) / 2 ); // Lower than normal
 		 // Calls main() and never returns, hehe - we'll call eglSwapBuffers() from native code
+		
+		String extraCommandLine = "";
+		if (customConfig!=null) extraCommandLine = " -conf " + customConfig;
 		nativeInit( Globals.DataDir,
-					Globals.CommandLine,
+					(Globals.CommandLine + extraCommandLine).trim(),
 					( (Globals.SwVideoMode && Globals.MultiThreadedVideo) || Globals.CompatibilityHacksVideo ) ? 1 : 0,
 					Globals.RedirectStdout ? 1 : 0 );
 		System.exit(0); // The main() returns here - I don't bother with deinit stuff, just terminate process
@@ -908,7 +913,8 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		super(context);
 		mParent = context;
 		setEGLConfigChooser(Globals.VideoDepthBpp, Globals.NeedDepthBuffer, Globals.NeedStencilBuffer, Globals.NeedGles2);
-		mRenderer = new DemoRenderer(context);
+		String customConfig = context.getIntent().getStringExtra("conf");
+		mRenderer = new DemoRenderer(context, customConfig);
 		setRenderer(mRenderer);
 	}
 

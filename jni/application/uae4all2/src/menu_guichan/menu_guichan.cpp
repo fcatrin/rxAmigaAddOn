@@ -39,7 +39,7 @@ extern void resetCpuSpeed(void);
 #endif
 extern void gp2x_stop_sound(void);
 
-
+extern char kickstarts_dir[300];
 extern int kickstart;
 extern int oldkickstart;
 extern int bReloadKickstart;
@@ -73,7 +73,7 @@ enum { DIRECTION_NONE, DIRECTION_UP, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_R
 
 bool CheckKickstart()
 {
-	snprintf(romfile, 256, "%s/kickstarts/%s",launchDir,kickstarts_rom_names[kickstart]);
+	snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
 	FILE *f=fopen (romfile, "r" );
   if(f)
   {

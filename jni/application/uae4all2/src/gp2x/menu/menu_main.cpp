@@ -29,6 +29,7 @@
 /* PocketUAE config file. Used for parsing PocketUAE-like options. */
 #include "savestate.h"
 
+extern char kickstarts_dir[300];
 extern int kickstart;
 extern int oldkickstart;
 extern int bReloadKickstart;
@@ -851,7 +852,7 @@ int run_mainMenu()
 			if (kickstart!=oldkickstart) 
 			{
 				oldkickstart=kickstart;
-				snprintf(romfile, 256, "%s/kickstarts/%s",launchDir,kickstarts_rom_names[kickstart]);
+				snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
 				bReloadKickstart=1;
 				uae4all_init_rom(romfile);
 #ifdef ANDROIDSDL

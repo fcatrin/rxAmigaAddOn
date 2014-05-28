@@ -13,6 +13,7 @@
 #include "gp2x.h"
 #include "cfgfile.h"
 
+extern char kickstarts_dir[300];
 extern int kickstart;
 extern int sound_rate;
 extern int skipintro;
@@ -29,6 +30,9 @@ extern char *config_filename;
 
 extern void extractFileName(char * str,char *buffer);
 
+#ifdef ANDROIDSDL
+#include <android/log.h>
+#endif
 
 char filename0[256] = "";
 char filename1[256] = "";
@@ -1007,9 +1011,15 @@ int saveconfig(int general)
 }
 
 
-void loadconfig(int general)
+void loadconfig(int general) {
+	loadconfigcustom(general, NULL);
+}
+
+void loadconfigcustom(int general, char *configfile)
 {
 	char path[300];
+
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "loadconfigcustom %i %s", general, configfile==NULL?"null":configfile);
 
 	if(general == 1)
 	{
@@ -1037,7 +1047,9 @@ void loadconfig(int general)
 		}
 	}
 
-	if (general == 1)
+	if (configfile!=NULL)
+		snprintf(path, 300, "%s", configfile);
+	else if (general == 1)
 		snprintf(path, 300, "%s/conf/uaeconfig.conf", launchDir);
 	else if (general == 3)
 		snprintf(path, 300, config_filename, launchDir);
@@ -1056,7 +1068,7 @@ void loadconfig(int general)
 		
 	FILE *f=fopen(path,"rt");
 	if (!f){
-		printf ("No config file %s!\n",path);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "No config file %s!",path);
 	}
 	else
 	{
@@ -1067,7 +1079,20 @@ void loadconfig(int general)
 #if defined(PANDORA) || defined(ANDROIDSDL)
 		int dummy;
 #endif
-		fscanf(f, "df0=%s\n", uae4all_image_file0);
+		char line[1024];
+		while (fgets(line, sizeof(line), f)) {
+			sscanf(line, "df0=%s\n", uae4all_image_file0);
+			sscanf(line, "df1=%s\n", uae4all_image_file1);
+			sscanf(line, "kickstart=%d\n",&kickstart);
+			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
+		}
+
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 %s", uae4all_image_file0);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 %s", uae4all_image_file1);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstart %i", kickstart);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstarts_dir %s", kickstarts_dir);
+
+
 /*		fscanf(f,"kickstart=%d\n",&kickstart);
 #if defined(PANDORA) || defined(ANDROIDSDL)
 		fscanf(f,"scaling=%d\n",&dummy);

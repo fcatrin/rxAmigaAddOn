@@ -34,6 +34,7 @@ int createScript(int bIcon=0);
 void text_flip(void);
 void set_joyConf(void);
 void loadconfig(int general=0);
+void loadconfigcustom(int general, char *configfile);
 int saveconfig(int general=0);
 int create_configfilename(char *dest, char *basename, int fromDir);
 
