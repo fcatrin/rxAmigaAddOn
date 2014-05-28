@@ -1,0 +1,1 @@
+../src/writelog.cpp
