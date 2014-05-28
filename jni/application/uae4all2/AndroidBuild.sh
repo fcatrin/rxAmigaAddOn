@@ -16,7 +16,7 @@ LOCAL_PATH=`cd $LOCAL_PATH && pwd`
 #../setEnvironment.sh sh -c "make --makefile=Makefile.arm -j1" && mv -f uae4all libapplication.so
 #fi
 if [ "$1" = armeabi-v7a ]; then
-../setEnvironment-armeabi-v7a.sh sh -c "make --makefile=Makefile.arm-v7a -j1" && mv -f uae4all-v7a libapplication-armeabi-v7a.so
+../setEnvironment-armeabi-v7a.sh sh -c "make --makefile=Makefile.arm-v7a -j1" && mv -f uae4all-v7a ../../../libs/armeabi-v7a/libapplication.so
 fi
 #if [ "$1" = armeabi-v7a ]; then
 #../setEnvironment-armeabi-v7a.sh sh -c "make --makefile=Makefile.arm-v7a-neon -j1" && mv -f uae4all-v7a libapplication-armeabi-v7a.so
