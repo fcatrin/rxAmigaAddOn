@@ -738,6 +738,11 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Log.d("AMIGA", "On key down back");
+			return super.onKeyDown(keyCode, event);
+		}
+		
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyDown(keyCode, event);
 		else
@@ -760,6 +765,13 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
+		
+		if( keyCode == KeyEvent.KEYCODE_BACK ) {
+			Log.d("AMIGA", "On key up back");
+			return super.onKeyUp(keyCode, event);
+		}
+		
+		
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyUp(keyCode, event);
 		else
@@ -793,6 +805,12 @@ public class MainActivity extends Activity
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void onBackPressed() {
+		Log.d("AMIGA", "Finish this!");
+		finish();
 	}
 
 	@Override
