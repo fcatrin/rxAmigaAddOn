@@ -1,0 +1,21 @@
+# Instalar Homebrew
+
+ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+
+# Instalar coreutils y gnu-sed
+
+brew install coreutils
+brew install gnu-sed
+
+# Aplicar aliases para que tome comandos de GNU
+
+alias readlink=greadlink
+alias sed=gsed
+
+# Compilar
+
+cd jni/application/src
+./AndroidBuild.sh  armeabi-v7a
+
+# Probado con android-ndk-9b
+
