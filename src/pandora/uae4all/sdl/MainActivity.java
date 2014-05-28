@@ -115,7 +115,7 @@ public class MainActivity extends Activity
 
 		if( Globals.StartupMenuButtonTimeout > 0 )
 		{
-			_btn = new Button(this);
+/*			_btn = new Button(this);
 			_btn.setEnabled(false);
 			_btn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			_btn.setText(getResources().getString(R.string.device_change_cfg));
@@ -133,7 +133,7 @@ public class MainActivity extends Activity
 			};
 			_btn.setOnClickListener(new onClickListener(this));
 
-			_layout2.addView(_btn);
+			_layout2.addView(_btn);*/
 		}
 
 		_layout.addView(_layout2);

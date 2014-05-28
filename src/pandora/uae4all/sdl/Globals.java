@@ -70,7 +70,7 @@ class Globals
 	public static String DeleteFilesOnUpgrade = " ";
 	public static int AppTouchscreenKeyboardKeysAmount = 4;
 	public static String[] AppTouchscreenKeyboardKeysNames = "HOME END PAGEDOWN PAGEUP RCTRL RSHIFT UNKNOWN UNKNOWN UNKNOWN".split(" ");
-	public static int StartupMenuButtonTimeout = 3000;
+	public static int StartupMenuButtonTimeout = 10;
 	public static int AppMinimumRAM = 256;
 	public static SettingsMenu.Menu HiddenMenuOptions [] = {  new SettingsMenuMouse.JoystickMouseConfig(), }; // If you see error here - update HiddenMenuOptions in your AndroidAppSettings.cfg: change OptionalDownloadConfig to SettingsMenuMisc.OptionalDownloadConfig etc.
 	public static SettingsMenu.Menu FirstStartMenuOptions [] = { new SettingsMenuMisc.ShowReadme(), (AppUsesMouse && ! ForceRelativeMouseMode ? new SettingsMenuMouse.DisplaySizeConfig() : new SettingsMenu.DummyMenu()), new SettingsMenuMisc.OptionalDownloadConfig(), new SettingsMenuMisc.GyroscopeCalibration() };
