@@ -25,7 +25,6 @@ package pandora.uae4all.sdl;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11Ext;
-
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -42,7 +41,9 @@ import android.view.InputDevice;
 import android.view.Window;
 import android.view.WindowManager;
 import android.os.Environment;
+
 import java.io.File;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.content.res.Resources;
@@ -50,14 +51,15 @@ import android.content.res.AssetManager;
 import android.widget.Toast;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
 import android.widget.TextView;
+
 import java.lang.Thread;
 import java.util.concurrent.locks.ReentrantLock;
+
 import android.os.Build;
+
 import java.lang.reflect.Method;
 import java.util.LinkedList;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -759,7 +761,7 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 		cb.sendBackspace = (sendBackspace != 0);
 		context.runOnUiThread(cb);
 	}
-
+	
 	public void hideScreenKeyboard() // Called from native code
 	{
 		class Callback implements Runnable
@@ -785,13 +787,29 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 		context.setScreenKeyboardHintMessage(s);
 	}
 
-	public void startAccelerometerGyroscope(int started) // Called from native code
+	public void startAccelerometerGyroscope(int started) 
 	{
 		accelerometer.openedBySDL = (started != 0);
 		if( accelerometer.openedBySDL && !mPaused )
 			accelerometer.start();
 		else
 			accelerometer.stop();
+	}
+
+	public void toastMessage(final String message) { // Called from native code
+		class Callback implements Runnable
+		{
+			public MainActivity parent;
+			public String message;
+			public void run()
+			{
+				parent.toastMessage(message);
+			}
+		}
+		Callback cb = new Callback();
+		cb.parent = context;
+		cb.message = message;
+		context.runOnUiThread(cb);
 	}
 
 	public void exitApp()

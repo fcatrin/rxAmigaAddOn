@@ -40,6 +40,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import android.graphics.drawable.Drawable;
 import android.graphics.Color;
 import android.content.res.Configuration;
@@ -52,6 +53,7 @@ import android.view.MenuItem;
 import android.view.Menu;
 import android.view.Gravity;
 import android.text.method.TextKeyListener;
+
 import java.util.LinkedList;
 import java.io.SequenceInputStream;
 import java.io.BufferedInputStream;
@@ -62,20 +64,23 @@ import java.io.FileOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.zip.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.Set;
+
 import android.text.SpannedString;
+
 import java.io.BufferedReader;
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
+
 import android.view.inputmethod.InputMethodManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+
 import java.util.concurrent.Semaphore;
+
 import android.content.pm.ActivityInfo;
 import android.view.Display;
 import android.text.InputType;
@@ -442,6 +447,10 @@ public class MainActivity extends Activity
 			DimSystemStatusBar.get().dim(_videoLayout);
 			DimSystemStatusBar.get().dim(mGLView);
 		}
+	}
+	
+	public void toastMessage(final String message) {
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 
 	public void showScreenKeyboard(final String oldText, boolean sendBackspace)
