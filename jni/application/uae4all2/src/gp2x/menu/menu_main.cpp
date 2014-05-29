@@ -50,6 +50,7 @@ extern void update_display(void);
 extern int saveAdfDir(void);
 extern void setCpuSpeed(void);
 
+
 extern char launchDir[300];
 extern char currentDir[300];
 
@@ -190,6 +191,7 @@ static void draw_mainMenu(int c)
 	int tabstop7 = 29+4;
 	int tabstop8 = 31+4;
 	int tabstop9 = 33+4;
+
 
 	text_draw_background();
 	text_draw_window(leftMargin-1,menuLine-1,34,40,text_str_title);
@@ -852,6 +854,8 @@ int run_mainMenu()
 			if (kickstart!=oldkickstart) 
 			{
 				oldkickstart=kickstart;
+				__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "KICKSTART %s/%s!",kickstarts_dir, kickstarts_rom_names[kickstart]);
+
 				snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
 				bReloadKickstart=1;
 				uae4all_init_rom(romfile);

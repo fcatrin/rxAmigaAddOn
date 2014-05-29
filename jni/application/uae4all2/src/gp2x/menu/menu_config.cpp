@@ -28,6 +28,7 @@ extern char currentDir[300];
 extern int nr_drives;
 extern char *config_filename;
 
+
 extern void extractFileName(char * str,char *buffer);
 
 #ifdef ANDROIDSDL
@@ -1110,7 +1111,7 @@ void loadconfigcustom(int general, char *configfile)
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 %s", uae4all_image_file1);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstart %i", kickstart);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstarts_dir %s", kickstarts_dir);
-
+		snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
 
 /*		fscanf(f,"kickstart=%d\n",&kickstart);
 #if defined(PANDORA) || defined(ANDROIDSDL)

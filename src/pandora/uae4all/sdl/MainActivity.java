@@ -87,7 +87,7 @@ import android.text.InputType;
 import android.util.Log;
 
 public class MainActivity extends Activity
-{
+{ 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -190,7 +190,7 @@ public class MainActivity extends Activity
 					{
 						public MainActivity Parent;
 						public void run()
-						{
+						{   
 							Settings.Load(Parent);
 							loaded.release();
 							loadedLibraries.release();
@@ -198,6 +198,8 @@ public class MainActivity extends Activity
 								_btn.setEnabled(true);
 						}
 					}
+					
+					
 					Callback2 cb = new Callback2();
 					cb.Parent = p;
 					p.runOnUiThread(cb);

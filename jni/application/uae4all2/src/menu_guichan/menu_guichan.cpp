@@ -73,10 +73,12 @@ enum { DIRECTION_NONE, DIRECTION_UP, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_R
 
 bool CheckKickstart()
 {
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "KICKSTART %s/%s!",kickstarts_dir, kickstarts_rom_names[kickstart]);
 	snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
 	FILE *f=fopen (romfile, "r" );
   if(f)
   {
+	  __android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Leyo bien KICKSTART %s/%s!",kickstarts_dir, kickstarts_rom_names[kickstart]);
     fclose(f);
     return true;
   }
