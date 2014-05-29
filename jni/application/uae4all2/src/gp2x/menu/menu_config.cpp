@@ -1085,6 +1085,25 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "df1=%s\n", uae4all_image_file1);
 			sscanf(line, "kickstart=%d\n",&kickstart);
 			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
+			sscanf(line, "presetModeId=%d\n",&presetModeId); // resolution to render on
+			sscanf(line, "showstatus=%d\n",&mainMenu_showStatus); // 1 = show leds
+			sscanf(line, "soundrate=%d\n",&sound_rate); // default is 44100. 22050 is more close to the Amiga500
+			sscanf(line, "floppyspeed=%d\n",&mainMenu_floppyspeed); // floppy speed in percent (100 = 100% Amiga)
+			sscanf(line, "drives=%d\n",&nr_drives); // restrict number of drives
+			sscanf(line,"moveX=%d\n",&moveX);
+			sscanf(line,"moveY=%d\n",&moveY);
+
+
+			// joystick & keyboaard overlay (1 = show, 0 = hide)
+			sscanf(line, "onscreen=%d\n",&mainMenu_onScreen);
+			sscanf(line, "onScreen_textinput=%d\n",&mainMenu_onScreen_textinput);
+			sscanf(line, "onScreen_dpad=%d\n",&mainMenu_onScreen_dpad);
+			sscanf(line, "onScreen_button1=%d\n",&mainMenu_onScreen_button1);
+			sscanf(line, "onScreen_button2=%d\n",&mainMenu_onScreen_button2);
+			sscanf(line, "onScreen_button3=%d\n",&mainMenu_onScreen_button3);
+			sscanf(line, "onScreen_button4=%d\n",&mainMenu_onScreen_button4);
+			sscanf(line, "onScreen_button5=%d\n",&mainMenu_onScreen_button5);
+			sscanf(line, "onScreen_button6=%d\n",&mainMenu_onScreen_button6);
 		}
 
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 %s", uae4all_image_file0);
@@ -1139,7 +1158,6 @@ void loadconfigcustom(int general, char *configfile)
 		fscanf(f,"drives=%d\n",&nr_drives);
 		fscanf(f,"videomode=%d\n",&mainMenu_ntsc);
 		fscanf(f,"mainMenu_cpuSpeed=%d\n",&mainMenu_cpuSpeed);
-		fscanf(f,"presetModeId=%d\n",&presetModeId);
 		fscanf(f,"moveX=%d\n",&moveX);
 		fscanf(f,"moveY=%d\n",&moveY);
 		fscanf(f,"displayedLines=%d\n",&mainMenu_displayedLines);
