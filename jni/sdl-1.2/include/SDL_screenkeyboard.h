@@ -136,6 +136,8 @@ extern DECLSPEC int SDLCALL SDL_ToggleScreenKeyboard(void *unused);
 
 extern DECLSPEC int SDLCALL SDL_IsScreenKeyboardShown(void *unused);
 
+extern DECLSPEC int SDLCALL SDL_ToastMessage(char *message);
+
 /* Remap SDL keycodes returned by gamepad buttons.
    Pass the SDLK_ constants, or 0 to leave old value.
    On OUYA: O = A, U = X, Y = Y, A = B */

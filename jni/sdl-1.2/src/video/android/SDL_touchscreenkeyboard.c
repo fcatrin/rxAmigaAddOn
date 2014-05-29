@@ -1048,6 +1048,12 @@ int SDLCALL SDL_ToggleScreenKeyboard(void *unused)
 		return SDL_ShowScreenKeyboard(NULL);
 }
 
+int SDLCALL SDL_ToastMessage(char *message)
+{
+	SDL_ANDROID_CallJavaToastMessage(message);
+	return 1;
+}
+
 int SDLCALL SDL_ANDROID_SetScreenKeyboardButtonGenerateTouchEvents(int buttonId, int generateEvents)
 {
 	if( buttonId < 0 || buttonId >= SDL_ANDROID_SCREENKEYBOARD_BUTTON_NUM )

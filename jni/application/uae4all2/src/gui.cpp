@@ -44,6 +44,7 @@
 
 #ifdef ANDROIDSDL
 #include <android/log.h>
+#include "SDL_screenkeyboard.h"
 #endif
 
 extern int gp2xMouseEmuOn, gp2xButtonRemappingOn;
@@ -159,6 +160,27 @@ int gui_init (void)
 		return 0;
     }
     return -1;
+}
+
+
+char *diskimages[] = {uae4all_image_file0, uae4all_image_file1, uae4all_image_file2, uae4all_image_file3};
+
+void disk_insert(int fd, char *image) {
+	strcpy(diskimages[fd], image);
+	strcpy(changed_df[fd], image);
+	real_changed_df[fd]=1;
+}
+
+void disk_swap() {
+	char tmp[300];
+	strcpy(tmp, diskimages[0]);
+
+	int i=1;
+	while(i<4 && diskimages[i]!=NULL && strlen(diskimages[i])>0) {
+		disk_insert(i-1, diskimages[i]);
+		i++;
+	}
+	disk_insert(i-1, tmp);
 }
 
 int gui_update (void)
@@ -498,6 +520,18 @@ void getMapping(int customId)
 	}
 }
 
+static bool onDiskSwapPressed = false;
+
+char *basename(char *filename) {
+	int i = 0;
+	int pos = 0;
+	while (filename[i]) {
+		if (filename[i] == '/') pos = i+1;
+		i++;
+	}
+	return &filename[pos];
+}
+
 void gui_handle_events (void)
 {
 	Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -514,8 +548,26 @@ void gui_handle_events (void)
 	buttonSelect = keystate[SDLK_LCTRL];
 	buttonStart = keystate[SDLK_LALT];
 
-//	if(keystate[SDLK_LCTRL])
-//		goMenu();
+	if(keystate[SDLK_LCTRL]) {
+		if (onDiskSwapPressed) return;
+		onDiskSwapPressed = true;
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Disk swap");
+
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 %s", uae4all_image_file0);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 %s", uae4all_image_file1);
+		disk_swap();
+
+		char usermsg[300];
+		sprintf(usermsg, "Disk inserted on fd0: %s", basename(uae4all_image_file0));
+
+		SDL_ToastMessage(usermsg);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "After disk swap");
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 %s", uae4all_image_file0);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 %s", uae4all_image_file1);
+		return;
+	} else {
+		onDiskSwapPressed = false;
+	}
 	if (keystate[SDLK_LCTRL]) 	{
 		leave_program();
 		sync();

@@ -74,6 +74,7 @@ static jmethodID JavaGetAdvertisementParams = NULL;
 static jmethodID JavaSetAdvertisementVisible = NULL;
 static jmethodID JavaSetAdvertisementPosition = NULL;
 static jmethodID JavaRequestNewAdvertisement = NULL;
+static jmethodID JavaToastMessage = NULL;
 static int glContextLost = 0;
 static int showScreenKeyboardDeferred = 0;
 static const char * showScreenKeyboardOldText = "";
@@ -290,6 +291,17 @@ void SDL_ANDROID_CallJavaHideScreenKeyboard()
 	(*JavaEnv)->CallVoidMethod( JavaEnv, JavaRenderer, JavaHideScreenKeyboard );
 }
 
+void SDL_ANDROID_CallJavaToastMessage(const char *message) {
+
+	(*JavaEnv)->PushLocalFrame(JavaEnv, 1);
+	jstring s = (*JavaEnv)->NewStringUTF( JavaEnv, message );
+	(*JavaEnv)->CallVoidMethod( JavaEnv, JavaRenderer, JavaToastMessage, s );
+	(*JavaEnv)->DeleteLocalRef( JavaEnv, s );
+	(*JavaEnv)->PopLocalFrame(JavaEnv, NULL);
+
+}
+
+
 int SDL_ANDROID_IsScreenKeyboardShown()
 {
 	/*
@@ -340,6 +352,7 @@ JAVA_EXPORT_NAME(DemoRenderer_nativeInitJavaCallbacks) ( JNIEnv*  env, jobject t
 	JavaSetAdvertisementVisible = (*JavaEnv)->GetMethodID(JavaEnv, JavaRendererClass, "setAdvertisementVisible", "(I)V");
 	JavaSetAdvertisementPosition = (*JavaEnv)->GetMethodID(JavaEnv, JavaRendererClass, "setAdvertisementPosition", "(II)V");
 	JavaRequestNewAdvertisement = (*JavaEnv)->GetMethodID(JavaEnv, JavaRendererClass, "requestNewAdvertisement", "()V");
+	JavaToastMessage = (*JavaEnv)->GetMethodID(JavaEnv, JavaRendererClass, "toastMessage", "(Ljava/lang/String;)V");
 	
 	ANDROID_InitOSKeymap();
 }
