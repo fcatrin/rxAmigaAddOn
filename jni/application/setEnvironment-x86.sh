@@ -9,6 +9,7 @@ if uname -s | grep -i "linux" > /dev/null ; then
 fi
 if uname -s | grep -i "darwin" > /dev/null ; then
 	MYARCH=darwin-x86
+	alias sed=gsed
 fi
 if uname -s | grep -i "windows" > /dev/null ; then
 	MYARCH=windows-x86
@@ -22,7 +23,7 @@ grep "64.bit" "$NDK/RELEASE.TXT" >/dev/null 2>&1 && MYARCH="${MYARCH}_64"
 
 #echo NDK $NDK
 GCCPREFIX=i686-linux-android
-[ -z "$GCCVER" ] && GCCVER=4.4.3
+[ -z "$GCCVER" ] && GCCVER=4.6
 [ -z "$PLATFORMVER" ] && PLATFORMVER=android-14
 LOCAL_PATH=`dirname $0`
 if which realpath > /dev/null ; then

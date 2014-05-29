@@ -1,7 +1,7 @@
 obj/local/x86/objs/guichan/src/gui.o: jni/../jni/guichan/src/gui.cpp \
  jni/../jni/guichan/include/guichan/gui.hpp \
- /home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/list \
- /home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/deque \
+ /Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/list \
+ /Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/deque \
  jni/../jni/guichan/include/guichan/keyevent.hpp \
  jni/../jni/guichan/include/guichan/inputevent.hpp \
  jni/../jni/guichan/include/guichan/event.hpp \
@@ -11,16 +11,16 @@ obj/local/x86/objs/guichan/src/gui.o: jni/../jni/guichan/src/gui.cpp \
  jni/../jni/guichan/include/guichan/mouseinput.hpp \
  jni/../jni/guichan/include/guichan/basiccontainer.hpp \
  jni/../jni/guichan/include/guichan/deathlistener.hpp \
- /home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/string \
+ /Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/string \
  jni/../jni/guichan/include/guichan/widget.hpp \
  jni/../jni/guichan/include/guichan/color.hpp \
- /home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/iostream \
+ /Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/iostream \
  jni/../jni/guichan/include/guichan/rectangle.hpp \
  jni/../jni/guichan/include/guichan/exception.hpp \
  jni/../jni/guichan/include/guichan/focushandler.hpp \
- /home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/vector \
+ /Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/vector \
  jni/../jni/guichan/include/guichan/graphics.hpp \
- /home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/stack \
+ /Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/stack \
  jni/../jni/guichan/include/guichan/cliprectangle.hpp \
  jni/../jni/guichan/include/guichan/input.hpp \
  jni/../jni/guichan/include/guichan/keyinput.hpp \
@@ -29,9 +29,9 @@ obj/local/x86/objs/guichan/src/gui.o: jni/../jni/guichan/src/gui.cpp \
 
 jni/../jni/guichan/include/guichan/gui.hpp:
 
-/home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/list:
+/Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/list:
 
-/home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/deque:
+/Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/deque:
 
 jni/../jni/guichan/include/guichan/keyevent.hpp:
 
@@ -51,13 +51,13 @@ jni/../jni/guichan/include/guichan/basiccontainer.hpp:
 
 jni/../jni/guichan/include/guichan/deathlistener.hpp:
 
-/home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/string:
+/Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/string:
 
 jni/../jni/guichan/include/guichan/widget.hpp:
 
 jni/../jni/guichan/include/guichan/color.hpp:
 
-/home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/iostream:
+/Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/iostream:
 
 jni/../jni/guichan/include/guichan/rectangle.hpp:
 
@@ -65,11 +65,11 @@ jni/../jni/guichan/include/guichan/exception.hpp:
 
 jni/../jni/guichan/include/guichan/focushandler.hpp:
 
-/home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/vector:
+/Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/vector:
 
 jni/../jni/guichan/include/guichan/graphics.hpp:
 
-/home/hydefus/devel/android-ndk-r7c/sources/cxx-stl/gnu-libstdc++/include/stack:
+/Users/fcatrin/devel/android-ndk-r9b/sources/cxx-stl/gnu-libstdc++/4.6/include/stack:
 
 jni/../jni/guichan/include/guichan/cliprectangle.hpp:
 

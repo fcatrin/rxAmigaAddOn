@@ -9,6 +9,7 @@ if uname -s | grep -i "linux" > /dev/null ; then
 fi
 if uname -s | grep -i "darwin" > /dev/null ; then
 	MYARCH=darwin-x86
+	alias sed=gsed
 fi
 if uname -s | grep -i "windows" > /dev/null ; then
 	MYARCH=windows-x86

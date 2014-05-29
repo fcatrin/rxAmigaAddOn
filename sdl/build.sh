@@ -1,6 +1,7 @@
 #!/bin/sh
 #set -eu # Bashism, does not work with default shell on Ubuntu 12.04
 
+
 install_apk=false
 run_apk=false
 sign_apk=false
@@ -43,6 +44,11 @@ if [ "$#" -gt 0 -a "$1" = "-h" ]; then
 	exit 0
 fi
 
+if uname -s | grep -i "darwin" > /dev/null ; then
+	alias sed=gsed
+	alias readlink=greadlink
+fi
+
 [ -e project/local.properties ] || {
 	android update project -p project || exit 1
 	rm -f project/src/Globals.java
@@ -72,6 +78,8 @@ if uname -s | grep -i "linux" > /dev/null ; then
 fi
 if uname -s | grep -i "darwin" > /dev/null ; then
 	MYARCH=darwin-x86
+	alias sed=gsed
+	alias readlink=greadlink
 fi
 if uname -s | grep -i "windows" > /dev/null ; then
 	MYARCH=windows-x86
@@ -117,7 +125,7 @@ cd project && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j
 		cp jni/application/src/libapplication-x86.so libs/x86/libapplication.so && \
 		$NDK/toolchains/x86-4.6/prebuilt/$MYARCH/bin/i686-linux-android-strip --strip-unneeded libs/x86/libapplication.so \
 		|| true ; } && \
-	cd .. && ./copyAssets.sh && cd project && \
+	cd .. &&  ./copyAssets.sh && cd project && \
 	{	if $build_release ; then \
 			ant release || exit 1 ; \
 			jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -sigalg MD5withRSA -digestalg SHA1 bin/MainActivity-release-unsigned.apk androiddebugkey || exit 1 ; \

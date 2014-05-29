@@ -1,22 +1,24 @@
 obj/local/armeabi-v7a/objs/sdl_image/IMG.o: jni/../jni/sdl_image/IMG.c \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/stdio.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/cdefs.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/cdefs_elf.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/_types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/machine/_types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/stdint.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/posix_types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/stddef.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/compiler.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/posix_types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/types.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/machine/kernel.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/sysmacros.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/string.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/malloc.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/ctype.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/stdio.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/cdefs.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/cdefs_elf.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/android/api-level.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/stdint.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/_types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/machine/_types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/_wchar_limits.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/posix_types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/stddef.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/compiler.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/posix_types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/types.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/machine/kernel.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/sysmacros.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/string.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/malloc.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/ctype.h \
  jni/../jni/sdl_image/include/SDL_image.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_main.h \
@@ -24,22 +26,24 @@ obj/local/armeabi-v7a/objs/sdl_image/IMG.o: jni/../jni/sdl_image/IMG.c \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_config.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_platform.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_config_android.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/mman.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/mman.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm-generic/mman.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/page.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/stdlib.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/alloca.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/strings.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/memory.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/inttypes.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/mman.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/mman.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm-generic/mman.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm-generic/mman-common.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/page.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/stdlib.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/alloca.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/strings.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/memory.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/inttypes.h \
  jni/../jni/sdl_image/../sdl-1.2/include/begin_code.h \
  jni/../jni/sdl_image/../sdl-1.2/include/close_code.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_audio.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_error.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_endian.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/endian.h \
- /home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/endian.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/endian.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/endian.h \
+ /Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/machine/endian.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_mutex.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_thread.h \
  jni/../jni/sdl_image/../sdl-1.2/include/SDL_rwops.h \
@@ -60,41 +64,45 @@ obj/local/armeabi-v7a/objs/sdl_image/IMG.o: jni/../jni/sdl_image/IMG.c \
  jni/../jni/sdl_image/../sdl-1.2/include/begin_code.h \
  jni/../jni/sdl_image/../sdl-1.2/include/close_code.h
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/stdio.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/stdio.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/cdefs.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/cdefs.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/cdefs_elf.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/cdefs_elf.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/_types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/android/api-level.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/machine/_types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/stdint.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/stdint.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/_types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/posix_types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/machine/_types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/stddef.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/_wchar_limits.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/compiler.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/posix_types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/posix_types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/stddef.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/compiler.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/linux/types.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/posix_types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/machine/kernel.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/sysmacros.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/linux/types.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/string.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/machine/kernel.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/malloc.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/sysmacros.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/ctype.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/string.h:
+
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/malloc.h:
+
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/ctype.h:
 
 jni/../jni/sdl_image/include/SDL_image.h:
 
@@ -110,23 +118,25 @@ jni/../jni/sdl_image/../sdl-1.2/include/SDL_platform.h:
 
 jni/../jni/sdl_image/../sdl-1.2/include/SDL_config_android.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/mman.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/mman.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/mman.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/mman.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm-generic/mman.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm-generic/mman.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/asm/page.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm-generic/mman-common.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/stdlib.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/asm/page.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/alloca.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/stdlib.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/strings.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/alloca.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/memory.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/strings.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/inttypes.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/memory.h:
+
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/inttypes.h:
 
 jni/../jni/sdl_image/../sdl-1.2/include/begin_code.h:
 
@@ -138,9 +148,11 @@ jni/../jni/sdl_image/../sdl-1.2/include/SDL_error.h:
 
 jni/../jni/sdl_image/../sdl-1.2/include/SDL_endian.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/endian.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/endian.h:
 
-/home/hydefus/devel/android-ndk-r7c/platforms/android-14/arch-arm/usr/include/sys/endian.h:
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/sys/endian.h:
+
+/Users/fcatrin/devel/android-ndk-r9b/platforms/android-14/arch-arm/usr/include/machine/endian.h:
 
 jni/../jni/sdl_image/../sdl-1.2/include/SDL_mutex.h:
 

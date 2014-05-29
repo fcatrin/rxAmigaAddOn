@@ -19,3 +19,11 @@ cd jni/application/src
 
 # Probado con android-ndk-9b
 
+
+# Recompilar SDL
+# Respaldar el codigo Java (sera sobreescrito).  Lo mejor es subirlo a SVN
+
+cd sdl
+./rebuild.sh
+
+# Recuperar respaldo
