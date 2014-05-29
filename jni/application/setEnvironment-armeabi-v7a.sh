@@ -10,6 +10,7 @@ fi
 if uname -s | grep -i "darwin" > /dev/null ; then
 	MYARCH=darwin-x86
 	alias sed=gsed
+	alias readlink=greadlink
 fi
 if uname -s | grep -i "windows" > /dev/null ; then
 	MYARCH=windows-x86
