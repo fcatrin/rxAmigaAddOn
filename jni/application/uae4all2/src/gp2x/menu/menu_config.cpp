@@ -63,6 +63,7 @@ int mainMenu_joyConf = 0;
 int mainMenu_joyPort = 0; // Both ports
 int mainMenu_autofireRate = 8;
 int mainMenu_showStatus = DEFAULT_STATUSLN;
+int mainMenu_showFPS = false;
 int mainMenu_mouseMultiplier = DEFAULT_MOUSEMULTIPLIER;
 int mainMenu_stylusOffset = 0;
 int mainMenu_tapDelay = 10;
@@ -1088,9 +1089,10 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
 			sscanf(line, "presetModeId=%d\n",&presetModeId); // resolution to render on
 			sscanf(line, "showstatus=%d\n",&mainMenu_showStatus); // 1 = show leds
+			sscanf(line, "showfps=%d\n",&mainMenu_showFPS); // 1 = show leds
 			sscanf(line, "soundrate=%d\n",&sound_rate); // default is 44100. 22050 is more close to the Amiga500
 			sscanf(line, "floppyspeed=%d\n",&mainMenu_floppyspeed); // floppy speed in percent (100 = 100% Amiga)
-			sscanf(line, "drives=%d\n",&nr_drives); // restrict number of drives
+			sscanf(line, "drives=%d\n",&mainMenu_drives); // restrict number of drives
 			sscanf(line,"moveX=%d\n",&moveX);
 			sscanf(line,"moveY=%d\n",&moveY);
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="pandora.uae4all.sdl"
-      android:versionCode="3000"
-      android:versionName="2.3.5.3-0"
+      android:versionCode="3001"
+      android:versionName="2.3.5.3-1"
       android:installLocation="auto"
       android:sharedUserId="psychoworld.retrobox"
 >
