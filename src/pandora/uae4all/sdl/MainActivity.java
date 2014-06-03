@@ -802,6 +802,14 @@ public class MainActivity extends Activity
 		return true;
 	}
 
+	public static void sendNativeKey(int keyCode, int down) {
+		DemoGLSurfaceView.nativeKey(keyCode, down, 0);
+	}
+
+	public static void sendNativeMouseButton(int button, int down) {
+		DemoGLSurfaceView.nativeMouseButtonsPressed(button, down);
+	}
+
 	@Override
 	public boolean onKeyMultiple(int keyCode, int repeatCount, final KeyEvent event)
 	{
@@ -1218,7 +1226,7 @@ public class MainActivity extends Activity
 
 	static int NOTIFY_ID = 12367098; // Random ID
 
-	private static DemoGLSurfaceView mGLView = null;
+	public static DemoGLSurfaceView mGLView = null;
 	private static AudioThread mAudioThread = null;
 	private static DataDownloader downloader = null;
 
