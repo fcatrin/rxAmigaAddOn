@@ -936,6 +936,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		String customConfig = context.getIntent().getStringExtra("conf");
 		mRenderer = new DemoRenderer(context, customConfig);
 		setRenderer(mRenderer);
+		startGamepadMouseMoveThread();
 	}
 
 	@Override
@@ -949,6 +950,48 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		return true;
 	};
 
+	static final int maxGamepadX = 640;
+	static final int maxGamepadY = 480;
+	static int lastGamepadX = 0;
+	static int lastGamepadY = 0;
+	static int gamepadX = 0;
+	static int gamepadY = 0;
+	static float gamepadMouseMoveX = 0;
+	static float gamepadMouseMoveY = 0;
+	boolean gamepadMouseThreadRunning = false;
+	
+	private void startGamepadMouseMoveThread() {
+		if (gamepadMouseThreadRunning) return;
+		
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				while (gamepadMouseThreadRunning) {
+					gamepadX += gamepadMouseMoveX;
+					gamepadY += gamepadMouseMoveY;
+	
+					if (gamepadX<0) gamepadX = 0;
+					if (gamepadY<0) gamepadY = 0;
+	
+					if (gamepadX>maxGamepadX) gamepadX = maxGamepadX;
+					if (gamepadY>maxGamepadY) gamepadY = maxGamepadY;
+					
+					if (lastGamepadX != gamepadX || lastGamepadY != gamepadY) {
+						lastGamepadX = gamepadX;
+						lastGamepadY = gamepadY;
+						nativeMouseEvent(gamepadX, gamepadY, MotionEvent.ACTION_MOVE);
+						//Log.d("libSDL", "nativeMouseEvent (" + gamepadX + ", " + gamepadY + ")");
+					}
+					try {
+						Thread.sleep(40);
+					} catch (InterruptedException e) {}
+				}
+			}
+		};
+		gamepadMouseThreadRunning = true;
+		t.start();
+	}
+	
 	@Override
 	public boolean onGenericMotionEvent (final MotionEvent event)
 	{
@@ -957,10 +1000,17 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 				") RS=(" + event.getAxisValue(MotionEvent.AXIS_Z) + ", " + event.getAxisValue(MotionEvent.AXIS_RZ) + ") " + (DifferentTouchInput.touchInput.getClass().getSimpleName()));
 		
 		if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
-			int x = (int)event.getAxisValue(MotionEvent.AXIS_Z) * 10;
-			int y = (int)event.getAxisValue(MotionEvent.AXIS_RZ) * 10;
-			nativeMouseEvent(x, y, event.getAction());
-			Log.d("MAPPER", "nativeMouseEvent (" + x + ", " + y + ")");
+			float moveX = event.getAxisValue(MotionEvent.AXIS_Z);
+			float moveY = event.getAxisValue(MotionEvent.AXIS_RZ);
+			if (Math.abs(moveX) < 0.1) {
+				moveX = 0;
+			}
+			if (Math.abs(moveY) < 0.1) {
+				moveY = 0;
+			}
+
+			gamepadMouseMoveX = moveX * 2;
+			gamepadMouseMoveY = moveY * 2;
 		}
 		
 		DifferentTouchInput.touchInput.processGenericEvent(event);
@@ -989,11 +1039,13 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	}
 
 	public void exitApp() {
+		gamepadMouseThreadRunning = false;
 		mRenderer.exitApp();
 	};
 
 	@Override
 	public void onPause() {
+		gamepadMouseThreadRunning = false;
 		Log.i("SDL", "libSDL: DemoGLSurfaceView.onPause(): mRenderer.mGlSurfaceCreated " + mRenderer.mGlSurfaceCreated + " mRenderer.mPaused " + mRenderer.mPaused + (mRenderer.mPaused ? " - not doing anything" : ""));
 		if(mRenderer.mPaused)
 			return;
@@ -1019,6 +1071,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 			mRenderer.nativeGlContextRecreated();
 		if( mRenderer.accelerometer != null && mRenderer.accelerometer.openedBySDL ) // For some reason it crashes here often - are we getting this event before initialization?
 			mRenderer.accelerometer.start();
+		startGamepadMouseMoveThread();
 	};
 
 	

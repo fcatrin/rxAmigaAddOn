@@ -449,7 +449,7 @@ static void ProcessMouseRelativeMovement( jint *xx, jint *yy, int action )
 {
 	int x = *xx, y = *yy;
 
-	__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse relative x,y = %i, %i", x, y);
+	//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse relative x,y = %i, %i", x, y);
 	if( !relativeMovement )
 		return;
 
@@ -498,7 +498,7 @@ static void ProcessMouseRelativeMovement( jint *xx, jint *yy, int action )
 	relativeMovementX += x - diffX;
 	relativeMovementY += y - diffY;
 
-	__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse relative final x,y = %i, %i", x, y);
+	//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse relative final x,y = %i, %i", x, y);
 
 	*xx = x;
 	*yy = y;
@@ -625,7 +625,7 @@ static void ProcessMouseMove( int x, int y, int force, int radius )
 {
 	if( SDL_ANDROID_moveMouseWithKbX >= 0 )
 	{
-		__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move x,y = %i, %i", x, y);
+		//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move x,y = %i, %i", x, y);
 
 		// Mouse lazily follows magnifying glass, not very intuitive for drag&drop
 		/*
@@ -649,26 +649,26 @@ static void ProcessMouseMove( int x, int y, int force, int radius )
 			SDL_ANDROID_moveMouseWithKbY = -1;
 			SDL_ANDROID_moveMouseWithKbSpeedX = 0;
 			SDL_ANDROID_moveMouseWithKbSpeedY = 0;
-			__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion x,y = %i, %i", x, y);
+			//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion x,y = %i, %i", x, y);
 
 			SDL_ANDROID_MainThreadPushMouseMotion(x, y);
 		}
 		else {
-			__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion with kb x,y = %i, %i", SDL_ANDROID_moveMouseWithKbX, SDL_ANDROID_moveMouseWithKbY);
+			//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion with kb x,y = %i, %i", SDL_ANDROID_moveMouseWithKbX, SDL_ANDROID_moveMouseWithKbY);
 			SDL_ANDROID_MainThreadPushMouseMotion(SDL_ANDROID_moveMouseWithKbX, SDL_ANDROID_moveMouseWithKbY);
 
 		}
 	}
 	else
 	{
-		__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion no kb x,y = %i, %i", x, y);
+		//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion no kb x,y = %i, %i", x, y);
 		SDL_ANDROID_MainThreadPushMouseMotion(x, y);
 	}
 
 	if( rightClickMethod == RIGHT_CLICK_WITH_PRESSURE || leftClickMethod == LEFT_CLICK_WITH_PRESSURE )
 	{
 
-		__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move with pressure");
+		//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move with pressure");
 
 		int button = (leftClickMethod == LEFT_CLICK_WITH_PRESSURE) ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
 		int buttonState = ( force > maxForce || radius > maxRadius );
@@ -677,7 +677,7 @@ static void ProcessMouseMove( int x, int y, int force, int radius )
 		SDL_ANDROID_MainThreadPushMouseButton( buttonState ? SDL_PRESSED : SDL_RELEASED, button );
 	}
 
-	__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move timeouts x,y = %i, %i", x, y);
+	//__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move timeouts x,y = %i, %i", x, y);
 
 	ProcessMouseMove_Timeouts(x, y);
 }
@@ -820,7 +820,7 @@ static void AdjustMouseWithGyroscope( jint *xx, jint *yy )
 }
 
 JNIEXPORT void JNICALL
-JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeMouseEvent) ( JNIEnv*  env, jint x, jint y, jint action)
+JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeMouseEvent) ( JNIEnv*  env, jobject  thiz, jint x, jint y, jint action)
 {
 #if SDL_VERSION_ATLEAST(1,3,0)
 	if( !SDL_GetFocusWindow() )
@@ -829,6 +829,16 @@ JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeMouseEvent) ( JNIEnv*  env, jint x, jin
 	if( !SDL_CurrentVideoSurface )
 		return;
 #endif
+
+	float refX = 640.0;
+	float refY = 480.0;
+
+	float warpX = (float)x / refX;
+	float warpY = (float)y / refY;
+
+	x = warpX * SDL_ANDROID_sFakeWindowWidth;
+	y = warpY * SDL_ANDROID_sFakeWindowHeight;
+
 	ProcessMouseRelativeMovement( &x, &y, action );
 	if( action == MOUSE_UP )
 		ProcessMouseUp( x, y );

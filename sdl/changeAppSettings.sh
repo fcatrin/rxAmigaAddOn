@@ -1,5 +1,8 @@
 #!/bin/sh
 
+exit 0
+
+
 AUTO=a
 CHANGED=
 JAVA_SRC_PATH=project/java
