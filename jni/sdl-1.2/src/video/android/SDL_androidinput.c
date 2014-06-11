@@ -803,6 +803,25 @@ static void AdjustMouseWithGyroscope( jint *xx, jint *yy )
 }
 
 JNIEXPORT void JNICALL
+JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeMouseEvent) ( JNIEnv*  env, jint x, jint y, jint action)
+{
+#if SDL_VERSION_ATLEAST(1,3,0)
+	if( !SDL_GetFocusWindow() )
+		return;
+#else
+	if( !SDL_CurrentVideoSurface )
+		return;
+#endif
+	ProcessMouseRelativeMovement( &x, &y, action );
+	if( action == MOUSE_UP )
+		ProcessMouseUp( x, y );
+	if( action == MOUSE_DOWN )
+		action = ProcessMouseDown( x, y ); // May change action to MOUSE_MOVE
+	if( action == MOUSE_MOVE )
+		ProcessMouseMove( x, y, 0, 0 );
+}
+
+JNIEXPORT void JNICALL
 JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeMotionEvent) ( JNIEnv*  env, jobject  thiz, jint x, jint y, jint action, jint pointerId, jint force, jint radius )
 {
 	int i;

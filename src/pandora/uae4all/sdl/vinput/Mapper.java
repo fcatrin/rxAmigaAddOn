@@ -2,6 +2,7 @@ package pandora.uae4all.sdl.vinput;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.KeyEvent;
 
 public class Mapper {
 	private static final String LOGTAG = "vinput.Mapper"; 
@@ -24,6 +25,16 @@ public class Mapper {
 	    		Log.d("REMAP", "Linux key " + keyNameLinux + " mapped to event " + event);
 	    	} else genericJoystick.virtualEvents[i] = null;
 	    }
+	    
+	    // for testing
+	    VirtualEvent ev = new VirtualEvent();
+	    ev.keyCode = KeyEvent.KEYCODE_DPAD_RIGHT;
+	    genericJoystick.virtualEvents[2] =  ev;
+	    
+	    ev = new VirtualEvent();
+	    ev.keyCode = KeyEvent.KEYCODE_DPAD_RIGHT;
+	    genericJoystick.virtualEvents[3] =  ev;
+	    
 	}
 	
 	private void initGenericJoystick(Intent intent) {
@@ -35,5 +46,15 @@ public class Mapper {
 				genericJoystick.originCode[i] = keyCode;
 			}
 		}
+	}
+	
+	public int getVKey(int keyCode) {
+		for(int i=0; i<genericJoystick.originCode.length; i++) {
+			if (genericJoystick.originCode[i] == keyCode) {
+				VirtualEvent ev = genericJoystick.virtualEvents[i];
+				if (ev!=null) return ev.keyCode;
+			}
+		}
+		return 0;
 	}
 }

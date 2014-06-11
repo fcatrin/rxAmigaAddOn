@@ -81,6 +81,7 @@ import android.os.SystemClock;
 
 import java.util.concurrent.Semaphore;
 
+import pandora.uae4all.sdl.vinput.Mapper;
 import android.content.pm.ActivityInfo;
 import android.view.Display;
 import android.text.InputType;
@@ -88,6 +89,9 @@ import android.util.Log;
 
 public class MainActivity extends Activity
 { 	
+	
+	Mapper mapper;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -101,6 +105,7 @@ public class MainActivity extends Activity
 			setRequestedOrientation(Globals.HorizontalOrientation ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		instance = this;
+		
 		// fullscreen mode
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -109,6 +114,8 @@ public class MainActivity extends Activity
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+		mapper = new Mapper(getIntent());
+		
 		Log.i("SDL", "libSDL: Creating startup screen");
 		_layout = new LinearLayout(this);
 		_layout.setOrientation(LinearLayout.VERTICAL);
@@ -749,6 +756,7 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
+		Log.d("AMIGA", "On key down " + keyCode);
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Log.d("AMIGA", "On key down back");
 			return super.onKeyDown(keyCode, event);
@@ -756,9 +764,11 @@ public class MainActivity extends Activity
 		
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyDown(keyCode, event);
-		else
-		if( mGLView != null )
-		{
+		else if( mGLView != null ) {
+			int vKeyCode = mapper.getVKey(keyCode);
+			if (vKeyCode!=0) keyCode = vKeyCode;
+			Log.d("AMIGA", "On key down transformed " + keyCode);
+			
 			if( mGLView.nativeKey( keyCode, 1, event.getUnicodeChar() ) == 0 )
 				return super.onKeyDown(keyCode, event);
 		}
@@ -786,8 +796,11 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyUp(keyCode, event);
 		else
-		if( mGLView != null )
-		{
+		if( mGLView != null ) {
+			
+			int vKeyCode = mapper.getVKey(keyCode);
+			if (vKeyCode!=0) keyCode = vKeyCode;
+
 			if( mGLView.nativeKey( keyCode, 0, event.getUnicodeChar() ) == 0 )
 				return super.onKeyUp(keyCode, event);
 			if( keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU )

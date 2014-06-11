@@ -927,6 +927,8 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 }
 
 class DemoGLSurfaceView extends GLSurfaceView_SDL {
+	private static final String LOGTAG = DemoGLSurfaceView.class.getSimpleName();
+
 	public DemoGLSurfaceView(MainActivity context) {
 		super(context);
 		mParent = context;
@@ -950,6 +952,17 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	@Override
 	public boolean onGenericMotionEvent (final MotionEvent event)
 	{
+		
+		Log.d("MAPPER", "onGenericMotionEvent " + event.getDevice().getName() + " LS=(" + event.getAxisValue(MotionEvent.AXIS_X) + ", " + event.getAxisValue(MotionEvent.AXIS_Y) + 
+				") RS=(" + event.getAxisValue(MotionEvent.AXIS_Z) + ", " + event.getAxisValue(MotionEvent.AXIS_RZ) + ") " + (DifferentTouchInput.touchInput.getClass().getSimpleName()));
+		
+		if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
+			int x = (int)event.getAxisValue(MotionEvent.AXIS_Z) * 10;
+			int y = (int)event.getAxisValue(MotionEvent.AXIS_RZ) * 10;
+			nativeMouseEvent(x, y, event.getAction());
+			Log.d("MAPPER", "nativeMouseEvent (" + x + ", " + y + ")");
+		}
+		
 		DifferentTouchInput.touchInput.processGenericEvent(event);
 		if( DemoRenderer.mRatelimitTouchEvents )
 		{
@@ -1008,9 +1021,20 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 			mRenderer.accelerometer.start();
 	};
 
+	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.d(LOGTAG, "onKeyDown " + keyCode);
+		return super.onKeyDown(keyCode, event);
+	}
+
+
+
 	DemoRenderer mRenderer;
 	MainActivity mParent;
 
+	public static native void nativeMouseEvent( int x, int y, int action);
 	public static native void nativeMotionEvent( int x, int y, int action, int pointerId, int pressure, int radius );
 	public static native int nativeKey( int keyCode, int down, int unicode );
 	public static native void initJavaCallbacks();
