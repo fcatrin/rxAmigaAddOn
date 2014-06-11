@@ -12,7 +12,10 @@ fi
 [ -e project/bin/lib ] || ln -s ../libs project/bin/lib
 
 cd project && \
-env PATH=$NDKBUILDPATH ndk-build -j2 V=1 && \
+env PATH=$NDKBUILDPATH ndk-build -j2 V=1 
+
+exit
+
 cd bin && \
 rm -rf DemoActivity-debug-unaligned.apk && \
 cp DemoActivity.ap_ DemoActivity-debug-unaligned.apk && \

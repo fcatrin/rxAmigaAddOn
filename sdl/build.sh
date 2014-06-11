@@ -124,8 +124,11 @@ cd project && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j
 		cp jni/application/src/libapplication-x86.so obj/local/x86/libapplication.so && \
 		cp jni/application/src/libapplication-x86.so libs/x86/libapplication.so && \
 		$NDK/toolchains/x86-4.6/prebuilt/$MYARCH/bin/i686-linux-android-strip --strip-unneeded libs/x86/libapplication.so \
-		|| true ; } && \
-	cd .. &&  ./copyAssets.sh && cd project && \
+		|| true ; } 
+		
+exit 0		
+		
+	cd .. &&  ./copyAssets.sh && cd project  \
 	{	if $build_release ; then \
 			ant release || exit 1 ; \
 			jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -sigalg MD5withRSA -digestalg SHA1 bin/MainActivity-release-unsigned.apk androiddebugkey || exit 1 ; \

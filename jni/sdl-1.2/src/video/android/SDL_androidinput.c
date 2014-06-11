@@ -449,6 +449,7 @@ static void ProcessMouseRelativeMovement( jint *xx, jint *yy, int action )
 {
 	int x = *xx, y = *yy;
 
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse relative x,y = %i, %i", x, y);
 	if( !relativeMovement )
 		return;
 
@@ -496,6 +497,8 @@ static void ProcessMouseRelativeMovement( jint *xx, jint *yy, int action )
 		y = SDL_ANDROID_sFakeWindowHeight;
 	relativeMovementX += x - diffX;
 	relativeMovementY += y - diffY;
+
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse relative final x,y = %i, %i", x, y);
 
 	*xx = x;
 	*yy = y;
@@ -622,6 +625,8 @@ static void ProcessMouseMove( int x, int y, int force, int radius )
 {
 	if( SDL_ANDROID_moveMouseWithKbX >= 0 )
 	{
+		__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move x,y = %i, %i", x, y);
+
 		// Mouse lazily follows magnifying glass, not very intuitive for drag&drop
 		/*
 		if( abs(moveMouseWithKbX - x) > SDL_ANDROID_sFakeWindowWidth / 12 )
@@ -644,24 +649,36 @@ static void ProcessMouseMove( int x, int y, int force, int radius )
 			SDL_ANDROID_moveMouseWithKbY = -1;
 			SDL_ANDROID_moveMouseWithKbSpeedX = 0;
 			SDL_ANDROID_moveMouseWithKbSpeedY = 0;
+			__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion x,y = %i, %i", x, y);
+
 			SDL_ANDROID_MainThreadPushMouseMotion(x, y);
 		}
-		else
+		else {
+			__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion with kb x,y = %i, %i", SDL_ANDROID_moveMouseWithKbX, SDL_ANDROID_moveMouseWithKbY);
 			SDL_ANDROID_MainThreadPushMouseMotion(SDL_ANDROID_moveMouseWithKbX, SDL_ANDROID_moveMouseWithKbY);
+
+		}
 	}
 	else
 	{
+		__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move PushMouseMotion no kb x,y = %i, %i", x, y);
 		SDL_ANDROID_MainThreadPushMouseMotion(x, y);
 	}
 
 	if( rightClickMethod == RIGHT_CLICK_WITH_PRESSURE || leftClickMethod == LEFT_CLICK_WITH_PRESSURE )
 	{
+
+		__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move with pressure");
+
 		int button = (leftClickMethod == LEFT_CLICK_WITH_PRESSURE) ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
 		int buttonState = ( force > maxForce || radius > maxRadius );
 		if( button == SDL_BUTTON_RIGHT )
 			SDL_ANDROID_MainThreadPushMouseButton( SDL_RELEASED, SDL_BUTTON_LEFT );
 		SDL_ANDROID_MainThreadPushMouseButton( buttonState ? SDL_PRESSED : SDL_RELEASED, button );
 	}
+
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "process mouse move timeouts x,y = %i, %i", x, y);
+
 	ProcessMouseMove_Timeouts(x, y);
 }
 

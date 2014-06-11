@@ -21,9 +21,10 @@ cd jni/application/src
 
 
 # Recompilar SDL
-# Respaldar el codigo Java (sera sobreescrito).  Lo mejor es subirlo a SVN
+# Respaldar el codigo Java y el AndroidManifest.xml (sera sobreescrito).  Lo mejor es subirlo a SVN 
 
 cd sdl
 ./rebuild.sh
 
 # Recuperar respaldo
+# Recompilar uae4all para que vuelva a generar el archivo libapplication.so
