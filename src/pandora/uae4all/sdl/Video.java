@@ -22,46 +22,21 @@ freely, subject to the following restrictions:
 
 package pandora.uae4all.sdl;
 
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.opengles.GL11Ext;
+import java.lang.reflect.Method;
+
 import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
+import javax.microedition.khronos.opengles.GL10;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.KeyEvent;
-import android.view.InputDevice;
-import android.view.Window;
-import android.view.WindowManager;
-import android.os.Environment;
-
-import java.io.File;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.content.res.Resources;
-import android.content.res.AssetManager;
-import android.widget.Toast;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.TextView;
-
-import java.lang.Thread;
-import java.util.concurrent.locks.ReentrantLock;
-
-import android.os.Build;
-
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import android.view.InputDevice;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.widget.Toast;
 
 
 class Mouse
