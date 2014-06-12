@@ -3,6 +3,8 @@ package pandora.uae4all.sdl.vinput;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+import pandora.uae4all.sdl.vinput.VirtualEvent.MouseButton;
 import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -58,6 +60,13 @@ public class KeyTranslator {
 	
 	public static VirtualEvent translate(String name) {
 		if (name == null || name.equals("NONE")) return null;
+		if (name.equals("MOUSE_LEFT")) {
+			return new VirtualEvent(MouseButton.LEFT);
+		}
+		
+		if (name.equals("MOUSE_RIGHT")) {
+			return new VirtualEvent(MouseButton.RIGHT);
+		}
 		
 		VirtualEvent ve = new VirtualEvent();
 		

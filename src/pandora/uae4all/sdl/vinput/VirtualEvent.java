@@ -34,19 +34,18 @@ public class VirtualEvent {
 	}
 	
 	public void sendToNative(boolean down) {
-		if (mouseButton==null && keyCode!= KeyEvent.KEYCODE_BUTTON_MODE) {
-			MainActivity.sendNativeKey(keyCode, down?1:0);
+		if (keyCode== KeyEvent.KEYCODE_BUTTON_MODE) {
+			MainActivity.swapMouseJoystick();
+			return;
 		}
-		Log.d(LOGTAG, "Send " + this);
+		if (mouseButton==null) {
+			MainActivity.sendNativeKey(keyCode, down?1:0);
+		} else {
+			MainActivity.sendNativeMouseButton(mouseButton.ordinal()+1, down?1:0);
+		}
+		Log.d(LOGTAG, "Sent " + this);
 	}
 
-	public void sendToNative(int action) {
-		if (mouseButton!=null  && keyCode!= KeyEvent.KEYCODE_BUTTON_MODE) {
-			MainActivity.sendNativeMouseButton(mouseButton.ordinal(), action);
-		}
-		Log.d(LOGTAG, "Send " + this);
-	}
-	
 	public boolean isMouseButton() {
 		return mouseButton!=null;
 	}

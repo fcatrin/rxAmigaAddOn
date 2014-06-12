@@ -82,6 +82,7 @@ import android.os.SystemClock;
 import java.util.concurrent.Semaphore;
 
 import pandora.uae4all.sdl.vinput.Mapper;
+import pandora.uae4all.sdl.vinput.VirtualEvent;
 import android.content.pm.ActivityInfo;
 import android.view.Display;
 import android.text.InputType;
@@ -765,9 +766,11 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyDown(keyCode, event);
 		else if( mGLView != null ) {
-			int vKeyCode = mapper.getVKey(keyCode);
-			if (vKeyCode!=0) keyCode = vKeyCode;
-			Log.d("AMIGA", "On key down transformed " + keyCode);
+			VirtualEvent ev = mapper.getVirtualEvent(keyCode);
+			if (ev != null) {
+				ev.sendToNative(true);
+				return true;
+			}
 			
 			if( mGLView.nativeKey( keyCode, 1, event.getUnicodeChar() ) == 0 )
 				return super.onKeyDown(keyCode, event);
@@ -798,8 +801,11 @@ public class MainActivity extends Activity
 		else
 		if( mGLView != null ) {
 			
-			int vKeyCode = mapper.getVKey(keyCode);
-			if (vKeyCode!=0) keyCode = vKeyCode;
+			VirtualEvent ev = mapper.getVirtualEvent(keyCode);
+			if (ev != null) {
+				ev.sendToNative(false);
+				return true;
+			}
 
 			if( mGLView.nativeKey( keyCode, 0, event.getUnicodeChar() ) == 0 )
 				return super.onKeyUp(keyCode, event);
@@ -814,12 +820,16 @@ public class MainActivity extends Activity
 			return _btn.onKeyUp(keyCode, event);
 		return true;
 	}
+	
+	public static void swapMouseJoystick() {}
 
 	public static void sendNativeKey(int keyCode, int down) {
+		Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down);
 		DemoGLSurfaceView.nativeKey(keyCode, down, 0);
 	}
 
 	public static void sendNativeMouseButton(int button, int down) {
+		Log.d("MAPPER", "Send native mouse button " + button + ", down:" + down);
 		DemoGLSurfaceView.nativeMouseButtonsPressed(button, down);
 	}
 
