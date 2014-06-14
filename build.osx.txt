@@ -19,8 +19,13 @@ cd jni/application/src
 
 # Probado con android-ndk-9b
 
+# Recompilar SDL rapidamente
 
-# Recompilar SDL
+cd sdl
+./rebuildQuick.sh
+
+
+# Recompilar SDL 100%
 # Respaldar el codigo Java y el AndroidManifest.xml (sera sobreescrito).  Lo mejor es subirlo a SVN 
 
 cd sdl
@@ -28,3 +33,4 @@ cd sdl
 
 # Recuperar respaldo
 # Recompilar uae4all para que vuelva a generar el archivo libapplication.so
+

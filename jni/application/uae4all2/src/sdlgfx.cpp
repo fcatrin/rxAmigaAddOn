@@ -45,6 +45,10 @@
 #include "menu.h"
 #include "savestate.h"
 
+#ifdef ANDROIDSDL
+#include <android/log.h>
+#endif
+
 bool mouse_state = true;
 bool slow_mouse = false;
 extern int moved_x;
@@ -439,6 +443,7 @@ void handle_events (void)
 			uae_quit();
 			break;
 		case SDL_KEYDOWN:
+
 			if(rEvent.key.keysym.sym==SDLK_PAGEUP)
 				slow_mouse=true;
 			if(gp2xMouseEmuOn)
@@ -460,7 +465,7 @@ void handle_events (void)
 				}
 			}
 			
-			if (rEvent.key.keysym.sym==SDLK_LALT)
+			if (false) // rEvent.key.keysym.sym==SDLK_LALT)
 			{
 #ifdef USE_UAE4ALL_VKBD
 				if (!vkbd_mode)
@@ -575,7 +580,7 @@ void handle_events (void)
   				buttonstate[2] = 0;
 				}
 			}
-			if (rEvent.key.keysym.sym==SDLK_LALT)
+			if (false) // rEvent.key.keysym.sym==SDLK_LALT)
 			{
 				show_inputmode = 0;
 			}
