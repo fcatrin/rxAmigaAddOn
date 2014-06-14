@@ -1,5 +1,6 @@
 package pandora.uae4all.sdl.vinput;
 
+import pandora.uae4all.sdl.MainActivity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -7,6 +8,8 @@ import android.view.KeyEvent;
 public class Mapper {
 	private static final String LOGTAG = "vinput.Mapper"; 
 	public static GenericJoystick genericJoystick = new GenericJoystick();
+	private boolean inShortcutSequence = false;
+	private boolean wasShortcutSent = false;
 	
 	public Mapper(Intent intent) {
 		KeyTranslator.init();
@@ -33,18 +36,44 @@ public class Mapper {
 			Integer keyCode = intent.getIntExtra("j1" + eventName, 0);
 			if (keyCode>0) {
 				Log.d(LOGTAG, "keyCode for " + eventName + ":" + keyCode);
-				genericJoystick.originCode[i] = keyCode;
+				genericJoystick.translatedCodes[i] = keyCode;
 			}
 		}
 	}
 	
 	public VirtualEvent getVirtualEvent(int keyCode) {
-		for(int i=0; i<genericJoystick.originCode.length; i++) {
-			if (genericJoystick.originCode[i] == keyCode) {
+		for(int i=0; i<genericJoystick.translatedCodes.length; i++) {
+			if (genericJoystick.translatedCodes[i] == keyCode) {
 				VirtualEvent ev = genericJoystick.virtualEvents[i];
 				return ev;
 			}
 		}
 		return null;
+	}
+	
+	private boolean isStartButton(int keyCode) {
+		return genericJoystick.getOriginCode(keyCode) == KeyEvent.KEYCODE_BUTTON_START;
+	}
+	
+	public boolean handleShortcut(int keyCode, boolean down) {
+		if (isStartButton(keyCode)) {
+			if (down) {
+				inShortcutSequence = true;
+				return true;
+			} else {
+				inShortcutSequence = false;
+				if (!wasShortcutSent) {
+					wasShortcutSent = false;
+					VirtualEvent ve = getVirtualEvent(keyCode);
+					if (ve!=null) MainActivity.sendNativeKeyPress(ve.keyCode);
+				}
+				return true;
+			}
+		}
+		if (inShortcutSequence) {
+			wasShortcutSent = MainActivity.handleShortcut(genericJoystick.getOriginCode(keyCode), down);
+			return wasShortcutSent;
+		}
+		return false;
 	}
 }

@@ -757,15 +757,19 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
-		Log.d("AMIGA", "On key down " + keyCode);
+		//Log.d("AMIGA", "On key down " + keyCode);
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Log.d("AMIGA", "On key down back");
+			//Log.d("AMIGA", "On key down back");
 			return super.onKeyDown(keyCode, event);
 		}
 		
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyDown(keyCode, event);
 		else if( mGLView != null ) {
+			
+			if (mapper.handleShortcut(keyCode, true)) return true;
+			Log.d("SHORTCUT", "Not a shortcut");
+			
 			VirtualEvent ev = mapper.getVirtualEvent(keyCode);
 			if (ev != null) {
 				ev.sendToNative(true);
@@ -800,7 +804,8 @@ public class MainActivity extends Activity
 			_screenKeyboard.onKeyUp(keyCode, event);
 		else
 		if( mGLView != null ) {
-			
+			if (mapper.handleShortcut(keyCode, false)) return true;
+			Log.d("SHORTCUT", "Not a shortcut");
 			VirtualEvent ev = mapper.getVirtualEvent(keyCode);
 			if (ev != null) {
 				ev.sendToNative(false);
@@ -823,6 +828,15 @@ public class MainActivity extends Activity
 	
 	public static void swapMouseJoystick() {}
 
+	
+	public static void sendNativeKeyPress(int keyCode) {
+		sendNativeKey(keyCode, 1);
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {}
+		sendNativeKey(keyCode, 0);
+	}
+
 	public static void sendNativeKey(int keyCode, int down) {
 		if (keyCode == 0) return;
 		
@@ -832,6 +846,41 @@ public class MainActivity extends Activity
 		if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
 		
 		DemoGLSurfaceView.nativeKey(keyCode, down, 0);
+	}
+	
+	
+	enum ShortCut {NONE, LOAD_STATE, SAVE_STATE, SWAP_DISK};
+	private static int keyShortCuts[] = {0, KeyEvent.KEYCODE_BUTTON_L2, KeyEvent.KEYCODE_BUTTON_R2, KeyEvent.KEYCODE_BUTTON_B};
+	
+	public static boolean handleShortcut(int keyCode, boolean down) {
+		ShortCut shortcut = ShortCut.NONE;
+		for(int i=1; i<keyShortCuts.length; i++) {
+			if (keyShortCuts[i] == keyCode) {
+				shortcut = ShortCut.values()[i];
+				break;
+			}
+		}
+		if (shortcut!=ShortCut.NONE) {
+			int action = down?1:0;
+			switch(shortcut) {
+			case NONE: break;
+			case LOAD_STATE : 
+				sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, action);
+				sendNativeKey(KeyEvent.KEYCODE_L, action);
+				Log.d("SHORTCUT", "Send Load State " + down);
+				break;
+			case SAVE_STATE:
+				sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, action);
+				sendNativeKey(KeyEvent.KEYCODE_S, action);
+				Log.d("SHORTCUT", "Send Save State " + down);
+				break;
+			case SWAP_DISK:
+				sendNativeKey(KeyEvent.KEYCODE_CTRL_LEFT, action);
+				Log.d("SHORTCUT", "Send Swap State " + down);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public static void sendNativeMouseButton(int button, int down) {
@@ -1288,6 +1337,7 @@ public class MainActivity extends Activity
 
 	public LinkedList<Integer> textInput = new LinkedList<Integer> ();
 	public static MainActivity instance = null;
+
 }
 
 // *** HONEYCOMB / ICS FIX FOR FULLSCREEN MODE, by lmak ***
