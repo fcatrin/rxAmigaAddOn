@@ -971,10 +971,12 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	public boolean onGenericMotionEvent (final MotionEvent event)
 	{
 		
-		Log.d("MAPPER", "onGenericMotionEvent " + event.getDevice().getName() + " LS=(" + event.getAxisValue(MotionEvent.AXIS_X) + ", " + event.getAxisValue(MotionEvent.AXIS_Y) + 
-				") RS=(" + event.getAxisValue(MotionEvent.AXIS_Z) + ", " + event.getAxisValue(MotionEvent.AXIS_RZ) + ") " + (DifferentTouchInput.touchInput.getClass().getSimpleName()));
+		// Log.d("MAPPER", "onGenericMotionEvent " + event.getDevice().getName() + " LS=(" + event.getAxisValue(MotionEvent.AXIS_X) + ", " + event.getAxisValue(MotionEvent.AXIS_Y) + 
+		//		") RS=(" + event.getAxisValue(MotionEvent.AXIS_Z) + ", " + event.getAxisValue(MotionEvent.AXIS_RZ) + ") " + (DifferentTouchInput.touchInput.getClass().getSimpleName()));
 		
-		if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
+		// Log.d("UAE4ALL", "Action " + event.getAction() + ", axis=" + event.getActionIndex() +", x=" + event.getAxisValue(MotionEvent.AXIS_HAT_X) + ", y=" +  event.getAxisValue(MotionEvent.AXIS_HAT_Y));
+		
+		if (event.getAction() == MotionEvent.ACTION_MOVE && (event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == InputDevice.SOURCE_CLASS_JOYSTICK) {
 			float moveX = event.getAxisValue(MotionEvent.AXIS_Z);
 			float moveY = event.getAxisValue(MotionEvent.AXIS_RZ);
 			if (Math.abs(moveX) < 0.1) {
@@ -986,6 +988,20 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 
 			gamepadMouseMoveX = moveX * 2;
 			gamepadMouseMoveY = moveY * 2;
+			
+			float hatx = event.getAxisValue(MotionEvent.AXIS_HAT_X);
+			float haty = event.getAxisValue(MotionEvent.AXIS_HAT_Y);
+			
+			float axisx = hatx!=0?hatx:event.getAxisValue(MotionEvent.AXIS_X);
+			float axisy = haty!=0?haty:event.getAxisValue(MotionEvent.AXIS_Y);
+			
+			DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(
+					axisx, axisy, 0, 0, 0, 0);
+			
+			//Log.d("UAE4ALL", "Sent joystick x=" + axisx + ", y=" + axisy);
+
+			return true;
+
 		}
 		
 		DifferentTouchInput.touchInput.processGenericEvent(event);
