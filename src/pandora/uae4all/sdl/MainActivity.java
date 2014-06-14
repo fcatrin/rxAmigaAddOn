@@ -824,7 +824,13 @@ public class MainActivity extends Activity
 	public static void swapMouseJoystick() {}
 
 	public static void sendNativeKey(int keyCode, int down) {
+		if (keyCode == 0) return;
+		
 		Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down);
+		
+		// emulator expect BUTTON_4 to be Joystick BUTTON_0
+		if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
+		
 		DemoGLSurfaceView.nativeKey(keyCode, down, 0);
 	}
 
