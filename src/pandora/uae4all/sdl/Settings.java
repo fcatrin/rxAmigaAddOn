@@ -539,6 +539,9 @@ class Settings
 			nativeSetMultitouchUsed();
 		nativeSetAccelerometerSettings(Globals.AccelerometerSensitivity, Globals.AccelerometerCenterPos);
 		nativeSetTrackballDampening(Globals.TrackballDampening);
+		
+		Globals.UseTouchscreenKeyboard = !p.getIntent().hasExtra("gamepad");
+		
 		if( Globals.UseTouchscreenKeyboard )
 		{
 			boolean screenKbReallyUsed = false;
