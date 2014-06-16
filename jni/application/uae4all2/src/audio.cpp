@@ -104,8 +104,8 @@ typedef uae_s8 sample8_t;
 		d2 &= audio_channel_adk_mask[2]; \
 		d3 &= audio_channel_adk_mask[3]; \
 		if (mainMenu_soundStereo) { \
-		   	PUT_SOUND_WORD (d0+d3) \
-		   	PUT_SOUND_WORD (d1+d2) \
+		   	PUT_SOUND_WORD (((d0+d3)*0.75 + (d1+d2)*0.25)) \
+		   	PUT_SOUND_WORD (((d1+d2)*0.75 + (d0+d3)*0.25)) \
 		   	} else { \
 		   	PUT_SOUND_WORD (d0+d1+d2+d3) } \
     CHECK_SOUND_BUFFERS(); \
