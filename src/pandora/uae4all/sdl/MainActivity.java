@@ -22,76 +22,65 @@ freely, subject to the following restrictions:
 
 package pandora.uae4all.sdl;
 
-import android.app.Activity;
-import android.app.Service;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.view.MotionEvent;
-import android.view.KeyEvent;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.EditText;
-import android.text.Editable;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.FrameLayout;
-import android.widget.Toast;
-import android.graphics.drawable.Drawable;
-import android.graphics.Color;
-import android.content.res.Configuration;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.view.View.OnKeyListener;
-import android.view.MenuItem;
-import android.view.Menu;
-import android.view.Gravity;
-import android.text.method.TextKeyListener;
-
-import java.util.LinkedList;
-import java.io.SequenceInputStream;
-import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.zip.*;
-import java.util.Set;
+import java.io.SequenceInputStream;
+import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import android.text.SpannedString;
-
-import java.io.BufferedReader;
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
-
-import android.view.inputmethod.InputMethodManager;
+import retrobox.vinput.JoystickEventDispatcher;
+import retrobox.vinput.Mapper;
+import retrobox.vinput.VirtualEvent.MouseButton;
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Handler;
-import android.os.Message;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.os.SystemClock;
-
-import java.util.concurrent.Semaphore;
-
-import pandora.uae4all.sdl.vinput.Mapper;
-import pandora.uae4all.sdl.vinput.VirtualEvent;
-import android.content.pm.ActivityInfo;
-import android.view.Display;
 import android.text.InputType;
+import android.text.SpannedString;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
 { 	
 	
-	Mapper mapper;
+	static Mapper mapper;
+	static JoystickEventDispatcher vinputDispatcher;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -115,7 +104,8 @@ public class MainActivity extends Activity
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		mapper = new Mapper(getIntent());
+		vinputDispatcher = new VirtualInputDispatcher();
+		mapper = new Mapper(getIntent(), vinputDispatcher);
 		
 		Log.i("SDL", "libSDL: Creating startup screen");
 		_layout = new LinearLayout(this);
@@ -766,16 +756,8 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null)
 			_screenKeyboard.onKeyDown(keyCode, event);
 		else if( mGLView != null ) {
-			
-			if (mapper.handleShortcut(keyCode, true)) return true;
-			Log.d("SHORTCUT", "Not a shortcut");
-			
-			VirtualEvent ev = mapper.getVirtualEvent(keyCode);
-			if (ev != null) {
-				ev.sendToNative(true);
-				return true;
-			}
-			
+			if (mapper.handleKeyEvent(keyCode, true)) return true;
+
 			if( mGLView.nativeKey( keyCode, 1, event.getUnicodeChar() ) == 0 )
 				return super.onKeyDown(keyCode, event);
 		}
@@ -804,13 +786,7 @@ public class MainActivity extends Activity
 			_screenKeyboard.onKeyUp(keyCode, event);
 		else
 		if( mGLView != null ) {
-			if (mapper.handleShortcut(keyCode, false)) return true;
-			Log.d("SHORTCUT", "Not a shortcut");
-			VirtualEvent ev = mapper.getVirtualEvent(keyCode);
-			if (ev != null) {
-				ev.sendToNative(false);
-				return true;
-			}
+			if (mapper.handleKeyEvent(keyCode, false)) return true;
 
 			if( mGLView.nativeKey( keyCode, 0, event.getUnicodeChar() ) == 0 )
 				return super.onKeyUp(keyCode, event);
@@ -828,65 +804,6 @@ public class MainActivity extends Activity
 	
 	public static void swapMouseJoystick() {}
 
-	
-	public static void sendNativeKeyPress(int keyCode) {
-		sendNativeKey(keyCode, 1);
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {}
-		sendNativeKey(keyCode, 0);
-	}
-
-	public static void sendNativeKey(int keyCode, int down) {
-		if (keyCode == 0) return;
-		
-		Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down);
-		
-		// emulator expect BUTTON_4 to be Joystick BUTTON_0
-		if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
-		
-		DemoGLSurfaceView.nativeKey(keyCode, down, 0);
-	}
-	
-	
-	enum ShortCut {NONE, LOAD_STATE, SAVE_STATE, SWAP_DISK};
-	private static int keyShortCuts[] = {0, KeyEvent.KEYCODE_BUTTON_L2, KeyEvent.KEYCODE_BUTTON_R2, KeyEvent.KEYCODE_BUTTON_B};
-	
-	public static boolean handleShortcut(int keyCode, boolean down) {
-		ShortCut shortcut = ShortCut.NONE;
-		for(int i=1; i<keyShortCuts.length; i++) {
-			if (keyShortCuts[i] == keyCode) {
-				shortcut = ShortCut.values()[i];
-				break;
-			}
-		}
-		if (shortcut!=ShortCut.NONE) {
-			int action = down?1:0;
-			switch(shortcut) {
-			case NONE: break;
-			case LOAD_STATE : 
-				sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, action);
-				sendNativeKey(KeyEvent.KEYCODE_L, action);
-				Log.d("SHORTCUT", "Send Load State " + down);
-				break;
-			case SAVE_STATE:
-				sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, action);
-				sendNativeKey(KeyEvent.KEYCODE_S, action);
-				Log.d("SHORTCUT", "Send Save State " + down);
-				break;
-			case SWAP_DISK:
-				sendNativeKey(KeyEvent.KEYCODE_CTRL_LEFT, action);
-				Log.d("SHORTCUT", "Send Swap State " + down);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public static void sendNativeMouseButton(int button, int down) {
-		Log.d("MAPPER", "Send native mouse button " + button + ", down:" + down);
-		DemoGLSurfaceView.nativeMouseButtonsPressed(button, down);
-	}
 
 	@Override
 	public boolean onKeyMultiple(int keyCode, int repeatCount, final KeyEvent event)
@@ -1337,6 +1254,53 @@ public class MainActivity extends Activity
 
 	public LinkedList<Integer> textInput = new LinkedList<Integer> ();
 	public static MainActivity instance = null;
+	
+	class VirtualInputDispatcher implements JoystickEventDispatcher {
+
+		@Override
+		public void sendKey(int keyCode, boolean down) {
+			if (keyCode == 0) return;
+			
+			Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down);
+			
+			// emulator expect BUTTON_4 to be Joystick BUTTON_0
+			if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
+			
+			DemoGLSurfaceView.nativeKey(keyCode, down?1:0, 0);
+		}
+
+		@Override
+		public void sendMouseButton(MouseButton button, boolean down) {
+			DemoGLSurfaceView.nativeMouseButtonsPressed(button.ordinal(), down?1:0);
+		}
+
+		@Override
+		public boolean handleShortcut(retrobox.vinput.Mapper.ShortCut shortcut,	boolean down) {
+			switch(shortcut) {
+			case LOAD_STATE : 
+				sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
+				sendKey(KeyEvent.KEYCODE_L, down);
+				toastMessage("State was restored");
+				Log.d("SHORTCUT", "Send Load State " + down);
+				return true;
+			case SAVE_STATE:
+				sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
+				sendKey(KeyEvent.KEYCODE_S, down);
+				toastMessage("State was saved");
+				Log.d("SHORTCUT", "Send Save State " + down);
+				return true;
+			case SWAP_DISK:
+				sendKey(KeyEvent.KEYCODE_CTRL_LEFT, down);
+				Log.d("SHORTCUT", "Send Swap State " + down);
+				return true;
+			case EXIT:
+				MainActivity.instance.finish();
+				return true;
+			}
+			return false;
+		}
+		
+	}
 
 }
 

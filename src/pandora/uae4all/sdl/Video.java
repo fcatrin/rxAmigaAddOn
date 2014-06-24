@@ -31,6 +31,9 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
+import retrobox.vinput.JoystickAnalog;
+import retrobox.vinput.JoystickAnalog.Axis;
+import retrobox.vinput.JoystickAnalogListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.InputDevice;
@@ -904,14 +907,38 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	private static final String LOGTAG = DemoGLSurfaceView.class.getSimpleName();
 
+	JoystickAnalog joystickAnalog;
+	
 	public DemoGLSurfaceView(MainActivity context) {
 		super(context);
 		mParent = context;
 		setEGLConfigChooser(Globals.VideoDepthBpp, Globals.NeedDepthBuffer, Globals.NeedStencilBuffer, Globals.NeedGles2);
+		
+		
+		joystickAnalog = new JoystickAnalog(640, 480, new JoystickAnalogListener() {
+			@Override
+			public void onAxisChange(float axisx, float axisy) {
+				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0);
+			}
+
+			@Override
+			public void onMouseMove(int mousex, int mousey) {
+				nativeMouseEvent(mousex, mousey, MotionEvent.ACTION_MOVE);
+			}
+
+			@Override
+			public void onMouseMoveRelative(float mousex, float mousey) {}
+
+			@Override
+			public void onDigitalX(Axis axis, boolean on) {}
+
+			@Override
+			public void onDigitalY(Axis axis, boolean on) {}
+		});
+		
 		String customConfig = context.getIntent().getStringExtra("conf");
 		mRenderer = new DemoRenderer(context, customConfig);
 		setRenderer(mRenderer);
-		startGamepadMouseMoveThread();
 	}
 
 	@Override
@@ -925,47 +952,6 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		return true;
 	};
 
-	static final int maxGamepadX = 640;
-	static final int maxGamepadY = 480;
-	static int lastGamepadX = 0;
-	static int lastGamepadY = 0;
-	static int gamepadX = 0;
-	static int gamepadY = 0;
-	static float gamepadMouseMoveX = 0;
-	static float gamepadMouseMoveY = 0;
-	boolean gamepadMouseThreadRunning = false;
-	
-	private void startGamepadMouseMoveThread() {
-		if (gamepadMouseThreadRunning) return;
-		
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-				while (gamepadMouseThreadRunning) {
-					gamepadX += gamepadMouseMoveX;
-					gamepadY += gamepadMouseMoveY;
-	
-					if (gamepadX<0) gamepadX = 0;
-					if (gamepadY<0) gamepadY = 0;
-	
-					if (gamepadX>maxGamepadX) gamepadX = maxGamepadX;
-					if (gamepadY>maxGamepadY) gamepadY = maxGamepadY;
-					
-					if (lastGamepadX != gamepadX || lastGamepadY != gamepadY) {
-						lastGamepadX = gamepadX;
-						lastGamepadY = gamepadY;
-						nativeMouseEvent(gamepadX, gamepadY, MotionEvent.ACTION_MOVE);
-						//Log.d("libSDL", "nativeMouseEvent (" + gamepadX + ", " + gamepadY + ")");
-					}
-					try {
-						Thread.sleep(40);
-					} catch (InterruptedException e) {}
-				}
-			}
-		};
-		gamepadMouseThreadRunning = true;
-		t.start();
-	}
 	
 	@Override
 	public boolean onGenericMotionEvent (final MotionEvent event)
@@ -976,33 +962,8 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		
 		// Log.d("UAE4ALL", "Action " + event.getAction() + ", axis=" + event.getActionIndex() +", x=" + event.getAxisValue(MotionEvent.AXIS_HAT_X) + ", y=" +  event.getAxisValue(MotionEvent.AXIS_HAT_Y));
 		
-		if (event.getAction() == MotionEvent.ACTION_MOVE && (event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == InputDevice.SOURCE_CLASS_JOYSTICK) {
-			float moveX = event.getAxisValue(MotionEvent.AXIS_Z);
-			float moveY = event.getAxisValue(MotionEvent.AXIS_RZ);
-			if (Math.abs(moveX) < 0.1) {
-				moveX = 0;
-			}
-			if (Math.abs(moveY) < 0.1) {
-				moveY = 0;
-			}
 
-			gamepadMouseMoveX = moveX * 2;
-			gamepadMouseMoveY = moveY * 2;
-			
-			float hatx = event.getAxisValue(MotionEvent.AXIS_HAT_X);
-			float haty = event.getAxisValue(MotionEvent.AXIS_HAT_Y);
-			
-			float axisx = hatx!=0?hatx:event.getAxisValue(MotionEvent.AXIS_X);
-			float axisy = haty!=0?haty:event.getAxisValue(MotionEvent.AXIS_Y);
-			
-			DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(
-					axisx, axisy, 0, 0, 0, 0);
-			
-			//Log.d("UAE4ALL", "Sent joystick x=" + axisx + ", y=" + axisy);
-
-			return true;
-
-		}
+		if (joystickAnalog.onGenericMotionEvent(event)) return true;
 		
 		DifferentTouchInput.touchInput.processGenericEvent(event);
 		if( DemoRenderer.mRatelimitTouchEvents )
@@ -1030,13 +991,13 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	}
 
 	public void exitApp() {
-		gamepadMouseThreadRunning = false;
+		joystickAnalog.stopGamepadMouseMoveThread();
 		mRenderer.exitApp();
 	};
 
 	@Override
 	public void onPause() {
-		gamepadMouseThreadRunning = false;
+		joystickAnalog.stopGamepadMouseMoveThread();
 		Log.i("SDL", "libSDL: DemoGLSurfaceView.onPause(): mRenderer.mGlSurfaceCreated " + mRenderer.mGlSurfaceCreated + " mRenderer.mPaused " + mRenderer.mPaused + (mRenderer.mPaused ? " - not doing anything" : ""));
 		if(mRenderer.mPaused)
 			return;
@@ -1062,7 +1023,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 			mRenderer.nativeGlContextRecreated();
 		if( mRenderer.accelerometer != null && mRenderer.accelerometer.openedBySDL ) // For some reason it crashes here often - are we getting this event before initialization?
 			mRenderer.accelerometer.start();
-		startGamepadMouseMoveThread();
+		joystickAnalog.startGamepadMouseMoveThread();
 	};
 
 	
