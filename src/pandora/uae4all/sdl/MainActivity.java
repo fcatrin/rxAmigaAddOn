@@ -53,6 +53,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.text.InputType;
@@ -61,6 +62,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
@@ -450,7 +453,7 @@ public class MainActivity extends Activity
 	}
 	
 	public void toastMessage(final String message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
 	public void showScreenKeyboard(final String oldText, boolean sendBackspace)
@@ -744,31 +747,25 @@ public class MainActivity extends Activity
 	}
 	*/
 
+	
+	
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
-		//Log.d("AMIGA", "On key down " + keyCode);
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			//Log.d("AMIGA", "On key down back");
-			return super.onKeyDown(keyCode, event);
-		}
+		if (mapper.isSystemKey(keyCode))	return super.onKeyDown(keyCode, event);
 		
-		if(_screenKeyboard != null)
+		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyDown(keyCode, event);
-		else if( mGLView != null ) {
+		} else if( mGLView != null ) {
 			if (mapper.handleKeyEvent(keyCode, true)) return true;
 
 			if( mGLView.nativeKey( keyCode, 1, event.getUnicodeChar() ) == 0 )
 				return super.onKeyDown(keyCode, event);
-		}
-		else
-		if( keyListener != null )
-		{
+		} else if( keyListener != null ) {
 			keyListener.onKeyEvent(keyCode);
-		}
-		else
-		if( _btn != null )
+		} else if( _btn != null )
 			return _btn.onKeyDown(keyCode, event);
+		
 		return true;
 	}
 	
@@ -776,16 +773,11 @@ public class MainActivity extends Activity
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
 		
-		if( keyCode == KeyEvent.KEYCODE_BACK ) {
-			Log.d("AMIGA", "On key up back");
-			return super.onKeyUp(keyCode, event);
-		}
+		if (mapper.isSystemKey(keyCode))	return super.onKeyDown(keyCode, event);
 		
-		
-		if(_screenKeyboard != null)
+		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyUp(keyCode, event);
-		else
-		if( mGLView != null ) {
+		} else if( mGLView != null ) {
 			if (mapper.handleKeyEvent(keyCode, false)) return true;
 
 			if( mGLView.nativeKey( keyCode, 0, event.getUnicodeChar() ) == 0 )
@@ -795,10 +787,9 @@ public class MainActivity extends Activity
 				DimSystemStatusBar.get().dim(_videoLayout);
 				DimSystemStatusBar.get().dim(mGLView);
 			}
-		}
-		else
-		if( _btn != null )
+		} else if( _btn != null ) {
 			return _btn.onKeyUp(keyCode, event);
+		}
 		return true;
 	}
 	
@@ -819,12 +810,6 @@ public class MainActivity extends Activity
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void onBackPressed() {
-		Log.d("AMIGA", "Finish this!");
-		finish();
 	}
 
 	@Override
@@ -1255,6 +1240,101 @@ public class MainActivity extends Activity
 	public LinkedList<Integer> textInput = new LinkedList<Integer> ();
 	public static MainActivity instance = null;
 	
+	
+	@Override
+	public void onBackPressed() {
+		uiQuit();
+	}
+	
+    static final private int LOAD_ID = Menu.FIRST +1;
+    static final private int SAVE_ID = Menu.FIRST +2;
+    static final private int SWAP_ID = Menu.FIRST +3;
+    static final private int QUIT_ID = Menu.FIRST +4;
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        menu.add(0, LOAD_ID, 0, R.string.load_state);
+        menu.add(0, SAVE_ID, 0, R.string.save_state);
+        menu.add(0, SWAP_ID, 0, R.string.swap);
+        menu.add(0, QUIT_ID, 0, R.string.quit);
+        
+        return true;
+    }
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    	if (item != null) {
+	        switch (item.getItemId()) {
+	        case LOAD_ID : uiLoadState(); return true;
+	        case SAVE_ID : uiSaveState(); return true;
+	        case SWAP_ID : uiSwapDisks(); return true;
+	        case QUIT_ID : uiQuit(); return true;
+	        }
+    	}
+        return super.onMenuItemSelected(featureId, item);
+    }
+	
+	
+	protected static void sendNativeKey(int keyCode, boolean down) {
+		DemoGLSurfaceView.nativeKey(keyCode, down?1:0, 0);
+	}
+	
+	protected void sleep(long msec) {
+		try {Thread.sleep(msec);} catch (Exception e) {}
+	}
+	
+	protected void uiLoadState() {
+		uiLoadState(true);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				uiLoadState(false);
+				toastMessage("State was restored");
+			}
+		}, 500);
+	}
+
+	protected void uiSaveState() {
+		uiSaveState(true);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				uiSaveState(false);
+				toastMessage("State was saved");
+			}
+		}, 500);
+	}
+	
+	protected void uiSwapDisks() {
+		uiSwapDisks(true);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				uiSwapDisks(false);
+			}
+		}, 500);
+	}
+
+	protected void uiLoadState(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
+		sendNativeKey(KeyEvent.KEYCODE_L, down);
+	}
+	
+	protected void uiSaveState(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
+		sendNativeKey(KeyEvent.KEYCODE_S, down);
+	}
+	
+	protected void uiSwapDisks(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_CTRL_LEFT, down);
+	}
+	
+	public void uiQuit() {
+		MainActivity.instance.finish();
+	}
+	
 	class VirtualInputDispatcher implements JoystickEventDispatcher {
 
 		@Override
@@ -1266,7 +1346,7 @@ public class MainActivity extends Activity
 			// emulator expect BUTTON_4 to be Joystick BUTTON_0
 			if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
 			
-			DemoGLSurfaceView.nativeKey(keyCode, down?1:0, 0);
+			sendNativeKey(keyCode, down);
 		}
 
 		@Override
@@ -1277,31 +1357,15 @@ public class MainActivity extends Activity
 		@Override
 		public boolean handleShortcut(retrobox.vinput.Mapper.ShortCut shortcut,	boolean down) {
 			switch(shortcut) {
-			case LOAD_STATE : 
-				sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
-				sendKey(KeyEvent.KEYCODE_L, down);
-				toastMessage("State was restored");
-				Log.d("SHORTCUT", "Send Load State " + down);
-				return true;
-			case SAVE_STATE:
-				sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
-				sendKey(KeyEvent.KEYCODE_S, down);
-				toastMessage("State was saved");
-				Log.d("SHORTCUT", "Send Save State " + down);
-				return true;
-			case SWAP_DISK:
-				sendKey(KeyEvent.KEYCODE_CTRL_LEFT, down);
-				Log.d("SHORTCUT", "Send Swap State " + down);
-				return true;
-			case EXIT:
-				MainActivity.instance.finish();
-				return true;
+			case LOAD_STATE : if (!down) uiLoadState(); return true;
+			case SAVE_STATE: if (!down) uiSaveState(); return true;
+			case SWAP_DISK: if (!down) uiSwapDisks(); return true;
+			case MENU : openOptionsMenu(); return true;
+			case EXIT: if (!down) uiQuit(); return true;
+			default: return false;
 			}
-			return false;
 		}
-		
 	}
-
 }
 
 // *** HONEYCOMB / ICS FIX FOR FULLSCREEN MODE, by lmak ***

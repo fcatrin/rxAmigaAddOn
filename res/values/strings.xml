@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Commodore Amiga support for RetroBox (UAE4ALL-SDL)</string>
-
-
+    <string name="app_name">RetroBox Commodore Amiga support (UAE4ALL-SDL)</string>
+	<string name="quit">Quit</string>
+	<string name="swap">Swap Disks</string>
+	<string name="load_state">Load State</string>
+	<string name="save_state">Save State</string>
+	
     <string name="init">Initializing</string>
     <string name="please_wait">Please wait while data is being downloaded</string>
 
