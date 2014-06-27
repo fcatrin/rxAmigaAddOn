@@ -31,9 +31,9 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
-import retrobox.vinput.JoystickAnalog;
-import retrobox.vinput.JoystickAnalog.Axis;
-import retrobox.vinput.JoystickAnalogListener;
+import retrobox.vinput.AnalogGamepad;
+import retrobox.vinput.AnalogGamepad.Axis;
+import retrobox.vinput.AnalogGamepadListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.InputDevice;
@@ -907,7 +907,7 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	private static final String LOGTAG = DemoGLSurfaceView.class.getSimpleName();
 
-	JoystickAnalog joystickAnalog;
+	AnalogGamepad joystickAnalog;
 	
 	public DemoGLSurfaceView(MainActivity context) {
 		super(context);
@@ -915,7 +915,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		setEGLConfigChooser(Globals.VideoDepthBpp, Globals.NeedDepthBuffer, Globals.NeedStencilBuffer, Globals.NeedGles2);
 		
 		
-		joystickAnalog = new JoystickAnalog(640, 480, new JoystickAnalogListener() {
+		joystickAnalog = new AnalogGamepad(640, 480, new AnalogGamepadListener() {
 			@Override
 			public void onAxisChange(float axisx, float axisy) {
 				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0);

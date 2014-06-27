@@ -36,9 +36,9 @@ import java.util.zip.CheckedInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import retrobox.vinput.JoystickEventDispatcher;
 import retrobox.vinput.Mapper;
 import retrobox.vinput.VirtualEvent.MouseButton;
+import retrobox.vinput.VirtualEventDispatcher;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -83,7 +83,7 @@ public class MainActivity extends Activity
 { 	
 	
 	static Mapper mapper;
-	static JoystickEventDispatcher vinputDispatcher;
+	static VirtualEventDispatcher vinputDispatcher;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -1263,6 +1263,8 @@ public class MainActivity extends Activity
         return true;
     }
     
+    
+    
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	if (item != null) {
@@ -1335,7 +1337,7 @@ public class MainActivity extends Activity
 		MainActivity.instance.finish();
 	}
 	
-	class VirtualInputDispatcher implements JoystickEventDispatcher {
+	class VirtualInputDispatcher implements VirtualEventDispatcher {
 
 		@Override
 		public void sendKey(int keyCode, boolean down) {
