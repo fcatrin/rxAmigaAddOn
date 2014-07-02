@@ -37,6 +37,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import retrobox.vinput.Mapper;
+import retrobox.vinput.QuitHandler;
+import retrobox.vinput.QuitHandler.QuitHandlerCallback;
 import retrobox.vinput.VirtualEvent.MouseButton;
 import retrobox.vinput.VirtualEventDispatcher;
 import android.app.Activity;
@@ -752,7 +754,7 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
-		if (mapper.isSystemKey(keyCode))	return super.onKeyDown(keyCode, event);
+		if (mapper.isSystemKey(keyCode)) return super.onKeyDown(keyCode, event);
 		
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyDown(keyCode, event);
@@ -773,7 +775,7 @@ public class MainActivity extends Activity
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
 		
-		if (mapper.isSystemKey(keyCode))	return super.onKeyDown(keyCode, event);
+		if (mapper.isSystemKey(keyCode)) return super.onKeyUp(keyCode, event);
 		
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyUp(keyCode, event);
@@ -1243,18 +1245,20 @@ public class MainActivity extends Activity
 	
 	@Override
 	public void onBackPressed() {
-		uiQuit();
+		uiQuitConfirm();
 	}
 	
     static final private int LOAD_ID = Menu.FIRST +1;
     static final private int SAVE_ID = Menu.FIRST +2;
     static final private int SWAP_ID = Menu.FIRST +3;
     static final private int QUIT_ID = Menu.FIRST +4;
+    static final private int CANCEL_ID = Menu.FIRST +5;
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
+        menu.add(0, CANCEL_ID, 0, "Cancel");
         menu.add(0, LOAD_ID, 0, R.string.load_state);
         menu.add(0, SAVE_ID, 0, R.string.save_state);
         menu.add(0, SWAP_ID, 0, R.string.swap);
@@ -1333,6 +1337,15 @@ public class MainActivity extends Activity
 		sendNativeKey(KeyEvent.KEYCODE_CTRL_LEFT, down);
 	}
 	
+    protected void uiQuitConfirm() {
+    	QuitHandler.askForQuit(this, new QuitHandlerCallback() {
+			@Override
+			public void onQuit() {
+				uiQuit();
+			}
+		});
+    }
+	
 	public void uiQuit() {
 		MainActivity.instance.finish();
 	}
@@ -1363,7 +1376,7 @@ public class MainActivity extends Activity
 			case SAVE_STATE: if (!down) uiSaveState(); return true;
 			case SWAP_DISK: if (!down) uiSwapDisks(); return true;
 			case MENU : openOptionsMenu(); return true;
-			case EXIT: if (!down) uiQuit(); return true;
+			case EXIT: if (!down) uiQuitConfirm(); return true;
 			default: return false;
 			}
 		}
