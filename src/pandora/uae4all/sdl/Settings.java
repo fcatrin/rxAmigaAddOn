@@ -424,8 +424,11 @@ class Settings
 
 		Log.i("SDL", "libSDL: Settings.Load(): loading settings failed, running config dialog");
 		p.setUpStatusLabel();
-		if( checkRamSize(p) )
+		/*
+		if( checkRamSize(p) ) {
 			SettingsMenu.showConfig(p, true);
+		}
+		*/
 	}
 
 	// ===============================================================================================

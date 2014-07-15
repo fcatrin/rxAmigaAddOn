@@ -192,6 +192,7 @@ class DataDownloader extends Thread
 	@Override
 	public void run()
 	{
+		/*
 		Parent.keyListener = new BackKeyListener(Parent);
 		String [] downloadFiles = Globals.DataDownloadUrl;
 		int total = 0;
@@ -216,7 +217,7 @@ class DataDownloader extends Thread
 				}
 				count += 1;
 			}
-		}
+		}*/
 		DownloadComplete = true;
 		Parent.keyListener = null;
 		initParent();
