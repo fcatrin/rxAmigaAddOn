@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RetroBox Commodore Amiga support (UAE4ALL-SDL)</string>
+    <string name="app_name">RetroboxTv Amiga support (UAE4All)</string>
 	<string name="quit">Quit</string>
 	<string name="swap">Swap Disks</string>
 	<string name="load_state">Load State</string>
