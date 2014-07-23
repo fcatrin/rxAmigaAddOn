@@ -872,7 +872,6 @@ public class MainActivity extends Activity
 	@Override
 	public boolean dispatchTouchEvent(final MotionEvent ev) {
 
-		Log.d("TOUCH", "dispatchTouchEvent");
     	if (gamepadView.isVisible() && gamepadController.onTouchEvent(ev)) {
     		Log.d("TOUCH", "dispatched to gamepadController");
     		if (OverlayNew.requiresRedraw) {
@@ -882,7 +881,6 @@ public class MainActivity extends Activity
     		return true;
     	}
     	if (extraButtonsView.isVisible() && extraButtonsController.onTouchEvent(ev)) {
-    		Log.d("TOUCH", "dispatched to extraButtonsController");
     		return true;
     	}
     	
