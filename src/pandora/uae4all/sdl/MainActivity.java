@@ -41,6 +41,13 @@ import retrobox.vinput.QuitHandler;
 import retrobox.vinput.QuitHandler.QuitHandlerCallback;
 import retrobox.vinput.VirtualEvent.MouseButton;
 import retrobox.vinput.VirtualEventDispatcher;
+import retrobox.vinput.overlay.ExtraButtons;
+import retrobox.vinput.overlay.ExtraButtonsController;
+import retrobox.vinput.overlay.ExtraButtonsView;
+import retrobox.vinput.overlay.GamepadController;
+import retrobox.vinput.overlay.GamepadView;
+import retrobox.vinput.overlay.Overlay;
+import retrobox.vinput.overlay.OverlayNew;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -70,6 +77,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -86,6 +95,13 @@ public class MainActivity extends Activity
 	
 	static Mapper mapper;
 	static VirtualEventDispatcher vinputDispatcher;
+	
+	static GamepadController gamepadController;
+	static GamepadView gamepadView;
+	static ExtraButtonsController extraButtonsController;
+	static ExtraButtonsView extraButtonsView;
+	
+	public static final OverlayNew overlay = new OverlayNew();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -111,6 +127,13 @@ public class MainActivity extends Activity
 
 		vinputDispatcher = new VirtualInputDispatcher();
 		mapper = new Mapper(getIntent(), vinputDispatcher);
+		
+		gamepadController = new GamepadController();
+		gamepadView = new GamepadView(this, overlay);
+		
+		extraButtonsController = new ExtraButtonsController();
+		extraButtonsView = new ExtraButtonsView(this);
+	
 		
 		Log.i("SDL", "libSDL: Creating startup screen");
 		_layout = new LinearLayout(this);
@@ -348,6 +371,38 @@ public class MainActivity extends Activity
 		// Receive keyboard events
 		DimSystemStatusBar.get().dim(_videoLayout);
 		DimSystemStatusBar.get().dim(mGLView);
+		
+		setupGamepadOverlay();
+	}
+
+	private boolean needsOverlay() {
+		return !getIntent().hasExtra("gamepad");
+	}
+	
+	private void setupGamepadOverlay() {
+		ViewTreeObserver observer = mGLView.getViewTreeObserver();
+		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+		    	int w = mGLView.getWidth();
+		    	int h = mGLView.getHeight();
+				if (needsOverlay()) {
+			    	String overlayConfig = getIntent().getStringExtra("OVERLAY");
+			    	if (overlayConfig!=null) overlay.init(overlayConfig, w, h);
+				}
+		
+		    	Log.d("REMAP", "addExtraButtons : " + getIntent().getStringExtra("buttons"));
+		        ExtraButtons.initExtraButtons(MainActivity.this, getIntent().getStringExtra("buttons"), w, h, true);
+			}
+		});
+
+		if (needsOverlay()) {
+			 gamepadView.addToLayout(_videoLayout);
+			 gamepadView.showPanel();
+		}
+		 
+		extraButtonsView.addToLayout(_videoLayout);
+		extraButtonsView.hidePanel();
 	}
 
 	@Override
@@ -815,8 +870,23 @@ public class MainActivity extends Activity
 	}
 
 	@Override
-	public boolean dispatchTouchEvent(final MotionEvent ev)
-	{
+	public boolean dispatchTouchEvent(final MotionEvent ev) {
+
+		Log.d("TOUCH", "dispatchTouchEvent");
+    	if (gamepadView.isVisible() && gamepadController.onTouchEvent(ev)) {
+    		Log.d("TOUCH", "dispatched to gamepadController");
+    		if (OverlayNew.requiresRedraw) {
+        		OverlayNew.requiresRedraw = false;
+    			gamepadView.invalidate();
+    		}
+    		return true;
+    	}
+    	if (extraButtonsView.isVisible() && extraButtonsController.onTouchEvent(ev)) {
+    		Log.d("TOUCH", "dispatched to extraButtonsController");
+    		return true;
+    	}
+    	
+    	
 		//Log.i("SDL", "dispatchTouchEvent: " + ev.getAction() + " coords " + ev.getX() + ":" + ev.getY() );
 		if(_screenKeyboard != null)
 			_screenKeyboard.dispatchTouchEvent(ev);
@@ -851,6 +921,7 @@ public class MainActivity extends Activity
 			_screenKeyboard.dispatchGenericMotionEvent(ev);
 		else
 		*/
+		
 		if(mGLView != null)
 			mGLView.onGenericMotionEvent(ev);
 		return true;
@@ -1253,6 +1324,8 @@ public class MainActivity extends Activity
     static final private int SWAP_ID = Menu.FIRST +3;
     static final private int QUIT_ID = Menu.FIRST +4;
     static final private int CANCEL_ID = Menu.FIRST +5;
+    static final private int BUTTONS_ID = Menu.FIRST +6;
+    static final private int OVERLAY_ID = Menu.FIRST +7;
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1261,6 +1334,12 @@ public class MainActivity extends Activity
         menu.add(0, CANCEL_ID, 0, "Cancel");
         menu.add(0, LOAD_ID, 0, R.string.load_state);
         menu.add(0, SAVE_ID, 0, R.string.save_state);
+        if (Overlay.hasExtraButtons()) {
+        	menu.add(0, BUTTONS_ID, 0, "Extra Buttons");
+        }
+        if (needsOverlay()) {
+        	menu.add(0, OVERLAY_ID, 0, "Overlay on/off");
+        }
         menu.add(0, SWAP_ID, 0, R.string.swap);
         menu.add(0, QUIT_ID, 0, R.string.quit);
         
@@ -1276,19 +1355,24 @@ public class MainActivity extends Activity
 	        case LOAD_ID : uiLoadState(); return true;
 	        case SAVE_ID : uiSaveState(); return true;
 	        case SWAP_ID : uiSwapDisks(); return true;
+	        case BUTTONS_ID : uiToggleExtraButtons(); return true;
+	        case OVERLAY_ID : uiToggleOverlay(); return true;
 	        case QUIT_ID : uiQuit(); return true;
 	        }
     	}
         return super.onMenuItemSelected(featureId, item);
     }
 	
+	private void uiToggleExtraButtons() {
+		extraButtonsView.toggleView();
+	}
+
+	private void uiToggleOverlay() {
+		gamepadView.toggleView();
+	}
 	
 	protected static void sendNativeKey(int keyCode, boolean down) {
 		DemoGLSurfaceView.nativeKey(keyCode, down?1:0, 0);
-	}
-	
-	protected void sleep(long msec) {
-		try {Thread.sleep(msec);} catch (Exception e) {}
 	}
 	
 	protected void uiLoadState() {
@@ -1375,7 +1459,7 @@ public class MainActivity extends Activity
 			case LOAD_STATE : if (!down) uiLoadState(); return true;
 			case SAVE_STATE: if (!down) uiSaveState(); return true;
 			case SWAP_DISK: if (!down) uiSwapDisks(); return true;
-			case MENU : openOptionsMenu(); return true;
+			case MENU : if (!down) openOptionsMenu(); return true;
 			case EXIT: if (!down) uiQuitConfirm(); return true;
 			default: return false;
 			}

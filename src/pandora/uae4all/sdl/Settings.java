@@ -271,7 +271,7 @@ class Settings
 			Globals.PhoneHasArrowKeys = settingsFile.readBoolean();
 			Globals.PhoneHasTrackball = settingsFile.readBoolean();
 			Globals.UseAccelerometerAsArrowKeys = settingsFile.readBoolean();
-			Globals.UseTouchscreenKeyboard = settingsFile.readBoolean();
+			//Globals.UseTouchscreenKeyboard = settingsFile.readBoolean();
 			Globals.TouchscreenKeyboardSize = settingsFile.readInt();
 			Globals.AccelerometerSensitivity = settingsFile.readInt();
 			Globals.AccelerometerCenterPos = settingsFile.readInt();
@@ -545,6 +545,7 @@ class Settings
 		
 		Globals.UseTouchscreenKeyboard = !p.getIntent().hasExtra("gamepad");
 		
+		/*
 		if( Globals.UseTouchscreenKeyboard )
 		{
 			boolean screenKbReallyUsed = false;
@@ -576,6 +577,7 @@ class Settings
 			else
 				Globals.UseTouchscreenKeyboard = false;
 		}
+		*/
 
 		for( int i = 0; i < SDL_Keys.JAVA_KEYCODE_LAST; i++ )
 			nativeSetKeymapKey(i, SDL_Keys.values[Globals.RemapHwKeycode[i]]);

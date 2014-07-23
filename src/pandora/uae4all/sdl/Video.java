@@ -33,6 +33,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import retrobox.vinput.AnalogGamepad;
 import retrobox.vinput.AnalogGamepad.Axis;
+import retrobox.vinput.overlay.ExtraButtonsView;
 import retrobox.vinput.AnalogGamepadListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -939,10 +940,12 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		String customConfig = context.getIntent().getStringExtra("conf");
 		mRenderer = new DemoRenderer(context, customConfig);
 		setRenderer(mRenderer);
+		
+		joystickAnalog.startGamepadMouseMoveThread();
 	}
 
 	@Override
-	public boolean onTouchEvent(final MotionEvent event) 
+	public boolean onTouchEvent(final MotionEvent event)
 	{
 		DifferentTouchInput.touchInput.process(event);
 		if( DemoRenderer.mRatelimitTouchEvents )
