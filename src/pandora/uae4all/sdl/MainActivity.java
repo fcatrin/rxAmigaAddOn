@@ -1336,7 +1336,7 @@ public class MainActivity extends Activity
         	menu.add(0, BUTTONS_ID, 0, "Extra Buttons");
         }
         if (needsOverlay()) {
-        	menu.add(0, OVERLAY_ID, 0, "Overlay on/off");
+        	menu.add(0, OVERLAY_ID, 0, "Overlay ON/OFF");
         }
         menu.add(0, SWAP_ID, 0, R.string.swap);
         menu.add(0, QUIT_ID, 0, R.string.quit);
