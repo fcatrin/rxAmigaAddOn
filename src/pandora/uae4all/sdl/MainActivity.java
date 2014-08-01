@@ -127,6 +127,7 @@ public class MainActivity extends Activity
 
 		vinputDispatcher = new VirtualInputDispatcher();
 		mapper = new Mapper(getIntent(), vinputDispatcher);
+		mapper.initGestureDetector(this);
 		
 		gamepadController = new GamepadController();
 		gamepadView = new GamepadView(this, overlay);
@@ -888,6 +889,7 @@ public class MainActivity extends Activity
     		return true;
     	}
     	
+    	mapper.onTouchEvent(ev);
     	
 		//Log.i("SDL", "dispatchTouchEvent: " + ev.getAction() + " coords " + ev.getX() + ":" + ev.getY() );
 		if(_screenKeyboard != null)
