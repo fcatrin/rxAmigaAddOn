@@ -170,9 +170,9 @@ public class MainActivity extends Activity
 
 		_layout.addView(_layout2);
 
-		ImageView img = new ImageView(this);
+/*		ImageView img = new ImageView(this);
 
-		img.setScaleType(ImageView.ScaleType.FIT_CENTER /* FIT_XY */ );
+		img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		try
 		{
 			img.setImageDrawable(Drawable.createFromStream(getAssets().open("logo.png"), "logo.png"));
@@ -183,7 +183,7 @@ public class MainActivity extends Activity
 		}
 		img.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 		_layout.addView(img);
-		
+*/		
 		_videoLayout = new FrameLayout(this);
 		_videoLayout.addView(_layout);
 
