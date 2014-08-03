@@ -1087,6 +1087,7 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "df1=%s\n", uae4all_image_file1);
 			sscanf(line, "kickstart=%d\n",&kickstart);
 			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
+			sscanf(line, "frameskip=%d\n",&mainMenu_frameskip);
 			sscanf(line, "presetModeId=%d\n",&presetModeId); // resolution to render on
 			sscanf(line, "showstatus=%d\n",&mainMenu_showStatus); // 1 = show leds
 			sscanf(line, "showfps=%d\n",&mainMenu_showFPS); // 1 = show leds
