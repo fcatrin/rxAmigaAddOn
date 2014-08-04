@@ -124,7 +124,8 @@ public class MainActivity extends Activity
 		if(Globals.InhibitSuspend)
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+          
+		
 		vinputDispatcher = new VirtualInputDispatcher();
 		mapper = new Mapper(getIntent(), vinputDispatcher);
 		mapper.initGestureDetector(this);
@@ -167,10 +168,10 @@ public class MainActivity extends Activity
 
 			_layout2.addView(_btn);*/
 		}
-
+          
 		_layout.addView(_layout2);
 
-/*		ImageView img = new ImageView(this);
+/*		ImageView img = new ImageView(this);     
 
 		img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		try
