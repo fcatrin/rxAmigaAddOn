@@ -128,8 +128,14 @@ public class MainActivity extends Activity
 		
 		vinputDispatcher = new VirtualInputDispatcher();
 		mapper = new Mapper(getIntent(), vinputDispatcher);
-		mapper.initGestureDetector(this);
-		
+		Mapper.initGestureDetector(this);
+
+		for(int i=0; i<2; i++) {
+        	String prefix = "j" + (i+1);
+        	String deviceDescriptor = getIntent().getStringExtra(prefix + "DESCRIPTOR");
+        	Mapper.registerGamepad(i, deviceDescriptor);
+        }
+        
 		gamepadController = new GamepadController();
 		gamepadView = new GamepadView(this, overlay);
 		
@@ -378,7 +384,7 @@ public class MainActivity extends Activity
 	}
 
 	private boolean needsOverlay() {
-		return !getIntent().hasExtra("gamepad");
+		return Mapper.hasGamepads();
 	}
 	
 	private void setupGamepadOverlay() {
@@ -816,7 +822,7 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyDown(keyCode, event);
 		} else if( mGLView != null ) {
-			if (mapper.handleKeyEvent(keyCode, true)) return true;
+			if (mapper.handleKeyEvent(event, keyCode, true)) return true;
 
 			if( mGLView.nativeKey( keyCode, 1, event.getUnicodeChar() ) == 0 )
 				return super.onKeyDown(keyCode, event);
@@ -837,7 +843,7 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyUp(keyCode, event);
 		} else if( mGLView != null ) {
-			if (mapper.handleKeyEvent(keyCode, false)) return true;
+			if (mapper.handleKeyEvent(event, keyCode, false)) return true;
 
 			if( mGLView.nativeKey( keyCode, 0, event.getUnicodeChar() ) == 0 )
 				return super.onKeyUp(keyCode, event);
