@@ -384,7 +384,7 @@ public class MainActivity extends Activity
 	}
 
 	private boolean needsOverlay() {
-		return Mapper.hasGamepads();
+		return !Mapper.hasGamepads();
 	}
 	
 	private void setupGamepadOverlay() {
