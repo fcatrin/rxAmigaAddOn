@@ -48,6 +48,7 @@ import retrobox.vinput.overlay.GamepadController;
 import retrobox.vinput.overlay.GamepadView;
 import retrobox.vinput.overlay.Overlay;
 import retrobox.vinput.overlay.OverlayExtra;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -61,6 +62,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -121,10 +123,15 @@ public class MainActivity extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		if(Globals.InhibitSuspend)
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 					WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-          
+
+		setImmersiveMode();
+		
+		Globals.KeepAspectRatioDefaultSetting = true;
+		Globals.KeepAspectRatio = getIntent().getBooleanExtra("keepAspect", true);
 		
 		vinputDispatcher = new VirtualInputDispatcher();
 		mapper = new Mapper(getIntent(), vinputDispatcher);
@@ -290,6 +297,21 @@ public class MainActivity extends Activity
 		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private void setImmersiveMode() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			getWindow().getDecorView().setSystemUiVisibility(
+		            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+		            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+		            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+		            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+		            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+		            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+		} else {
+			
+		}
+	}
+	
 	public void startDownloader()
 	{
 		Log.i("SDL", "libSDL: Starting data downloader");
@@ -462,8 +484,15 @@ public class MainActivity extends Activity
 		Log.i("SDL", "libSDL: onWindowFocusChanged: " + hasFocus + " - sending onPause/onResume");
 		if (hasFocus == false)
 			onPause();
-		else
+		else {
 			onResume();
+	        new Handler().postDelayed(new Runnable(){
+				@Override
+				public void run() {
+					setImmersiveMode();
+				}
+			}, 5000);
+		}
 		/*
 		if (hasFocus == false) {
 			synchronized(textInput) {
