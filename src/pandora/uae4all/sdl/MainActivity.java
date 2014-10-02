@@ -36,6 +36,7 @@ import java.util.zip.CheckedInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import retrobox.vinput.GenericGamepad.Analog;
 import retrobox.vinput.Mapper;
 import retrobox.vinput.QuitHandler;
 import retrobox.vinput.QuitHandler.QuitHandlerCallback;
@@ -61,7 +62,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -87,7 +87,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -418,7 +417,8 @@ public class MainActivity extends Activity
 		    	int h = mGLView.getHeight();
 				if (needsOverlay()) {
 			    	String overlayConfig = getIntent().getStringExtra("OVERLAY");
-			    	if (overlayConfig!=null) overlay.init(overlayConfig, w, h);
+					float alpha = getIntent().getFloatExtra("OVERLAY_ALPHA", 0.8f);
+			    	if (overlayConfig!=null) overlay.init(overlayConfig, w, h, alpha);
 				}
 		
 		    	Log.d("REMAP", "addExtraButtons : " + getIntent().getStringExtra("buttons"));
@@ -1504,6 +1504,9 @@ public class MainActivity extends Activity
 			default: return false;
 			}
 		}
+
+		@Override
+		public void sendAnalog(Analog index, double x, double y) {}
 	}
 }
 
