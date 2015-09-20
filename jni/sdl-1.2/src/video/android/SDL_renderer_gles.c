@@ -924,6 +924,7 @@ GLES_RenderCopy(SDL_Renderer * renderer, SDL_Texture * texture,
 
     GLES_SetBlendMode(data, texture->blendMode, 0);
 
+    int dpixel = 0;
     switch (texture->scaleMode) {
     case SDL_SCALEMODE_NONE:
     case SDL_SCALEMODE_FAST:
@@ -938,6 +939,7 @@ GLES_RenderCopy(SDL_Renderer * renderer, SDL_Texture * texture,
                               GL_LINEAR);
         data->glTexParameteri(texturedata->type, GL_TEXTURE_MAG_FILTER,
                               GL_LINEAR);
+        dpixel = 1;
         break;
     }
 
@@ -946,8 +948,8 @@ GLES_RenderCopy(SDL_Renderer * renderer, SDL_Texture * texture,
         SDL_Window *window = renderer->window;
         GLint cropRect[4];
         cropRect[0] = srcrect->x;
-        cropRect[1] = srcrect->y + srcrect->h;
-        cropRect[2] = srcrect->w;
+        cropRect[1] = srcrect->y + srcrect->h - dpixel;
+        cropRect[2] = srcrect->w - dpixel;
         cropRect[3] = -srcrect->h;
         data->glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_CROP_RECT_OES,
                                cropRect);
