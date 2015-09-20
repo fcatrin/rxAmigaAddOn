@@ -103,6 +103,7 @@ public class MainActivity extends Activity
 	static ExtraButtonsView extraButtonsView;
 	
 	public static final Overlay overlay = new Overlay();
+	private boolean aliased;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -147,6 +148,8 @@ public class MainActivity extends Activity
 		
 		extraButtonsController = new ExtraButtonsController();
 		extraButtonsView = new ExtraButtonsView(this);
+		
+		aliased = getIntent().getBooleanExtra("linearFilter", true);
 	
 		
 		Log.i("SDL", "libSDL: Creating startup screen");
@@ -232,6 +235,7 @@ public class MainActivity extends Activity
 						public void run()
 						{   
 							Settings.Load(Parent);
+							Globals.VideoLinearFilter = aliased;
 							loaded.release();
 							loadedLibraries.release();
 							if( _btn != null )
