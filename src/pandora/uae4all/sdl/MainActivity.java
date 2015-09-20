@@ -1356,7 +1356,7 @@ public class MainActivity extends Activity
 	
 	@Override
 	public void onBackPressed() {
-		uiQuitConfirm();
+		openOptionsMenu();
 	}
 	
     static final private int LOAD_ID = Menu.FIRST +1;
