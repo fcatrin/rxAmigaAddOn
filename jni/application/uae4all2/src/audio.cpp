@@ -70,31 +70,98 @@ typedef uae_s8 sample8_t;
       
 
 /*
-#define SAMPLE_HANDLER \
-	{ \
-		register uae_u32 d0 = audio_channel_current_sample[0]; \
-		register uae_u32 d1 = audio_channel_current_sample[1]; \
-		register uae_u32 d2 = audio_channel_current_sample[2]; \
-		register uae_u32 d3 = audio_channel_current_sample[3]; \
-		d0 *= audio_channel_vol[0]; \
-		d1 *= audio_channel_vol[1]; \
-		d2 *= audio_channel_vol[2]; \
-		d3 *= audio_channel_vol[3]; \
-		d0 &= audio_channel_adk_mask[0]; \
-		d1 &= audio_channel_adk_mask[1]; \
-		d2 &= audio_channel_adk_mask[2]; \
-		d3 &= audio_channel_adk_mask[3]; \
-	    	PUT_SOUND_WORD (d0+d1+d2+d3) \
-    		CHECK_SOUND_BUFFERS(); \
-	} \
-*/
+ * 7548hz
+ *
+ * [FILTER] coeffA
+ 1.0,
+ 2.939597192153944,
+ 4.5693643391269045,
+ 4.419363797669245,
+ 2.869257817232527,
+ 1.255686845745895,
+ 0.3591353433824307,
+ 0.060872889011850236,
+ 0.0046614758198230515,
+[FILTER] coeffB
+ 0.06827320195368214,
+ 0.5461856156294571,
+ 1.9116496547030999,
+ 3.8232993094061998,
+ 4.7791241367577495,
+ 3.8232993094061998,
+ 1.9116496547030999,
+ 0.5461856156294571,
+ 0.06827320195368214,
+ */
+
+float filterCoeffA[] = {
+		 1.0,
+		 2.939597192153944,
+		 4.5693643391269045,
+		 4.419363797669245,
+		 2.869257817232527,
+		 1.255686845745895,
+		 0.3591353433824307,
+		 0.060872889011850236,
+		 0.0046614758198230515,
+};
+
+float filterCoeffB[] = {
+		 0.06827320195368214,
+		 0.5461856156294571,
+		 1.9116496547030999,
+		 3.8232993094061998,
+		 4.7791241367577495,
+		 3.8232993094061998,
+		 1.9116496547030999,
+		 0.5461856156294571,
+		 0.06827320195368214,
+};
+
+bool filterEnabled = true;
+bool filterInitialized = false;
+
+#define FILTER_SIZE 8
+int filterPos[] = {0, 0, 0, 0};
+float filterBuffer1[4][FILTER_SIZE];
+float filterBuffer2[4][FILTER_SIZE];
+
+inline uae_u32 filterSample(int channel, int sample) {
+	if (!filterEnabled) return sample;
+	if (!filterInitialized) {
+		memset(filterBuffer1, 0, sizeof(float)*FILTER_SIZE*4);
+		memset(filterBuffer2, 0, sizeof(float)*FILTER_SIZE*4);
+		filterInitialized = true;
+	}
+	int j;
+
+	float inputValue = sample / 128.0;
+	float acc = filterCoeffB[0] * inputValue;
+
+	int pos = filterPos[channel];
+
+	for (j = 1; j <= FILTER_SIZE; j++) {
+		int p = (pos + FILTER_SIZE - j) % FILTER_SIZE;
+		acc += filterCoeffB[j] * filterBuffer1[channel][p];
+	}
+	for (j = 1; j <= FILTER_SIZE; j++) {
+		int p = (pos + FILTER_SIZE - j) % FILTER_SIZE;
+		acc -= filterCoeffA[j] * filterBuffer2[channel][p];
+	}
+	filterBuffer1[channel][pos] = inputValue;
+	filterBuffer2[channel][pos] = acc;
+
+	filterPos[channel] = (pos + 1) % FILTER_SIZE;
+
+	return (int)(acc * 128.0);
+}
 
 #define SAMPLE_HANDLER \
 	{ \
-		register uae_u32 d0 = audio_channel_current_sample[0]; \
-		register uae_u32 d1 = audio_channel_current_sample[1]; \
-		register uae_u32 d2 = audio_channel_current_sample[2]; \
-		register uae_u32 d3 = audio_channel_current_sample[3]; \
+		register uae_u32 d0 = filterSample(0, audio_channel_current_sample[0]); \
+		register uae_u32 d1 = filterSample(1, audio_channel_current_sample[1]); \
+		register uae_u32 d2 = filterSample(2, audio_channel_current_sample[2]); \
+		register uae_u32 d3 = filterSample(3, audio_channel_current_sample[3]); \
 		d0 *= audio_channel_vol[0]; \
 		d1 *= audio_channel_vol[1]; \
 		d2 *= audio_channel_vol[2]; \

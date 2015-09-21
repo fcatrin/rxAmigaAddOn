@@ -1117,6 +1117,7 @@ void loadconfigcustom(int general, char *configfile)
 		snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "romfile %s", kickstarts_dir);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "frameskip %d", mainMenu_frameskip);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "soundrate %d", sound_rate);
 
 /*		fscanf(f,"kickstart=%d\n",&kickstart);
 #if defined(PANDORA) || defined(ANDROIDSDL)
