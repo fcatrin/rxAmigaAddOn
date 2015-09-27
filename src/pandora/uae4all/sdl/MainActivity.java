@@ -914,7 +914,7 @@ public class MainActivity extends Activity
 	public boolean dispatchTouchEvent(final MotionEvent ev) {
 
     	if (gamepadView.isVisible() && gamepadController.onTouchEvent(ev)) {
-    		Log.d("TOUCH", "dispatched to gamepadController");
+    		// Log.d("TOUCH", "dispatched to gamepadController");
     		if (Overlay.requiresRedraw) {
         		Overlay.requiresRedraw = false;
     			gamepadView.invalidate();
