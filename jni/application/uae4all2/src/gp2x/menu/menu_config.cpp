@@ -27,7 +27,7 @@ extern char launchDir[300];
 extern char currentDir[300];
 extern int nr_drives;
 extern char *config_filename;
-
+int isAmiga1200 = 0;
 
 extern void extractFileName(char * str,char *buffer);
 
@@ -1094,6 +1094,7 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "soundrate=%d\n",&sound_rate); // default is 44100. 22050 is more close to the Amiga500
 			sscanf(line, "floppyspeed=%d\n",&mainMenu_floppyspeed); // floppy speed in percent (100 = 100% Amiga)
 			sscanf(line, "drives=%d\n",&mainMenu_drives); // restrict number of drives
+			sscanf(line, "a1200=%d\n", &isAmiga1200);
 			sscanf(line,"moveX=%d\n",&moveX);
 			sscanf(line,"moveY=%d\n",&moveY);
 
@@ -1110,6 +1111,7 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "onScreen_button6=%d\n",&mainMenu_onScreen_button6);
 		}
 
+
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 %s", uae4all_image_file0);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 %s", uae4all_image_file1);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstart %i", kickstart);
@@ -1118,6 +1120,7 @@ void loadconfigcustom(int general, char *configfile)
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "romfile %s", kickstarts_dir);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "frameskip %d", mainMenu_frameskip);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "soundrate %d", sound_rate);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "system %s", isAmiga1200?"a1200":"a500");
 
 /*		fscanf(f,"kickstart=%d\n",&kickstart);
 #if defined(PANDORA) || defined(ANDROIDSDL)
@@ -1302,6 +1305,16 @@ void loadconfigcustom(int general, char *configfile)
 #endif
 	*/
 		fclose(f);
+	}
+
+	if (isAmiga1200) { // A1200
+		mainMenu_chipMemory=2;
+		mainMenu_slowMemory=0;
+		mainMenu_fastMemory=4;
+		kickstart=3;
+		mainMenu_CPU_model=1;
+		mainMenu_chipset=2;
+		mainMenu_CPU_speed=1;
 	}
 
 	SetPresetMode(presetModeId);
