@@ -1370,6 +1370,8 @@ public class MainActivity extends Activity
     static final private int CANCEL_ID = Menu.FIRST +5;
     static final private int BUTTONS_ID = Menu.FIRST +6;
     static final private int OVERLAY_ID = Menu.FIRST +7;
+    static final private int LINES_MORE_ID = Menu.FIRST +8;
+    static final private int LINES_LESS_ID = Menu.FIRST +9;
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1384,6 +1386,8 @@ public class MainActivity extends Activity
         if (needsOverlay()) {
         	menu.add(0, OVERLAY_ID, 0, "Overlay ON/OFF");
         }
+        menu.add(0, LINES_MORE_ID, 0, "Increase height");
+        menu.add(0, LINES_LESS_ID, 0, "Decrease height");
         menu.add(0, SWAP_ID, 0, R.string.swap);
         menu.add(0, QUIT_ID, 0, R.string.quit);
         
@@ -1401,6 +1405,8 @@ public class MainActivity extends Activity
 	        case SWAP_ID : uiSwapDisks(); return true;
 	        case BUTTONS_ID : uiToggleExtraButtons(); return true;
 	        case OVERLAY_ID : uiToggleOverlay(); return true;
+	        case LINES_MORE_ID : uiMoreLines(); return true;
+	        case LINES_LESS_ID : uiLessLines(); return true;
 	        case QUIT_ID : uiQuit(); return true;
 	        }
     	}
@@ -1451,6 +1457,27 @@ public class MainActivity extends Activity
 		}, 500);
 	}
 
+	protected void uiMoreLines() {
+		uiMoreLines(true);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				uiMoreLines(false);
+			}
+		}, 500);
+	}
+
+	protected void uiLessLines() {
+		uiLessLines(true);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				uiLessLines(false);
+			}
+		}, 500);
+	}
+
+	
 	protected void uiLoadState(boolean down) {
 		sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
 		sendNativeKey(KeyEvent.KEYCODE_L, down);
@@ -1463,6 +1490,14 @@ public class MainActivity extends Activity
 	
 	protected void uiSwapDisks(boolean down) {
 		sendNativeKey(KeyEvent.KEYCODE_CTRL_LEFT, down);
+	}
+	
+	protected void uiLessLines(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_F10, down);
+	}
+	
+	protected void uiMoreLines(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_F11, down);
 	}
 	
     protected void uiQuitConfirm() {

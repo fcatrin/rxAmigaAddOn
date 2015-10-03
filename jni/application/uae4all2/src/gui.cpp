@@ -532,6 +532,44 @@ char *basename(char *filename) {
 	return &filename[pos];
 }
 
+#define KNOWN_HEIGHT 6
+int knownHeights[] = {200, 216, 240, 256, 262, 270};
+
+int get_height_index(int height) {
+	for(int i=0; i<KNOWN_HEIGHT; i++) {
+		if (knownHeights[i] == height) return i;
+	}
+	return 0;
+}
+
+void set_height_toast() {
+	char usermsg[300];
+	sprintf(usermsg, "Screen height set to %d lines", mainMenu_displayedLines);
+
+	SDL_ToastMessage(usermsg);
+}
+
+void set_height_less() {
+	int index = get_height_index(mainMenu_displayedLines);
+	if (index==0) index = KNOWN_HEIGHT;
+
+	index--;
+	mainMenu_displayedLines = knownHeights[index];
+	update_display();
+
+	set_height_toast();
+}
+
+void set_height_more() {
+	int index = get_height_index(mainMenu_displayedLines) + 1;
+	if (index==KNOWN_HEIGHT) index = 0;
+
+	mainMenu_displayedLines = knownHeights[index];
+	update_display();
+
+	set_height_toast();
+}
+
 void gui_handle_events (void)
 {
 	Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -572,6 +610,14 @@ void gui_handle_events (void)
 		leave_program();
 		sync();
 		exit(0);
+	}
+
+	if (keystate[SDLK_F10]) {
+		set_height_less();
+	}
+
+	if (keystate[SDLK_F11]) {
+		set_height_more();
 	}
 
 
