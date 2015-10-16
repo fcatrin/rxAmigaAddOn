@@ -850,7 +850,7 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
-		if (mapper.isSystemKey(keyCode)) return super.onKeyDown(keyCode, event);
+		if (mapper.isSystemKey(event, keyCode)) return super.onKeyDown(keyCode, event);
 		
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyDown(keyCode, event);
@@ -871,7 +871,7 @@ public class MainActivity extends Activity
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
 		
-		if (mapper.isSystemKey(keyCode)) return super.onKeyUp(keyCode, event);
+		if (mapper.isSystemKey(event, keyCode)) return super.onKeyUp(keyCode, event);
 		
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyUp(keyCode, event);
