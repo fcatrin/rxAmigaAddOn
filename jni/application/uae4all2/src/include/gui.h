@@ -44,6 +44,10 @@ extern char uae4all_image_file0[];
 extern char uae4all_image_file1[256];
 extern char uae4all_image_file2[256];
 extern char uae4all_image_file3[256];
+extern char uae4all_image_file4[256];
+extern char uae4all_image_file5[256];
+extern char uae4all_image_file6[256];
+extern char uae4all_image_file7[256];
 
 extern char uae4all_hard_dir[256];
 extern char uae4all_hard_file[256];

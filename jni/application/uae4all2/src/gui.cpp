@@ -81,10 +81,14 @@ extern int keycode2amiga(SDL_keysym *prKeySym);
 extern int uae4all_keystate[];
 
 int emulating=0;
-char uae4all_image_file0[256]  = { 0, };
+char uae4all_image_file0[256] = { 0, };
 char uae4all_image_file1[256] = { 0, };
-char uae4all_image_file2[256]  = { 0, };
+char uae4all_image_file2[256] = { 0, };
 char uae4all_image_file3[256] = { 0, };
+char uae4all_image_file4[256] = { 0, };
+char uae4all_image_file5[256] = { 0, };
+char uae4all_image_file6[256] = { 0, };
+char uae4all_image_file7[256] = { 0, };
 
 char uae4all_hard_dir[256] = { 0, };
 char uae4all_hard_file[256] = { 0, };
@@ -163,7 +167,10 @@ int gui_init (void)
 }
 
 
-char *diskimages[] = {uae4all_image_file0, uae4all_image_file1, uae4all_image_file2, uae4all_image_file3};
+char *diskimages[] = {
+		uae4all_image_file0, uae4all_image_file1, uae4all_image_file2, uae4all_image_file3,
+		uae4all_image_file4, uae4all_image_file5, uae4all_image_file6, uae4all_image_file7
+};
 
 void disk_insert(int fd, char *image) {
 	strcpy(diskimages[fd], image);
@@ -176,7 +183,7 @@ void disk_swap() {
 	strcpy(tmp, diskimages[0]);
 
 	int i=1;
-	while(i<4 && diskimages[i]!=NULL && strlen(diskimages[i])>0) {
+	while(i<8 && diskimages[i]!=NULL && strlen(diskimages[i])>0) {
 		disk_insert(i-1, diskimages[i]);
 		i++;
 	}

@@ -169,6 +169,10 @@ void SetDefaultMenuSettings(int general)
 		uae4all_image_file1[0] = '\0';
 		uae4all_image_file2[0] = '\0';
 		uae4all_image_file3[0] = '\0';
+		uae4all_image_file4[0] = '\0';
+		uae4all_image_file5[0] = '\0';
+		uae4all_image_file6[0] = '\0';
+		uae4all_image_file7[0] = '\0';
 		mainMenu_drives = DEFAULT_DRIVES;
 	}	
 	mainMenu_floppyspeed = 100;
@@ -1083,8 +1087,16 @@ void loadconfigcustom(int general, char *configfile)
 #endif
 		char line[1024];
 		while (fgets(line, sizeof(line), f)) {
+
 			sscanf(line, "df0=%[^\n]s", uae4all_image_file0);
 			sscanf(line, "df1=%[^\n]s", uae4all_image_file1);
+			sscanf(line, "df2=%[^\n]s", uae4all_image_file2);
+			sscanf(line, "df3=%[^\n]s", uae4all_image_file3);
+			sscanf(line, "df4=%[^\n]s", uae4all_image_file4);
+			sscanf(line, "df5=%[^\n]s", uae4all_image_file5);
+			sscanf(line, "df6=%[^\n]s", uae4all_image_file6);
+			sscanf(line, "df7=%[^\n]s", uae4all_image_file7);
+
 			sscanf(line, "kickstart=%d\n",&kickstart);
 			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
 			sscanf(line, "frameskip=%d\n",&mainMenu_frameskip);
@@ -1114,6 +1126,12 @@ void loadconfigcustom(int general, char *configfile)
 
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df0 %s", uae4all_image_file0);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df1 %s", uae4all_image_file1);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df2 %s", uae4all_image_file2);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df3 %s", uae4all_image_file3);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df4 %s", uae4all_image_file4);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df5 %s", uae4all_image_file5);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df6 %s", uae4all_image_file6);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df7 %s", uae4all_image_file7);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstart %i", kickstart);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstarts_dir %s", kickstarts_dir);
 		snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
