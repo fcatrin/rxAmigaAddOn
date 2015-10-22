@@ -1083,8 +1083,8 @@ void loadconfigcustom(int general, char *configfile)
 #endif
 		char line[1024];
 		while (fgets(line, sizeof(line), f)) {
-			sscanf(line, "df0=%s\n", uae4all_image_file0);
-			sscanf(line, "df1=%s\n", uae4all_image_file1);
+			sscanf(line, "df0=%[^\n]s", uae4all_image_file0);
+			sscanf(line, "df1=%[^\n]s", uae4all_image_file1);
 			sscanf(line, "kickstart=%d\n",&kickstart);
 			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
 			sscanf(line, "frameskip=%d\n",&mainMenu_frameskip);
