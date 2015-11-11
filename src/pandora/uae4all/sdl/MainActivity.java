@@ -29,7 +29,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
@@ -37,6 +39,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import retrobox.utils.ImmersiveModeSetter;
+import retrobox.utils.ListOption;
+import retrobox.utils.RetroBoxDialog;
+import retrobox.utils.RetroBoxUtils;
 import retrobox.vinput.GenericGamepad.Analog;
 import retrobox.vinput.Mapper;
 import retrobox.vinput.QuitHandler;
@@ -50,6 +55,9 @@ import retrobox.vinput.overlay.GamepadController;
 import retrobox.vinput.overlay.GamepadView;
 import retrobox.vinput.overlay.Overlay;
 import retrobox.vinput.overlay.OverlayExtra;
+import xtvapps.core.AndroidFonts;
+import xtvapps.core.Callback;
+import xtvapps.core.content.KeyValue;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
@@ -102,6 +110,7 @@ public class MainActivity extends Activity
 	static GamepadView gamepadView;
 	static ExtraButtonsController extraButtonsController;
 	static ExtraButtonsView extraButtonsView;
+	static boolean canOpenRetroBoxMenu = false;
 	
 	public static final Overlay overlay = new Overlay();
 	private boolean aliased;
@@ -400,6 +409,11 @@ public class MainActivity extends Activity
 		DimSystemStatusBar.get().dim(mGLView);
 		
 		setupGamepadOverlay();
+		
+		getLayoutInflater().inflate(R.layout.modal_dialog_list, _videoLayout);
+		AndroidFonts.setViewFont(findViewById(R.id.txtDialogListTitle), RetroBoxUtils.FONT_DEFAULT_M);
+		canOpenRetroBoxMenu = true;
+		
 	}
 
 	private boolean needsOverlay() {
@@ -435,16 +449,9 @@ public class MainActivity extends Activity
 
 	@Override
 	protected void onPause() {
-		if( downloader != null )
-		{
-			synchronized( downloader )
-			{
-				downloader.setStatusField(null);
-			}
-		}
+
+		pauseEmulation();
 		_isPaused = true;
-		if( mGLView != null )
-			mGLView.onPause();
 		//if( _ad.getView() != null )
 		//	_ad.getView().onPause();
 		super.onPause();
@@ -455,6 +462,23 @@ public class MainActivity extends Activity
 		super.onResume();
 		ImmersiveModeSetter.postImmersiveMode(new Handler(), getWindow(), isStableLayout());
 		
+		resumeEmulation();
+		_isPaused = false;
+	}
+
+	private void pauseEmulation() {
+		if( downloader != null )
+		{
+			synchronized( downloader )
+			{
+				downloader.setStatusField(null);
+			}
+		}
+		if( mGLView != null )
+			mGLView.onPause();
+	}
+	
+	private void resumeEmulation() {
 		if( mGLView != null )
 		{
 			mGLView.onResume();
@@ -471,9 +495,6 @@ public class MainActivity extends Activity
 				}
 			}
 		}
-		//if( _ad.getView() != null )
-		//	_ad.getView().onResume();
-		_isPaused = false;
 	}
 
 	@Override
@@ -844,6 +865,9 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
+		if (RetroBoxDialog.isDialogVisible(this)) {
+			return RetroBoxDialog.onKeyDown(this, keyCode, event);
+		}
 		if (mapper.isSystemKey(event, keyCode)) return super.onKeyDown(keyCode, event);
 		
 		if(_screenKeyboard != null) {
@@ -864,6 +888,9 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
+		if (RetroBoxDialog.isDialogVisible(this)) {
+			return RetroBoxDialog.onKeyUp(this, keyCode, event);
+		}
 		
 		if (mapper.isSystemKey(event, keyCode)) return super.onKeyUp(keyCode, event);
 		
@@ -891,6 +918,10 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onKeyMultiple(int keyCode, int repeatCount, final KeyEvent event)
 	{
+		if (RetroBoxDialog.isDialogVisible(this)) {
+			return super.onKeyMultiple(keyCode, repeatCount, event);
+		}
+		
 		// International text input
 		if( mGLView != null && event.getCharacters() != null )
 		{
@@ -906,6 +937,9 @@ public class MainActivity extends Activity
 
 	@Override
 	public boolean dispatchTouchEvent(final MotionEvent ev) {
+		if (RetroBoxDialog.isDialogVisible(this)) {
+			return super.dispatchTouchEvent(ev);
+		}
 
     	if (gamepadView.isVisible() && gamepadController.onTouchEvent(ev)) {
     		// Log.d("TOUCH", "dispatched to gamepadController");
@@ -959,6 +993,10 @@ public class MainActivity extends Activity
 			_screenKeyboard.dispatchGenericMotionEvent(ev);
 		else
 		*/
+		
+		if (RetroBoxDialog.isDialogVisible(this)) {
+			return super.dispatchGenericMotionEvent(ev);
+		}
 		
 		if(mGLView != null)
 			mGLView.onGenericMotionEvent(ev);
@@ -1354,59 +1392,54 @@ public class MainActivity extends Activity
 	
 	@Override
 	public void onBackPressed() {
-		openOptionsMenu();
+		if (!canOpenRetroBoxMenu) return;
+		
+		if (RetroBoxDialog.cancelDialog(this)) return;
+		openRetroBoxMenu();
 	}
 	
-    static final private int LOAD_ID = Menu.FIRST +1;
-    static final private int SAVE_ID = Menu.FIRST +2;
-    static final private int SWAP_ID = Menu.FIRST +3;
-    static final private int QUIT_ID = Menu.FIRST +4;
-    static final private int CANCEL_ID = Menu.FIRST +5;
-    static final private int BUTTONS_ID = Menu.FIRST +6;
-    static final private int OVERLAY_ID = Menu.FIRST +7;
-    static final private int LINES_MORE_ID = Menu.FIRST +8;
-    static final private int LINES_LESS_ID = Menu.FIRST +9;
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
+    private void openRetroBoxMenu() {
+    	pauseEmulation();
+    	List<ListOption> options = new ArrayList<ListOption>();
+    	options.add(new ListOption("", "Cancel"));
+    	options.add(new ListOption("load", "Load State"));
+    	options.add(new ListOption("save", "Save State"));
+    	options.add(new ListOption("extra", "Extra Buttons"));
+    	options.add(new ListOption("height+", "Increase Height"));
+    	options.add(new ListOption("height-", "Decrease Height"));
+    	options.add(new ListOption("swap", "Swap Disk"));
+    	options.add(new ListOption("quit", "Quit"));
+    	
+    	RetroBoxDialog.showListDialog(this, "RetroBoxTV", options, new Callback<KeyValue>() {
+			@Override
+			public void onResult(KeyValue result) {
+				String key = result.getKey();
+				if (key.equals("load")) {
+					uiLoadState();
+				} else if (key.equals("save")) {
+					uiSaveState();
+				} else if (key.equals("height+")) {
+					uiMoreLines();
+				} else if (key.equals("height-")) {
+					uiLessLines();
+				} else if (key.equals("extra")) {
+					uiToggleExtraButtons();
+				} else if (key.equals("swap")) {
+					uiSwapDisks();
+				} else if (key.equals("quit")) {
+					uiQuit();
+				}
+				resumeEmulation();
+			}
 
-        menu.add(0, CANCEL_ID, 0, "Cancel");
-        menu.add(0, LOAD_ID, 0, R.string.load_state);
-        menu.add(0, SAVE_ID, 0, R.string.save_state);
-        if (OverlayExtra.hasExtraButtons()) {
-        	menu.add(0, BUTTONS_ID, 0, "Extra Buttons");
-        }
-        if (needsOverlay()) {
-        	menu.add(0, OVERLAY_ID, 0, "Overlay ON/OFF");
-        }
-        menu.add(0, LINES_MORE_ID, 0, "Increase height");
-        menu.add(0, LINES_LESS_ID, 0, "Decrease height");
-        menu.add(0, SWAP_ID, 0, R.string.swap);
-        menu.add(0, QUIT_ID, 0, R.string.quit);
-        
-        return true;
-    }
-    
-    
-    
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-    	if (item != null) {
-	        switch (item.getItemId()) {
-	        case LOAD_ID : uiLoadState(); return true;
-	        case SAVE_ID : uiSaveState(); return true;
-	        case SWAP_ID : uiSwapDisks(); return true;
-	        case BUTTONS_ID : uiToggleExtraButtons(); return true;
-	        case OVERLAY_ID : uiToggleOverlay(); return true;
-	        case LINES_MORE_ID : uiMoreLines(); return true;
-	        case LINES_LESS_ID : uiLessLines(); return true;
-	        case QUIT_ID : uiQuit(); return true;
-	        }
-    	}
-        return super.onMenuItemSelected(featureId, item);
-    }
-	
+			@Override
+			public void onError() {
+				resumeEmulation();
+			}
+			
+		});
+	}
+
 	private void uiToggleExtraButtons() {
 		extraButtonsView.toggleView();
 	}
@@ -1532,7 +1565,7 @@ public class MainActivity extends Activity
 			case LOAD_STATE : if (!down) uiLoadState(); return true;
 			case SAVE_STATE: if (!down) uiSaveState(); return true;
 			case SWAP_DISK: if (!down) uiSwapDisks(); return true;
-			case MENU : if (!down) openOptionsMenu(); return true;
+			case MENU : if (!down) openRetroBoxMenu(); return true;
 			case EXIT: if (!down) uiQuitConfirm(); return true;
 			default: return false;
 			}
