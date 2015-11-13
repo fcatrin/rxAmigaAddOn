@@ -1516,6 +1516,7 @@ public class MainActivity extends Activity
 	}
 	
 	protected void uiSwapDisks(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
 		sendNativeKey(KeyEvent.KEYCODE_CTRL_LEFT, down);
 	}
 	

@@ -593,8 +593,8 @@ void gui_handle_events (void)
 	buttonSelect = keystate[SDLK_LCTRL];
 	buttonStart = keystate[SDLK_LALT];
 
-	if(keystate[SDLK_LCTRL]) {
-		if (onDiskSwapPressed) return;
+	if(keystate[SDLK_LCTRL] && keystate[SDLK_RSHIFT]) {
+		if (onDiskSwapPressed ) return;
 		onDiskSwapPressed = true;
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Disk swap");
 
@@ -613,11 +613,14 @@ void gui_handle_events (void)
 	} else {
 		onDiskSwapPressed = false;
 	}
+
+	/*
 	if (keystate[SDLK_LCTRL]) 	{
 		leave_program();
 		sync();
 		exit(0);
 	}
+	*/
 
 	if (keystate[SDLK_F10]) {
 		set_height_less();
