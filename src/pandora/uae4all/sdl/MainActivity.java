@@ -114,6 +114,7 @@ public class MainActivity extends Activity
 	
 	public static final Overlay overlay = new Overlay();
 	private boolean aliased;
+	private boolean canSwap = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -160,6 +161,7 @@ public class MainActivity extends Activity
 		extraButtonsView = new ExtraButtonsView(this);
 		
 		aliased = getIntent().getBooleanExtra("linearFilter", true);
+		canSwap = getIntent().getBooleanExtra("canSwap", false);
 	
 		
 		Log.i("SDL", "libSDL: Creating startup screen");
@@ -1404,10 +1406,18 @@ public class MainActivity extends Activity
     	options.add(new ListOption("", "Cancel"));
     	options.add(new ListOption("load", "Load State"));
     	options.add(new ListOption("save", "Save State"));
-    	options.add(new ListOption("extra", "Extra Buttons"));
+    	
+    	if (OverlayExtra.hasExtraButtons()) {
+    		options.add(new ListOption("extra", "Extra Buttons"));
+    	}
+    	
     	options.add(new ListOption("height+", "Increase Height"));
     	options.add(new ListOption("height-", "Decrease Height"));
-    	options.add(new ListOption("swap", "Swap Disk"));
+    	
+    	if (canSwap) {
+    		options.add(new ListOption("swap", "Swap Disk"));
+    	}
+    	
     	options.add(new ListOption("quit", "Quit"));
     	
     	RetroBoxDialog.showListDialog(this, "RetroBoxTV", options, new Callback<KeyValue>() {

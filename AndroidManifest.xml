@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="pandora.uae4all.sdl"
       android:versionCode="3020"
-      android:versionName="2.3.5.3-20"
+      android:versionName="2.3.5.3-21"
       android:installLocation="auto"
       android:sharedUserId="psychoworld.retrobox"
 >
