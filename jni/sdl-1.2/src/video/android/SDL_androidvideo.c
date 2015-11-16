@@ -46,6 +46,8 @@
 #include "SDL_androidvideo.h"
 #include "jniwrapperstuff.h"
 
+char retrobox_savestate_dir[2048];
+int  retrobox_savestate_slot = 0;
 
 // The device screen dimensions to draw on
 int SDL_ANDROID_sWindowWidth  = 0;
@@ -332,6 +334,21 @@ void SDL_ANDROID_CallJavaStartAccelerometerGyroscope(int start)
 {
 	(*JavaEnv)->CallVoidMethod( JavaEnv, JavaRenderer, JavaStartAccelerometerGyroscope, (jint) start );
 }
+
+JNIEXPORT void JNICALL
+JAVA_EXPORT_NAME(DemoRenderer_nativeSetSaveDir) ( JNIEnv*  env, jobject thiz, jstring jdir) {
+	const char *dir = (*env)->GetStringUTFChars( env, jdir , NULL ) ;
+	strcpy(retrobox_savestate_dir, dir);
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "set save state dir to %s", dir );
+	(*env)->ReleaseStringUTFChars(env, jdir, dir);
+}
+
+JNIEXPORT void JNICALL
+JAVA_EXPORT_NAME(DemoRenderer_nativeSetSaveSlot) ( JNIEnv*  env, jobject thiz, jint slot) {
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "set save state slot to %d", slot);
+	retrobox_savestate_slot = slot;
+}
+
 
 JNIEXPORT void JNICALL
 JAVA_EXPORT_NAME(DemoRenderer_nativeInitJavaCallbacks) ( JNIEnv*  env, jobject thiz )

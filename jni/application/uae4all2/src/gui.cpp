@@ -577,6 +577,13 @@ void set_height_more() {
 	set_height_toast();
 }
 
+extern char *retrobox_savestate_dir;
+extern int   retrobox_savestate_slot;
+
+void update_save_state_name() {
+	sprintf(savestate_filename, "%s/save_%s.state", retrobox_savestate_dir, retrobox_savestate_slot);
+}
+
 void gui_handle_events (void)
 {
 	Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -1623,12 +1630,14 @@ if(!vkbd_mode)
 
 	if(triggerL && keystate[SDLK_s])
 	{
+		update_save_state_name();
 		keystate[SDLK_s]=0;
 		savestate_state = STATE_DOSAVE;
 	}
 	if(triggerL && keystate[SDLK_l])
 	{
 		extern char *savestate_filename;
+		update_save_state_name();
 		FILE *f=fopen(savestate_filename, "rb");
 		keystate[SDLK_l]=0;
 		if(f)

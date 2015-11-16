@@ -652,6 +652,9 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 		Settings.nativeSetEnv( "DISPLAY_RESOLUTION_WIDTH", String.valueOf(Math.max(mWidth, mHeight)) );
 		Settings.nativeSetEnv( "DISPLAY_RESOLUTION_HEIGHT", String.valueOf(Math.min(mWidth, mHeight)) ); // In Kitkat with immersive mode, getWindowManager().getDefaultDisplay().getMetrics() return inaccurate height
 
+		DemoRenderer.nativeSetSaveDir(context.getIntent().getStringExtra("stateDir"));
+		DemoRenderer.nativeSetSaveSlot(0);
+		
 		accelerometer = new AccelerometerReader(context);
 		if( Globals.MoveMouseWithGyroscope )
 			startAccelerometerGyroscope(1);
@@ -886,6 +889,8 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 	public native void nativeGlContextLostAsyncEvent();
 	public static native void nativeTextInput( int ascii, int unicode );
 	public static native void nativeTextInputFinished();
+	public static native void nativeSetSaveDir(String dir);
+	public static native void nativeSetSaveSlot(int slot);
 
 	private MainActivity context = null;
 	public AccelerometerReader accelerometer = null;
