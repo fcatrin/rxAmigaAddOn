@@ -577,11 +577,14 @@ void set_height_more() {
 	set_height_toast();
 }
 
-extern char *retrobox_savestate_dir;
+extern char  retrobox_savestate_dir[];
 extern int   retrobox_savestate_slot;
 
 void update_save_state_name() {
-	sprintf(savestate_filename, "%s/save_%s.state", retrobox_savestate_dir, retrobox_savestate_slot);
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Set save state dir %s", retrobox_savestate_dir);
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Set save state slot %i", retrobox_savestate_slot);
+	sprintf(savestate_filename, "%s/save_%i.state", retrobox_savestate_dir, retrobox_savestate_slot);
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Set save state file %s", savestate_filename);
 }
 
 void gui_handle_events (void)

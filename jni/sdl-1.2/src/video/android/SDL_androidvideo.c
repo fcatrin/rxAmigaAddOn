@@ -46,7 +46,7 @@
 #include "SDL_androidvideo.h"
 #include "jniwrapperstuff.h"
 
-char retrobox_savestate_dir[2048];
+char retrobox_savestate_dir[2048] = "/tmp/savestate.state";
 int  retrobox_savestate_slot = 0;
 
 // The device screen dimensions to draw on
