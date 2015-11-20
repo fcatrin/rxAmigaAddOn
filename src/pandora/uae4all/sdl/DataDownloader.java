@@ -31,7 +31,6 @@ import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.os.Environment;
-
 import android.widget.TextView;
 import org.apache.http.client.methods.*;
 import org.apache.http.*;
@@ -43,6 +42,7 @@ import org.apache.http.conn.ssl.*;
 import org.apache.http.impl.*;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import retrobox.v2.pandora.uae4all.sdl.R;
 import java.security.cert.*;
 import java.security.SecureRandom;
 import javax.net.ssl.HostnameVerifier;
@@ -50,11 +50,9 @@ import javax.net.ssl.HttpsURLConnection;
 import java.util.zip.*;
 import java.io.*;
 import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import android.content.Context;
 import android.content.res.Resources;
 import java.lang.String;

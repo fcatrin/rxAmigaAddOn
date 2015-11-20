@@ -37,11 +37,11 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import retrobox.utils.ImmersiveModeSetter;
 import retrobox.utils.ListOption;
 import retrobox.utils.RetroBoxDialog;
 import retrobox.utils.RetroBoxUtils;
+import retrobox.v2.pandora.uae4all.sdl.R;
 import retrobox.vinput.GenericGamepad.Analog;
 import retrobox.vinput.Mapper;
 import retrobox.vinput.QuitHandler;
