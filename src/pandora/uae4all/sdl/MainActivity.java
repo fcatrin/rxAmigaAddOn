@@ -37,6 +37,8 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import retrobox.utils.GamepadInfoDialog;
 import retrobox.utils.ImmersiveModeSetter;
 import retrobox.utils.ListOption;
 import retrobox.utils.RetroBoxDialog;
@@ -57,6 +59,7 @@ import retrobox.vinput.overlay.Overlay;
 import retrobox.vinput.overlay.OverlayExtra;
 import xtvapps.core.AndroidFonts;
 import xtvapps.core.Callback;
+import xtvapps.core.SimpleCallback;
 import xtvapps.core.content.KeyValue;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -115,6 +118,7 @@ public class MainActivity extends Activity
 	public static final Overlay overlay = new Overlay();
 	private boolean aliased;
 	private boolean canSwap = false;
+	private GamepadInfoDialog gamepadInfoDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -416,6 +420,12 @@ public class MainActivity extends Activity
 		AndroidFonts.setViewFont(findViewById(R.id.txtDialogListTitle), RetroBoxUtils.FONT_DEFAULT_M);
 		canOpenRetroBoxMenu = true;
 		
+        getLayoutInflater().inflate(R.layout.modal_dialog_gamepad, _videoLayout);
+        AndroidFonts.setViewFont(findViewById(R.id.txtGamepadInfoTop), RetroBoxUtils.FONT_DEFAULT_M);
+        AndroidFonts.setViewFont(findViewById(R.id.txtGamepadInfoBottom), RetroBoxUtils.FONT_DEFAULT_M);
+
+        gamepadInfoDialog = new GamepadInfoDialog(this);
+        gamepadInfoDialog.loadFromIntent(getIntent());
 	}
 
 	private boolean needsOverlay() {
@@ -1418,6 +1428,7 @@ public class MainActivity extends Activity
     		options.add(new ListOption("swap", "Swap Disk"));
     	}
     	
+    	options.add(new ListOption("help", "Help"));
     	options.add(new ListOption("quit", "Quit"));
     	
     	RetroBoxDialog.showListDialog(this, "RetroBoxTV", options, new Callback<KeyValue>() {
@@ -1438,6 +1449,9 @@ public class MainActivity extends Activity
 					uiSwapDisks();
 				} else if (key.equals("quit")) {
 					uiQuit();
+				} else if (key.equals("help")) {
+					uiHelp();
+					return;
 				}
 				resumeEmulation();
 			}
@@ -1450,6 +1464,15 @@ public class MainActivity extends Activity
 		});
 	}
 
+    protected void uiHelp() {
+		RetroBoxDialog.showGamepadDialogIngame(this, gamepadInfoDialog, new SimpleCallback() {
+			@Override
+			public void onResult() {
+				resumeEmulation();
+			}
+		});
+    }
+    
 	private void uiToggleExtraButtons() {
 		extraButtonsView.toggleView();
 	}
