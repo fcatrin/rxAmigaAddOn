@@ -21,6 +21,7 @@
 #include "blitter.h"
 #include "events.h"
 #include "sound.h"
+#include "retrobox.h"
 
 #include "m68k/debug_m68k.h"
 
@@ -149,10 +150,12 @@ void m68k_go (int may_quit)
             if (quit_program == 1)
                 break;
             quit_program = 0;
-	    if (savestate_state == STATE_RESTORE)
-	    {
-		restore_state (savestate_filename);
-		mispcflags = 0;
+	    if (savestate_state == STATE_RESTORE ) {
+			restore_state (savestate_filename);
+			if (retrobox_savestate_slot>=100) {
+				retrobox_savestate_slot = 0;
+			}
+			mispcflags = 0;
 	    }
             reset_all_systems ();
             customreset ();

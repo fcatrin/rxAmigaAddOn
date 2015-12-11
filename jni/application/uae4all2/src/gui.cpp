@@ -30,6 +30,7 @@
 #include "keyboard.h"
 #include "disk.h"
 #include "savestate.h"
+#include "retrobox.h"
 #include <SDL.h>
 
 #define VIDEO_FLAGS_INIT SDL_SWSURFACE|SDL_FULLSCREEN
@@ -576,9 +577,6 @@ void set_height_more() {
 
 	set_height_toast();
 }
-
-extern char  retrobox_savestate_dir[];
-extern int   retrobox_savestate_slot;
 
 void update_save_state_name() {
 	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Set save state dir %s", retrobox_savestate_dir);
@@ -1637,11 +1635,14 @@ if(!vkbd_mode)
 		keystate[SDLK_s]=0;
 		savestate_state = STATE_DOSAVE;
 	}
-	if(triggerL && keystate[SDLK_l])
+	if ((triggerL && keystate[SDLK_l]) || retrobox_savestate_slot >=100)
 	{
 		extern char *savestate_filename;
 		update_save_state_name();
+		if (retrobox_savestate_slot >=100) retrobox_savestate_slot = 0;
+
 		FILE *f=fopen(savestate_filename, "rb");
+
 		keystate[SDLK_l]=0;
 		if(f)
 		{
