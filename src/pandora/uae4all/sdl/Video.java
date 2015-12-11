@@ -973,7 +973,13 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		
 		// Log.d("UAE4ALL", "Action " + event.getAction() + ", axis=" + event.getActionIndex() +", x=" + event.getAxisValue(MotionEvent.AXIS_HAT_X) + ", y=" +  event.getAxisValue(MotionEvent.AXIS_HAT_Y));
 		
-
+		// ignore bogus events from PS3 DPAD
+		if (event.getAction() == MotionEvent.ACTION_MOVE && (event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) == InputDevice.SOURCE_CLASS_JOYSTICK) {
+			if (event.getAxisValue(MotionEvent.AXIS_GENERIC_5)!=0 ||
+				event.getAxisValue(MotionEvent.AXIS_GENERIC_6)!=0 ||
+				event.getAxisValue(MotionEvent.AXIS_GENERIC_7)!=0) return true;
+		}
+		
 		if (joystickAnalog.onGenericMotionEvent(event)) return true;
 		
 		DifferentTouchInput.touchInput.processGenericEvent(event);
