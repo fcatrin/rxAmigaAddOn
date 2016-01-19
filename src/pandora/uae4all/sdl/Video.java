@@ -32,6 +32,7 @@ import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
 import retrobox.vinput.AnalogGamepad;
+import retrobox.vinput.GenericGamepad;
 import retrobox.vinput.AnalogGamepad.Axis;
 import retrobox.vinput.overlay.ExtraButtonsView;
 import retrobox.vinput.AnalogGamepadListener;
@@ -926,7 +927,9 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		
 		joystickAnalog = new AnalogGamepad(640, 480, new AnalogGamepadListener() {
 			@Override
-			public void onAxisChange(float axisx, float axisy) {
+			public void onAxisChange(GenericGamepad gamepad, float axisx, float axisy, float hatX, float hatY) {
+				if (axisx == 0) axisx = hatX;
+				if (axisy == 0) axisy = hatY;
 				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0);
 			}
 
@@ -943,6 +946,11 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 
 			@Override
 			public void onDigitalY(Axis axis, boolean on) {}
+
+			@Override
+			public void onTriggers(String deviceDescriptor, int deviceId, boolean left, boolean right) {
+				MainActivity.mapper.handleTriggerEvent(deviceDescriptor, deviceId, left, right); 
+			}
 		});
 		
 		String customConfig = context.getIntent().getStringExtra("conf");

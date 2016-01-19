@@ -44,6 +44,7 @@ import retrobox.utils.ListOption;
 import retrobox.utils.RetroBoxDialog;
 import retrobox.utils.RetroBoxUtils;
 import retrobox.v2.pandora.uae4all.sdl.R;
+import retrobox.vinput.GenericGamepad;
 import retrobox.vinput.GenericGamepad.Analog;
 import retrobox.vinput.Mapper;
 import retrobox.vinput.QuitHandler;
@@ -61,7 +62,6 @@ import xtvapps.core.AndroidFonts;
 import xtvapps.core.Callback;
 import xtvapps.core.SimpleCallback;
 import xtvapps.core.content.KeyValue;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -74,7 +74,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -85,8 +84,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
@@ -106,7 +103,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity
 { 	
 	
-	static Mapper mapper;
+	public static Mapper mapper;
 	static VirtualEventDispatcher vinputDispatcher;
 	
 	static GamepadController gamepadController;
@@ -1577,7 +1574,7 @@ public class MainActivity extends Activity
 	class VirtualInputDispatcher implements VirtualEventDispatcher {
 
 		@Override
-		public void sendKey(int keyCode, boolean down) {
+		public void sendKey(GenericGamepad gamepad, int keyCode, boolean down) {
 			if (keyCode == 0) return;
 			
 			Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down);
@@ -1606,7 +1603,9 @@ public class MainActivity extends Activity
 		}
 
 		@Override
-		public void sendAnalog(Analog index, double x, double y) {}
+		public void sendAnalog(GenericGamepad gamepad, Analog index, double x,
+				double y, double hatx, double haty) {
+		}
 	}
 }
 
