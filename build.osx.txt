@@ -34,3 +34,9 @@ cd sdl
 # Recuperar respaldo
 # Recompilar uae4all para que vuelva a generar el archivo libapplication.so
 
+# Cambiar ABI's a compilar
+En jni/Settings.mk
+
+APP_ABI := armeabi-v7a x86
+
+

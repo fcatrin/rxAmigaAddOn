@@ -93,32 +93,34 @@ rm -r -f project/bin/* # New Android SDK introduced some lame-ass optimizations 
 	cd ../../../..
 }
 
-cd project && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j$NCPU V=1 && \
-	{	grep "CustomBuildScript=y" ../AndroidAppSettings.cfg > /dev/null && \
+APPSETTINGS=jni/application/src/AndroidAppSettings.cfg
+
+cd project && pwd && ls && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j$NCPU V=1 && \
+	{	grep "CustomBuildScript=y" $APPSETTINGS > /dev/null && \
 		echo Stripping libapplication-armeabi.so by hand && \
 		rm obj/local/armeabi/libapplication.so && \
 		cp jni/application/src/libapplication-armeabi.so obj/local/armeabi/libapplication.so && \
 		cp jni/application/src/libapplication-armeabi.so libs/armeabi/libapplication.so && \
 		$NDK/toolchains/arm-linux-androideabi-4.6/prebuilt/$MYARCH/bin/arm-linux-androideabi-strip --strip-unneeded libs/armeabi/libapplication.so \
 		|| true ; } && \
-	{	grep "CustomBuildScript=y" ../AndroidAppSettings.cfg > /dev/null && \
-		grep "MultiABI=" ../AndroidAppSettings.cfg | grep "y\\|all\\|armeabi-v7a" > /dev/null && \
+	{	grep "CustomBuildScript=y" $APPSETTINGS > /dev/null && \
+		grep "MultiABI=" $APPSETTINGS | grep "y\\|all\\|armeabi-v7a" > /dev/null && \
 		echo Stripping libapplication-armeabi-v7a.so by hand && \
 		rm obj/local/armeabi-v7a/libapplication.so && \
 		cp jni/application/src/libapplication-armeabi-v7a.so obj/local/armeabi-v7a/libapplication.so && \
 		cp jni/application/src/libapplication-armeabi-v7a.so libs/armeabi-v7a/libapplication.so && \
 		$NDK/toolchains/arm-linux-androideabi-4.6/prebuilt/$MYARCH/bin/arm-linux-androideabi-strip --strip-unneeded libs/armeabi-v7a/libapplication.so \
 		|| true ; } && \
-	{	grep "CustomBuildScript=y" ../AndroidAppSettings.cfg > /dev/null && \
-		grep "MultiABI=" ../AndroidAppSettings.cfg | grep "all\\|mips" > /dev/null && \
+	{	grep "CustomBuildScript=y" $APPSETTINGS > /dev/null && \
+		grep "MultiABI=" $APPSETTINGS | grep "all\\|mips" > /dev/null && \
 		echo Stripping libapplication-mips.so by hand && \
 		rm obj/local/mips/libapplication.so && \
 		cp jni/application/src/libapplication-mips.so obj/local/mips/libapplication.so && \
 		cp jni/application/src/libapplication-mips.so libs/mips/libapplication.so && \
 		$NDK/toolchains/mipsel-linux-android-4.6/prebuilt/$MYARCH/bin/mipsel-linux-android-strip --strip-unneeded libs/mips/libapplication.so \
 		|| true ; } && \
-	{	grep "CustomBuildScript=y" ../AndroidAppSettings.cfg > /dev/null && \
-		grep "MultiABI=" ../AndroidAppSettings.cfg | grep "all\\|x86" > /dev/null && \
+	{	grep "CustomBuildScript=y" $APPSETTINGS > /dev/null && \
+		grep "MultiABI=" $APPSETTINGS | grep "all\\|x86" > /dev/null && \
 		echo Stripping libapplication-x86.so by hand && \
 		rm obj/local/x86/libapplication.so && \
 		cp jni/application/src/libapplication-x86.so obj/local/x86/libapplication.so && \
