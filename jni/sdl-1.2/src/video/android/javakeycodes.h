@@ -209,6 +209,15 @@ KEYCODE_BUTTON_14       = 201,
 KEYCODE_BUTTON_15       = 202,
 KEYCODE_BUTTON_16       = 203,
 
+// special joystick 2 codes
+
+KEYCODE_JS2_UP         = 204,
+KEYCODE_JS2_DOWN       = 205,
+KEYCODE_JS2_LEFT       = 206,
+KEYCODE_JS2_RIGHT      = 207,
+KEYCODE_JS2_BUTTON_1   = 208,
+KEYCODE_JS2_BUTTON_2   = 209,
+
 KEYCODE_LAST            = 255 // Android 2.3 added several new gaming keys, Android 3.1 added even more - plz keep in sync with Keycodes.java
 };
 

@@ -298,6 +298,15 @@ typedef enum {
 
 	/* Add any other keys here */
 
+	// Commdore Amiga second joystick fake keys
+
+	SDLK_JS2_UP        = 323,
+	SDLK_JS2_DOWN      = 324,
+	SDLK_JS2_LEFT      = 325,
+	SDLK_JS2_RIGHT     = 326,
+	SDLK_JS2_BUTTON_1  = 327,
+	SDLK_JS2_BUTTON_2  = 328,
+
 	SDLK_LAST
 } SDLKey;
 

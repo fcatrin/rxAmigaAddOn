@@ -985,6 +985,7 @@ void SDL_ANDROID_WarpMouse(int x, int y)
 	}
 };
 
+static int js2_mapped = 0;
 static int processAndroidTrackball(int key, int action);
 
 JNIEXPORT jint JNICALL
@@ -1010,7 +1011,17 @@ JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeKey) ( JNIEnv*  env, jobject thiz, jint
 		return 1;
 	}
 
-	//__android_log_print(ANDROID_LOG_INFO, "libSDL","nativeKey %d translated %d unicode %d", key, TranslateKey(key), unicode);
+	if (!js2_mapped) {
+		SDL_android_keymap[KEYCODE_JS2_UP]       = SDL_KEY(JS2_UP);
+		SDL_android_keymap[KEYCODE_JS2_DOWN]     = SDL_KEY(JS2_DOWN);
+		SDL_android_keymap[KEYCODE_JS2_LEFT]     = SDL_KEY(JS2_LEFT);
+		SDL_android_keymap[KEYCODE_JS2_RIGHT]    = SDL_KEY(JS2_RIGHT);
+		SDL_android_keymap[KEYCODE_JS2_BUTTON_1] = SDL_KEY(JS2_BUTTON_1);
+		SDL_android_keymap[KEYCODE_JS2_BUTTON_2] = SDL_KEY(JS2_BUTTON_2);
+		js2_mapped = 1;
+	}
+
+	__android_log_print(ANDROID_LOG_INFO, "libSDL","nativeKey %d translated %d unicode %d", key, TranslateKey(key), unicode);
 
 	if( TranslateKey(key) == SDLK_NO_REMAP || (TranslateKey(key) == SDLK_UNKNOWN && (unicode & 0xFF80) == 0) )
 		return 0;
@@ -1374,7 +1385,7 @@ JAVA_EXPORT_NAME(Settings_nativeSetTrackballDampening) ( JNIEnv*  env, jobject t
 
 JNIEXPORT void JNICALL
 JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeGamepadAnalogJoystickInput) (JNIEnv* env, jobject thiz,
-	jfloat stick1x, jfloat stick1y, jfloat stick2x, jfloat stick2y, jfloat rtrigger, jfloat ltrigger)
+	jfloat stick1x, jfloat stick1y, jfloat stick2x, jfloat stick2y, jfloat rtrigger, jfloat ltrigger, jint port)
 {
 	if( SDL_ANDROID_CurrentJoysticks[JOY_GAMEPAD1] )
 	{
@@ -1387,46 +1398,52 @@ JAVA_EXPORT_NAME(DemoGLSurfaceView_nativeGamepadAnalogJoystickInput) (JNIEnv* en
 	}
 	else
 	{
+
+		int sdl_left  = port == 0 ? SDL_KEY(LEFT)  : SDL_KEY(JS2_LEFT);
+		int sdl_right = port == 0 ? SDL_KEY(RIGHT) : SDL_KEY(JS2_RIGHT);
+		int sdl_up    = port == 0 ? SDL_KEY(UP)    : SDL_KEY(JS2_UP);
+		int sdl_down  = port == 0 ? SDL_KEY(DOWN)  : SDL_KEY(JS2_DOWN);
+
 		// Translate to up/down/left/right
 		if( stick1x < -0.5f )
 		{
-			if( !SDL_GetKeyboardState(NULL)[SDL_KEY(LEFT)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, SDL_KEY(LEFT), 0 );
+			if( !SDL_GetKeyboardState(NULL)[sdl_left] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, sdl_left, 0 );
 		}
 		else
 		{
-			if( SDL_GetKeyboardState(NULL)[SDL_KEY(LEFT)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, SDL_KEY(LEFT), 0 );
+			if( SDL_GetKeyboardState(NULL)[sdl_left] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, sdl_left, 0 );
 		}
 		if( stick1x > 0.5f )
 		{
-			if( !SDL_GetKeyboardState(NULL)[SDL_KEY(RIGHT)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, SDL_KEY(RIGHT), 0 );
+			if( !SDL_GetKeyboardState(NULL)[sdl_right] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, sdl_right, 0 );
 		}
 		else
 		{
-			if( SDL_GetKeyboardState(NULL)[SDL_KEY(RIGHT)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, SDL_KEY(RIGHT), 0 );
+			if( SDL_GetKeyboardState(NULL)[sdl_right] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, sdl_right, 0 );
 		}
 		if( stick1y < -0.5f )
 		{
-			if( !SDL_GetKeyboardState(NULL)[SDL_KEY(UP)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, SDL_KEY(UP), 0 );
+			if( !SDL_GetKeyboardState(NULL)[sdl_up] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, sdl_up, 0 );
 		}
 		else
 		{
-			if( SDL_GetKeyboardState(NULL)[SDL_KEY(UP)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, SDL_KEY(UP), 0 );
+			if( SDL_GetKeyboardState(NULL)[sdl_up] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, sdl_up, 0 );
 		}
 		if( stick1y > 0.5f )
 		{
-			if( !SDL_GetKeyboardState(NULL)[SDL_KEY(DOWN)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, SDL_KEY(DOWN), 0 );
+			if( !SDL_GetKeyboardState(NULL)[sdl_down] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_PRESSED, sdl_down, 0 );
 		}
 		else
 		{
-			if( SDL_GetKeyboardState(NULL)[SDL_KEY(DOWN)] )
-				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, SDL_KEY(DOWN), 0 );
+			if( SDL_GetKeyboardState(NULL)[sdl_down] )
+				SDL_ANDROID_MainThreadPushKeyboardKey( SDL_RELEASED, sdl_down, 0 );
 		}
 	}
 }
@@ -1732,6 +1749,11 @@ JNIEXPORT void JNICALL
 JAVA_EXPORT_NAME(Settings_nativeInitKeymap) ( JNIEnv*  env, jobject thiz )
 {
 	SDL_android_init_keymap(SDL_android_keymap);
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "SDL_android_keymap button 1 is %d [%d]", SDL_android_keymap[KEYCODE_JS2_BUTTON_1], KEYCODE_JS2_BUTTON_1);
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "SDL_android_keymap button 2 is %d [%d]", SDL_android_keymap[KEYCODE_JS2_BUTTON_2], KEYCODE_JS2_BUTTON_2);
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "Translated button 1 is %d", TranslateKey(KEYCODE_JS2_BUTTON_1));
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "Translated button 2 is %d", TranslateKey(KEYCODE_JS2_BUTTON_2));
+
 }
 
 void SDL_ANDROID_SetGamepadKeymap(int A, int B, int X, int Y, int L1, int R1, int L2, int R2, int LThumb, int RThumb)

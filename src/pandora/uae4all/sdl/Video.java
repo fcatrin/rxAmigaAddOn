@@ -372,7 +372,7 @@ abstract class DifferentTouchInput
 				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(
 					event.getAxisValue(MotionEvent.AXIS_X), event.getAxisValue(MotionEvent.AXIS_Y),
 					event.getAxisValue(MotionEvent.AXIS_Z), event.getAxisValue(MotionEvent.AXIS_RZ),
-					event.getAxisValue(MotionEvent.AXIS_RTRIGGER), event.getAxisValue(MotionEvent.AXIS_LTRIGGER) );
+					event.getAxisValue(MotionEvent.AXIS_RTRIGGER), event.getAxisValue(MotionEvent.AXIS_LTRIGGER), 0 );
 				return;
 			}
 			// Process mousewheel
@@ -428,7 +428,7 @@ abstract class DifferentTouchInput
 				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(
 					event.getAxisValue(MotionEvent.AXIS_X), event.getAxisValue(MotionEvent.AXIS_Y),
 					event.getAxisValue(MotionEvent.AXIS_RX), event.getAxisValue(MotionEvent.AXIS_RZ),
-					0, 0);
+					0, 0, 0);
 				if( event.getAxisValue(MotionEvent.AXIS_HAT_X) != hatX )
 				{
 					hatX = event.getAxisValue(MotionEvent.AXIS_HAT_X);
@@ -928,9 +928,9 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		joystickAnalog = new AnalogGamepad(640, 480, new AnalogGamepadListener() {
 			@Override
 			public void onAxisChange(GenericGamepad gamepad, float axisx, float axisy, float hatX, float hatY) {
-				if (axisx == 0) axisx = hatX;
-				if (axisy == 0) axisy = hatY;
-				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0);
+				if (Math.abs(axisx) < 0.005) axisx = hatX;
+				if (Math.abs(axisy) < 0.005) axisy = hatY;
+				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0, gamepad.player);
 			}
 
 			@Override
@@ -1071,7 +1071,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 	public static native void nativeHardwareMouseDetected( int detected );
 	public static native void nativeMouseButtonsPressed( int buttonId, int pressedState );
 	public static native void nativeMouseWheel( int scrollX, int scrollY );
-	public static native void nativeGamepadAnalogJoystickInput( float stick1x,  float stick1y, float stick2x, float stick2y, float rtrigger, float ltrigger );
+	public static native void nativeGamepadAnalogJoystickInput( float stick1x,  float stick1y, float stick2x, float stick2y, float rtrigger, float ltrigger, int port );
 }
 
 

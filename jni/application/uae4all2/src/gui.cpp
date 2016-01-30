@@ -112,6 +112,14 @@ int triggerR=0;
 int buttonSelect=0;
 int buttonStart=0;
 
+// second joystick
+int dpad2Up;
+int dpad2Down;
+int dpad2Left;
+int dpad2Right;
+int button2A;
+int button2B;
+
 extern int mainMenu_case;
 #ifdef WITH_TESTMODE
 int no_limiter = 0;
@@ -600,6 +608,15 @@ void gui_handle_events (void)
 	triggerR = keystate[SDLK_RCTRL];
 	buttonSelect = keystate[SDLK_LCTRL];
 	buttonStart = keystate[SDLK_LALT];
+
+
+	// second joystick handling
+	dpad2Up      = keystate[SDLK_JS2_UP];
+	dpad2Down    = keystate[SDLK_JS2_DOWN];
+	dpad2Left    = keystate[SDLK_JS2_LEFT];
+	dpad2Right   = keystate[SDLK_JS2_RIGHT];
+	button2A     = keystate[SDLK_JS2_BUTTON_1];
+	button2B     = keystate[SDLK_JS2_BUTTON_2];
 
 	if(keystate[SDLK_LCTRL] && keystate[SDLK_RSHIFT]) {
 		if (onDiskSwapPressed ) return;

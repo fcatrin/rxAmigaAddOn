@@ -1577,11 +1577,22 @@ public class MainActivity extends Activity
 		public void sendKey(GenericGamepad gamepad, int keyCode, boolean down) {
 			if (keyCode == 0) return;
 			
-			Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down);
-			
-			// emulator expect BUTTON_4 to be Joystick BUTTON_0
-			if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
-			
+			if (gamepad.player == 0) {
+				// emulator expect BUTTON_4 to be Joystick BUTTON_0
+				if (keyCode == KeyEvent.KEYCODE_BUTTON_1) keyCode = KeyEvent.KEYCODE_BUTTON_4;
+			} else {
+				switch (keyCode) {
+				case KeyEvent.KEYCODE_DPAD_UP     : keyCode = 204; break;
+				case KeyEvent.KEYCODE_DPAD_DOWN   : keyCode = 205; break;
+				case KeyEvent.KEYCODE_DPAD_LEFT   : keyCode = 206; break;
+				case KeyEvent.KEYCODE_DPAD_RIGHT  : keyCode = 207; break;
+				case KeyEvent.KEYCODE_BUTTON_1    : keyCode = 208; break;
+				case KeyEvent.KEYCODE_BUTTON_2    : keyCode = 209; break;
+				}
+					
+			}
+			// Log.d("MAPPER", "Send native key " + keyCode + ", down:" + down + ", player:" + gamepad.player);
+
 			sendNativeKey(keyCode, down);
 		}
 

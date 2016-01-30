@@ -239,6 +239,16 @@ void SDL_android_init_keymap(SDLKey *SDL_android_keymap)
   keymap[KEYCODE_BUTTON_14] = SDL_KEY(N);
   keymap[KEYCODE_BUTTON_15] = SDL_KEY(O);
   keymap[KEYCODE_BUTTON_16] = SDL_KEY(P);
+
+  // second joystick support
+  // this is never called. Moved to SQL_androidinput.c nativeKey
+  keymap[KEYCODE_JS2_UP]       = SDL_KEY(JS2_UP);
+  keymap[KEYCODE_JS2_DOWN]     = SDL_KEY(JS2_DOWN);
+  keymap[KEYCODE_JS2_LEFT]     = SDL_KEY(JS2_LEFT);
+  keymap[KEYCODE_JS2_RIGHT]    = SDL_KEY(JS2_RIGHT);
+  keymap[KEYCODE_JS2_BUTTON_1] = SDL_KEY(JS2_BUTTON_1);
+  keymap[KEYCODE_JS2_BUTTON_2] = SDL_KEY(JS2_BUTTON_2);
+
 }
 
 unsigned char SDL_android_keysym_to_scancode[SDLK_LAST] = {

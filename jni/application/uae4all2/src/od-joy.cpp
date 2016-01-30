@@ -43,6 +43,15 @@ extern int triggerL;
 extern int triggerR;
 extern int buttonSelect;
 extern int buttonStart;
+
+// second joystick
+extern int dpad2Up;
+extern int dpad2Down;
+extern int dpad2Left;
+extern int dpad2Right;
+extern int button2A;
+extern int button2B;
+
 #endif
 
 extern char launchDir[300];
@@ -63,6 +72,22 @@ void read_joystick(int nr, unsigned int *dir, int *button)
     int left = 0, right = 0, top = 0, bot = 0, upRight=0, downRight=0, upLeft=0, downLeft=0, x=0, y=0, a=0, b=0;
     int len, i, num;
     SDL_Joystick *joy = nr == 0 ? uae4all_joy0 : uae4all_joy1;
+
+    // simple player second joystick handling
+
+    if (nr == 1) {
+    	left  = dpad2Left;
+    	right = dpad2Right;
+    	top   = dpad2Up;
+    	bot   = dpad2Down;
+
+    	if (left) top = !top;
+    	if (right) bot = !bot;
+
+    	*dir = bot | (right << 1) | (top << 8) | (left << 9);
+    	*button = button2A | (button2B << 1);
+    	return;
+    }
 
     *dir = 0;
     *button = 0;
