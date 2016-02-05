@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="retrobox.v2.pandora.uae4all.sdl"
-      android:versionCode="3027"
-      android:versionName="2.3.5.3-27"
+      android:versionCode="3028"
+      android:versionName="2.3.5.3-28"
       android:installLocation="auto"
       android:sharedUserId="psychoworld.retrobox.v2"
 >
