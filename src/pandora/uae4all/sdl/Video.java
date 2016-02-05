@@ -942,10 +942,10 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 			public void onMouseMoveRelative(float mousex, float mousey) {}
 
 			@Override
-			public void onDigitalX(Axis axis, boolean on) {}
+			public void onDigitalX(GenericGamepad gamepad, Axis axis, boolean on) {}
 
 			@Override
-			public void onDigitalY(Axis axis, boolean on) {}
+			public void onDigitalY(GenericGamepad gamepad, Axis axis, boolean on) {}
 
 			@Override
 			public void onTriggers(String deviceDescriptor, int deviceId, boolean left, boolean right) {
