@@ -49,6 +49,10 @@
 char retrobox_savestate_dir[2048] = "/tmp/savestate.state";
 int  retrobox_savestate_slot = 0;
 
+char screenshot_dir[2048] = "";
+char screenshot_name[256] = "";
+
+
 // The device screen dimensions to draw on
 int SDL_ANDROID_sWindowWidth  = 0;
 int SDL_ANDROID_sWindowHeight = 0;
@@ -347,6 +351,22 @@ JNIEXPORT void JNICALL
 JAVA_EXPORT_NAME(DemoRenderer_nativeSetSaveSlot) ( JNIEnv*  env, jobject thiz, jint slot) {
 	__android_log_print(ANDROID_LOG_INFO, "libSDL", "set save state slot to %d", slot);
 	retrobox_savestate_slot = slot;
+}
+
+JNIEXPORT void JNICALL
+JAVA_EXPORT_NAME(DemoRenderer_nativeSetScreenshotDir) ( JNIEnv*  env, jobject thiz, jstring jdir) {
+	const char *dir = (*env)->GetStringUTFChars( env, jdir , NULL ) ;
+	strcpy(screenshot_dir, dir);
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "set screenshot dir to %s", dir );
+	(*env)->ReleaseStringUTFChars(env, jdir, dir);
+}
+
+JNIEXPORT void JNICALL
+JAVA_EXPORT_NAME(DemoRenderer_nativeSetScreenshotName) ( JNIEnv*  env, jobject thiz, jstring jname) {
+	const char *name = (*env)->GetStringUTFChars( env, jname , NULL ) ;
+	strcpy(screenshot_name, name);
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "set screenshot name to %s", name );
+	(*env)->ReleaseStringUTFChars(env, jname, name);
 }
 
 

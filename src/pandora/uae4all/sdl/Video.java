@@ -653,6 +653,8 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 		Settings.nativeSetEnv( "DISPLAY_RESOLUTION_WIDTH", String.valueOf(Math.max(mWidth, mHeight)) );
 		Settings.nativeSetEnv( "DISPLAY_RESOLUTION_HEIGHT", String.valueOf(Math.min(mWidth, mHeight)) ); // In Kitkat with immersive mode, getWindowManager().getDefaultDisplay().getMetrics() return inaccurate height
 
+		DemoRenderer.nativeSetScreenshotDir(context.getIntent().getStringExtra("screenshotDir"));
+		DemoRenderer.nativeSetScreenshotName(context.getIntent().getStringExtra("screenshotName"));
 		DemoRenderer.nativeSetSaveDir(context.getIntent().getStringExtra("stateDir"));
 		int stateSlot = context.getIntent().getIntExtra("stateSlot", 0);
 		
@@ -895,6 +897,8 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 	public static native void nativeTextInputFinished();
 	public static native void nativeSetSaveDir(String dir);
 	public static native void nativeSetSaveSlot(int slot);
+	public static native void nativeSetScreenshotDir(String dir);
+	public static native void nativeSetScreenshotName(String name);
 
 	private MainActivity context = null;
 	public AccelerometerReader accelerometer = null;

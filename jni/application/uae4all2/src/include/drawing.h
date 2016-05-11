@@ -13,6 +13,9 @@
 #define RES_HIRES 1
 #define RES_SUPERHIRES 2
 
+#define STATE_DOSCREENSHOT 1
+extern int screenshot_state;
+
 #define gfxHeight 270
 
 #ifndef UAE4ALL_ALIGN

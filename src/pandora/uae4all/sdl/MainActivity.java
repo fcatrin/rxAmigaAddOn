@@ -1534,6 +1534,17 @@ public class MainActivity extends Activity
 		}, 500);
 	}
 
+	protected void uiScreenshot() {
+		uiScreenshot(true);
+		new Handler().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				uiScreenshot(false);
+				toastMessage("Screenshot taken");
+			}
+		}, 500);
+	}
+
 	
 	protected void uiLoadState(boolean down) {
 		sendNativeKey(KeyEvent.KEYCODE_SHIFT_RIGHT, down);
@@ -1557,7 +1568,11 @@ public class MainActivity extends Activity
 	protected void uiMoreLines(boolean down) {
 		sendNativeKey(KeyEvent.KEYCODE_F11, down);
 	}
-	
+
+	protected void uiScreenshot(boolean down) {
+		sendNativeKey(KeyEvent.KEYCODE_SYSRQ, down);
+	}
+
     protected void uiQuitConfirm() {
     	QuitHandler.askForQuit(this, new QuitHandlerCallback() {
 			@Override
@@ -1607,6 +1622,7 @@ public class MainActivity extends Activity
 			case LOAD_STATE : if (!down) uiLoadState(); return true;
 			case SAVE_STATE: if (!down) uiSaveState(); return true;
 			case SWAP_DISK: if (!down) uiSwapDisks(); return true;
+			case SCREENSHOT: uiScreenshot(); return true;
 			case MENU : if (!down) openRetroBoxMenu(); return true;
 			case EXIT: if (!down) uiQuitConfirm(); return true;
 			default: return false;

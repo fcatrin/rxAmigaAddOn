@@ -593,6 +593,8 @@ void update_save_state_name() {
 	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "Set save state file %s", savestate_filename);
 }
 
+static int screenshot_pressed = false;
+
 void gui_handle_events (void)
 {
 	Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -658,6 +660,15 @@ void gui_handle_events (void)
 
 	if(keystate[SDLK_F12])
 		SDL_WM_ToggleFullScreen(prSDLScreen);
+
+	if(!screenshot_pressed) {
+		if (keystate[SDLK_PRINT]) {
+			screenshot_state = STATE_DOSCREENSHOT;
+			__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","screenshot state set");
+		}
+	}
+	screenshot_pressed = keystate[SDLK_PRINT];
+
 
 #ifdef ANDROIDSDL
 

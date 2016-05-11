@@ -5,6 +5,7 @@
 #include "sysdeps.h"
 #include "config.h"
 #include "menu.h"
+#include "retrobox.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -185,15 +186,48 @@ void CreateScreenshot(int code)
   SDL_BlitSurface(prSDLScreen, NULL, current_screenshot, NULL);
 }
 
+static void ClearScreenshot() {
+	if(current_screenshot != NULL)
+	{
+	SDL_FreeSurface(current_screenshot);
+	current_screenshot = NULL;
+	}
+}
+
+char screenshot_path[2048] = "";
+
+static char *build_screenshot_path() {
+	for(int i=0; i<1000; i++) {
+		sprintf(screenshot_path, "%s/%s.shot.%i.png", screenshot_dir, screenshot_name, i);
+		if (access(screenshot_path, F_OK) == -1) {
+			__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","set screenshot path to %s", screenshot_path);
+			return screenshot_path;
+		}
+	}
+	return NULL;
+}
 
 int save_thumb(int code,char *path)
 {
 //	CreateScreenshot(code);
-	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","in save thumb to %s", path);
+	if (path == NULL) {
+		path = build_screenshot_path();
+	}
+
+	if (path == NULL) {
+		__android_log_print(ANDROID_LOG_ERROR, "UAE4ALL2","reached maximum screenshots at ", screenshot_dir);
+		return 0;
+	}
+
+	if (current_screenshot == NULL) {
+		CreateScreenshot(code);
+	}
+
 	int ret = 0;
 	if(current_screenshot != NULL) {
-		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","in save png to %s", path);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","save screenshot to png to %s", path);
 		ret = save_png(current_screenshot, path);
+		ClearScreenshot();
 	}
 
 	return ret;

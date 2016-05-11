@@ -59,6 +59,8 @@
 
 static int fps_counter = 0, fps_counter_changed = 0;
 
+int screenshot_state = 0;
+
 #ifdef USE_DRAWING_EXTRA_INLINE
 #define _INLINE_ __inline__
 #else
@@ -2664,6 +2666,11 @@ void vsync_handle_redraw (int long_frame, int lof_changed)
 			pause_sound();
 			savestate_state = STATE_RESTORE;
 			uae_reset ();
+		} else if (screenshot_state == STATE_DOSCREENSHOT) {
+			pause_sound();
+			save_thumb(SCREENSHOT, NULL);
+			screenshot_state = 0;
+			resume_sound();
 		}
 
 		if (quit_program < 0) {
