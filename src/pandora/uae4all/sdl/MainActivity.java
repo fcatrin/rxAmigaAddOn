@@ -38,11 +38,13 @@ import java.util.zip.CheckedInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import retrobox.content.SaveStateInfo;
 import retrobox.utils.GamepadInfoDialog;
 import retrobox.utils.ImmersiveModeSetter;
 import retrobox.utils.ListOption;
 import retrobox.utils.RetroBoxDialog;
 import retrobox.utils.RetroBoxUtils;
+import retrobox.utils.SaveStateSelectorAdapter;
 import retrobox.v2.pandora.uae4all.sdl.R;
 import retrobox.vinput.GenericGamepad;
 import retrobox.vinput.GenericGamepad.Analog;
@@ -63,6 +65,7 @@ import xtvapps.core.Callback;
 import xtvapps.core.SimpleCallback;
 import xtvapps.core.content.KeyValue;
 import android.app.Activity;
+import android.app.NativeActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -103,6 +106,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity
 { 	
 	
+	private static final String LOGTAG = MainActivity.class.getSimpleName();
 	public static Mapper mapper;
 	static VirtualEventDispatcher vinputDispatcher;
 	
@@ -116,6 +120,8 @@ public class MainActivity extends Activity
 	private boolean aliased;
 	private boolean canSwap = false;
 	private GamepadInfoDialog gamepadInfoDialog;
+	
+	private static int saveSlot = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -423,6 +429,8 @@ public class MainActivity extends Activity
 
         gamepadInfoDialog = new GamepadInfoDialog(this);
         gamepadInfoDialog.loadFromIntent(getIntent());
+        
+        getLayoutInflater().inflate(R.layout.modal_dialog_savestates, _videoLayout);
 	}
 
 	private boolean needsOverlay() {
@@ -1407,6 +1415,51 @@ public class MainActivity extends Activity
 		openRetroBoxMenu();
 	}
 	
+	private void uiSelectSaveState(final boolean isLoadingState) {
+		List<SaveStateInfo> list = new ArrayList<SaveStateInfo>();
+		String baseName = getIntent().getStringExtra("stateDir") + "/save";
+		for(int i=0; i<6; i++) {
+			String fileName = baseName + "_" + i + ".state" ;
+			String fileNameShot = fileName + ".png" ;
+			Log.d(LOGTAG, "Reading filestate from " + fileName);
+			list.add(new SaveStateInfo(new File(fileName), new File(fileNameShot)));
+		}
+		
+		final SaveStateSelectorAdapter adapter = new SaveStateSelectorAdapter(list, saveSlot);
+		
+		Callback<Integer> callback = new Callback<Integer>() {
+			boolean invalidSlot = false;
+			
+			@Override
+			public void onResult(Integer index) {
+				System.out.println("setting save slot to " + index + " loading " + isLoadingState);
+				invalidSlot = isLoadingState && 
+						!((SaveStateInfo)adapter.getItem(index)).exists();
+				
+				if (!invalidSlot) {
+					saveSlot = index;
+					DemoRenderer.nativeSetSaveSlot(saveSlot);
+					RetroBoxDialog.cancelDialog(MainActivity.this);
+				}
+			}
+
+			@Override
+			public void onFinally() {
+				resumeEmulation();
+				if (!invalidSlot) {
+					if (isLoadingState) {
+						uiLoadState();
+					} else {
+						uiSaveState();
+					}
+				}
+			}
+		};
+		
+		String title = "Select slot to " + (isLoadingState ? "load from" : "save on");
+		RetroBoxDialog.showSaveStatesDialog(this, title, adapter, callback);
+	}
+	
     private void openRetroBoxMenu() {
     	pauseEmulation();
     	List<ListOption> options = new ArrayList<ListOption>();
@@ -1433,9 +1486,11 @@ public class MainActivity extends Activity
 			public void onResult(KeyValue result) {
 				String key = result.getKey();
 				if (key.equals("load")) {
-					uiLoadState();
+					uiSelectSaveState(true);
+					return;
 				} else if (key.equals("save")) {
-					uiSaveState();
+					uiSelectSaveState(false);
+					return;
 				} else if (key.equals("height+")) {
 					uiMoreLines();
 				} else if (key.equals("height-")) {
@@ -1488,7 +1543,7 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiLoadState(false);
-				toastMessage("State was restored");
+				toastMessage("State was restored from slot #" + saveSlot);
 			}
 		}, 500);
 	}
@@ -1499,7 +1554,7 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiSaveState(false);
-				toastMessage("State was saved");
+				toastMessage("State was saved to slot #" + saveSlot);
 			}
 		}, 500);
 	}
