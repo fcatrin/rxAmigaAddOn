@@ -1543,7 +1543,7 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiLoadState(false);
-				toastMessage("State was restored from slot #" + saveSlot);
+				toastMessage("State was restored from slot #" + (saveSlot+1));
 			}
 		}, 500);
 	}
@@ -1554,7 +1554,7 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiSaveState(false);
-				toastMessage("State was saved to slot #" + saveSlot);
+				toastMessage("State was saved to slot #" + (saveSlot+1));
 			}
 		}, 500);
 	}
