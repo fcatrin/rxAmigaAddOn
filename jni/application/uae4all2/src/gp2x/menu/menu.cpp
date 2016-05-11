@@ -19,6 +19,11 @@
 #include <SDL_gfxPrimitives.h>
 #include <SDL_gp2x.h>
 
+#ifdef ANDROIDSDL
+#include <android/log.h>
+#include "SDL_screenkeyboard.h"
+#endif
+
 extern int bReloadKickstart;
 #ifdef USE_GUICHAN
 extern int mainMenu_displayHires;
@@ -184,9 +189,13 @@ void CreateScreenshot(int code)
 int save_thumb(int code,char *path)
 {
 //	CreateScreenshot(code);
+	__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","in save thumb to %s", path);
 	int ret = 0;
-	if(current_screenshot != NULL)
-	  ret = save_png(current_screenshot, path);
+	if(current_screenshot != NULL) {
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","in save png to %s", path);
+		ret = save_png(current_screenshot, path);
+	}
+
 	return ret;
 }
 

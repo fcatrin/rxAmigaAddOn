@@ -52,6 +52,11 @@
 #include "menu_config.h"
 #include "menu.h"
 
+#ifdef ANDROIDSDL
+#include <android/log.h>
+#include "SDL_screenkeyboard.h"
+#endif
+
 static int fps_counter = 0, fps_counter_changed = 0;
 
 #ifdef USE_DRAWING_EXTRA_INLINE
@@ -2643,7 +2648,12 @@ void vsync_handle_redraw (int long_frame, int lof_changed)
 			custom_prepare_savestate ();
 			savestate_state = STATE_SAVE;
 			pause_sound();
-			save_thumb(SCREENSHOT, screenshot_filename);
+
+			char savestate_screenshot_filename[1024] = "";
+			strcpy(savestate_screenshot_filename, savestate_filename);
+			strcat(savestate_screenshot_filename, ".png");
+			save_thumb(SCREENSHOT, savestate_screenshot_filename);
+
 			save_state (savestate_filename, "Description!");
 			resume_sound();
 			gui_set_message("Saved", 50);
