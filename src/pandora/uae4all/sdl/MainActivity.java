@@ -1425,7 +1425,7 @@ public class MainActivity extends Activity
 			list.add(new SaveStateInfo(new File(fileName), new File(fileNameShot)));
 		}
 		
-		final SaveStateSelectorAdapter adapter = new SaveStateSelectorAdapter(list, saveSlot);
+		final SaveStateSelectorAdapter adapter = new SaveStateSelectorAdapter(this, list, saveSlot);
 		
 		Callback<Integer> callback = new Callback<Integer>() {
 			boolean invalidSlot = false;
@@ -1456,32 +1456,34 @@ public class MainActivity extends Activity
 			}
 		};
 		
-		String title = "Select slot to " + (isLoadingState ? "load from" : "save on");
+		String title =  isLoadingState ?
+				getString(R.string.emu_slot_load_title) :
+				getString(R.string.emu_slot_save_title);
 		RetroBoxDialog.showSaveStatesDialog(this, title, adapter, callback);
 	}
 	
     private void openRetroBoxMenu() {
     	pauseEmulation();
     	List<ListOption> options = new ArrayList<ListOption>();
-    	options.add(new ListOption("", "Cancel"));
-    	options.add(new ListOption("load", "Load State"));
-    	options.add(new ListOption("save", "Save State"));
+    	options.add(new ListOption("", getString(R.string.emu_opt_cancel)));
+    	options.add(new ListOption("load", getString(R.string.emu_opt_state_load)));
+    	options.add(new ListOption("save", getString(R.string.emu_opt_state_save)));
     	
     	if (OverlayExtra.hasExtraButtons()) {
-    		options.add(new ListOption("extra", "Extra Buttons"));
+    		options.add(new ListOption("extra", getString(R.string.emu_opt_extra_buttons)));
     	}
     	
-    	options.add(new ListOption("height+", "Increase Height"));
-    	options.add(new ListOption("height-", "Decrease Height"));
+    	options.add(new ListOption("height+", getString(R.string.emu_amiga_more_height)));
+    	options.add(new ListOption("height-", getString(R.string.emu_amiga_less_height)));
     	
     	if (canSwap) {
-    		options.add(new ListOption("swap", "Swap Disk"));
+    		options.add(new ListOption("swap", getString(R.string.emu_opt_disk_swap)));
     	}
     	
-    	options.add(new ListOption("help", "Help"));
-    	options.add(new ListOption("quit", "Quit"));
+    	options.add(new ListOption("help", getString(R.string.emu_opt_help)));
+    	options.add(new ListOption("quit", getString(R.string.emu_opt_quit)));
     	
-    	RetroBoxDialog.showListDialog(this, "RetroBoxTV", options, new Callback<KeyValue>() {
+    	RetroBoxDialog.showListDialog(this, getString(R.string.emu_opt_title), options, new Callback<KeyValue>() {
 			@Override
 			public void onResult(KeyValue result) {
 				String key = result.getKey();
@@ -1543,7 +1545,8 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiLoadState(false);
-				toastMessage("State was restored from slot #" + (saveSlot+1));
+				String msg = getString(R.string.emu_slot_loaded).replace("{n}", String.valueOf(saveSlot+1));
+				toastMessage(msg);
 			}
 		}, 500);
 	}
@@ -1554,7 +1557,8 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiSaveState(false);
-				toastMessage("State was saved to slot #" + (saveSlot+1));
+				String msg = getString(R.string.emu_slot_saved).replace("{n}", String.valueOf(saveSlot+1));
+				toastMessage(msg);
 			}
 		}, 500);
 	}
@@ -1595,7 +1599,7 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiScreenshot(false);
-				toastMessage("Screenshot taken");
+				toastMessage(getString(R.string.emu_screenshot));
 			}
 		}, 500);
 	}
