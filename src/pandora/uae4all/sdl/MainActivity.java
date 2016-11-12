@@ -1599,7 +1599,7 @@ public class MainActivity extends Activity
 			@Override
 			public void run() {
 				uiScreenshot(false);
-				toastMessage(getString(R.string.emu_screenshot));
+				toastMessage(getString(R.string.emu_screenshot_failed));
 			}
 		}, 500);
 	}
