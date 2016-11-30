@@ -93,4 +93,6 @@ extern int SDL_ANDROID_joysticksAmount;
 extern void SDL_ANDROID_PumpEvents();
 extern void SDL_ANDROID_SetHoverDeadzone();
 
+extern int SDL_ANDROID_invert_rgb;
+
 #endif /* _SDL_androidvideo_h */

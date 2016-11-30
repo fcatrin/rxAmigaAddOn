@@ -247,6 +247,11 @@ public class MainActivity extends Activity
 					Log.i("SDL", "libSDL: Loading libraries");
 					p.LoadLibraries();
 					p.mAudioThread = new AudioThread(p);
+					
+					boolean isInvertedRGB = getIntent().getBooleanExtra("invertRGB", false);
+					Log.d("SDL", "libSDL: set isInvertedRGB = " + isInvertedRGB);
+	                DemoRenderer.nativeSetInvertRGB(isInvertedRGB);
+	                
 					Log.i("SDL", "libSDL: Loading settings");
 					final Semaphore loaded = new Semaphore(0);
 					class Callback2 implements Runnable

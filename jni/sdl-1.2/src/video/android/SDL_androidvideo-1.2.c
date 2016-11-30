@@ -487,7 +487,12 @@ SDL_Surface *ANDROID_SetVideoMode(_THIS, SDL_Surface *current,
 
 	/* Allocate the new pixel format for the screen */
     SDL_memset(&format, 0, sizeof(format));
-	SDL_PixelFormatEnumToMasks( PixelFormatEnum, &bpp1,
+    Uint32 pixel_format = PixelFormatEnum;
+    if (pixel_format == SDL_PIXELFORMAT_RGB565  && SDL_ANDROID_invert_rgb) {
+    	pixel_format = SDL_PIXELFORMAT_BGR565;
+    }
+
+	SDL_PixelFormatEnumToMasks( pixel_format, &bpp1,
 								&format.Rmask, &format.Gmask,
 								&format.Bmask, &format.Amask );
 	format.BitsPerPixel = bpp1;

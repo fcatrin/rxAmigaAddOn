@@ -60,6 +60,8 @@ int SDL_ANDROID_sWindowHeight = 0;
 int SDL_ANDROID_sRealWindowWidth  = 0;
 int SDL_ANDROID_sRealWindowHeight = 0;
 
+int SDL_ANDROID_invert_rgb = 0;
+
 int SDL_ANDROID_ScreenKeep43Ratio = 0;
 
 SDL_Rect SDL_ANDROID_ForceClearScreenRect[4] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
@@ -393,6 +395,12 @@ JAVA_EXPORT_NAME(DemoRenderer_nativeInitJavaCallbacks) ( JNIEnv*  env, jobject t
 	
 	ANDROID_InitOSKeymap();
 }
+
+JNIEXPORT void JNICALL
+JAVA_EXPORT_NAME(DemoRenderer_nativeSetInvertRGB) ( JNIEnv*  env, jobject thiz, jboolean invert )
+{
+        SDL_ANDROID_invert_rgb = invert;
+};
 
 int SDL_ANDROID_SetApplicationPutToBackgroundCallback(
 		SDL_ANDROID_ApplicationPutToBackgroundCallback_t appPutToBackground,

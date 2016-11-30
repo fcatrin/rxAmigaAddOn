@@ -899,6 +899,7 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 	public static native void nativeSetSaveSlot(int slot);
 	public static native void nativeSetScreenshotDir(String dir);
 	public static native void nativeSetScreenshotName(String name);
+	public static native void nativeSetInvertRGB(boolean invert); 
 
 	private MainActivity context = null;
 	public AccelerometerReader accelerometer = null;
