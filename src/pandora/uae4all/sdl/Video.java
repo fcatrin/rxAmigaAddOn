@@ -932,7 +932,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		
 		joystickAnalog = new AnalogGamepad(640, 480, new AnalogGamepadListener() {
 			@Override
-			public void onAxisChange(GenericGamepad gamepad, float axisx, float axisy, float hatX, float hatY) {
+			public void onAxisChange(GenericGamepad gamepad, float axisx, float axisy, float hatX, float hatY, float raxisx, float raxisy) {
 				if (Math.abs(axisx) < 0.005) axisx = hatX;
 				if (Math.abs(axisy) < 0.005) axisy = hatY;
 				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0, gamepad.player);
