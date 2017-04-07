@@ -956,6 +956,9 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 			public void onTriggers(String deviceDescriptor, int deviceId, boolean left, boolean right) {
 				MainActivity.mapper.handleTriggerEvent(deviceDescriptor, deviceId, left, right); 
 			}
+
+			@Override
+			public void onTriggersAnalog(GenericGamepad gamepad, int deviceId, float left, float right) {}
 		});
 		
 		String customConfig = context.getIntent().getStringExtra("conf");
