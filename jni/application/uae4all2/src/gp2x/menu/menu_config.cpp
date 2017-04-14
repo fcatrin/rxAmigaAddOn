@@ -1097,6 +1097,8 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "df6=%[^\n]s", uae4all_image_file6);
 			sscanf(line, "df7=%[^\n]s", uae4all_image_file7);
 
+			sscanf(line, "hdf=%[^\n]s", uae4all_hard_file);
+
 			sscanf(line, "kickstart=%d\n",&kickstart);
 			sscanf(line, "kickstarts_dir=%s\n",kickstarts_dir);
 			sscanf(line, "frameskip=%d\n",&mainMenu_frameskip);
@@ -1132,6 +1134,7 @@ void loadconfigcustom(int general, char *configfile)
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df5 %s", uae4all_image_file5);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df6 %s", uae4all_image_file6);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "df7 %s", uae4all_image_file7);
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "hdf %s", uae4all_hard_file);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstart %i", kickstart);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "kickstarts_dir %s", kickstarts_dir);
 		snprintf(romfile, 256, "%s/%s",kickstarts_dir,kickstarts_rom_names[kickstart]);
@@ -1333,6 +1336,13 @@ void loadconfigcustom(int general, char *configfile)
 		mainMenu_CPU_model=1;
 		mainMenu_chipset=2;
 		mainMenu_CPU_speed=1;
+	}
+
+	if (uae4all_hard_file[0] != '\0') {
+		make_hard_file_cfg_line(uae4all_hard_file);
+		reset_hdConf();
+		mainMenu_bootHD = 2;
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "boot from hard drive %s", uae4all_hard_file);
 	}
 
 	SetPresetMode(presetModeId);
