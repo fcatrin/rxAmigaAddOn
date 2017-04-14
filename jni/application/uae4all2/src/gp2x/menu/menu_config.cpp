@@ -28,6 +28,7 @@ extern char currentDir[300];
 extern int nr_drives;
 extern char *config_filename;
 int isAmiga1200 = 0;
+int isAmiga600  = 0;
 
 extern void extractFileName(char * str,char *buffer);
 
@@ -1109,6 +1110,7 @@ void loadconfigcustom(int general, char *configfile)
 			sscanf(line, "floppyspeed=%d\n",&mainMenu_floppyspeed); // floppy speed in percent (100 = 100% Amiga)
 			sscanf(line, "drives=%d\n",&mainMenu_drives); // restrict number of drives
 			sscanf(line, "a1200=%d\n", &isAmiga1200);
+			sscanf(line, "a600=%d\n", &isAmiga600);
 			sscanf(line,"moveX=%d\n",&moveX);
 			sscanf(line,"moveY=%d\n",&moveY);
 
@@ -1141,7 +1143,7 @@ void loadconfigcustom(int general, char *configfile)
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "romfile %s", kickstarts_dir);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "frameskip %d", mainMenu_frameskip);
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "soundrate %d", sound_rate);
-		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "system %s", isAmiga1200?"a1200":"a500");
+		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "system %s", isAmiga1200?"a1200": (isAmiga600 ? "a600": "a500"));
 
 /*		fscanf(f,"kickstart=%d\n",&kickstart);
 #if defined(PANDORA) || defined(ANDROIDSDL)
@@ -1336,11 +1338,26 @@ void loadconfigcustom(int general, char *configfile)
 		mainMenu_CPU_model=1;
 		mainMenu_chipset=2;
 		mainMenu_CPU_speed=1;
+	} else if (isAmiga600) { // A600
+		mainMenu_chipMemory = 2;
+		mainMenu_slowMemory = 0;
+		mainMenu_fastMemory = 0;
+		kickstart = 2;
+		mainMenu_CPU_model = 0;
+		mainMenu_chipset = 1;
+		mainMenu_CPU_speed = 0;
+	} else { // A500
+		mainMenu_chipMemory = 1;
+		mainMenu_slowMemory = 0;
+		mainMenu_fastMemory = 0;
+		kickstart = 1;
+		mainMenu_CPU_model = 0;
+		mainMenu_chipset = 0;
+		mainMenu_CPU_speed = 0;
 	}
 
 	if (uae4all_hard_file[0] != '\0') {
 		make_hard_file_cfg_line(uae4all_hard_file);
-		reset_hdConf();
 		mainMenu_bootHD = 2;
 		__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2", "boot from hard drive %s", uae4all_hard_file);
 	}
