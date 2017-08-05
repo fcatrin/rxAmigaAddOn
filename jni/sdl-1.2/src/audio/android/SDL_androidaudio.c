@@ -37,10 +37,15 @@
 #include <android/log.h>
 #include <string.h> // for memset()
 #include <pthread.h>
+#include "../../../../application/src/src/retrobox.h"
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 #define _THIS	SDL_AudioDevice *this
+
+float audio_stereo_separation = 0.75;
+int   audio_filter_enabled = 1;
+
 
 /* Audio driver functions */
 
@@ -391,6 +396,15 @@ int SDL_ANDROID_ResumeAudioPlayback(void)
 #define JAVA_EXPORT_NAME2(name,package) Java_##package##_##name
 #define JAVA_EXPORT_NAME1(name,package) JAVA_EXPORT_NAME2(name,package)
 #define JAVA_EXPORT_NAME(name) JAVA_EXPORT_NAME1(name,SDL_JAVA_PACKAGE_PATH)
+
+JNIEXPORT void JNICALL JAVA_EXPORT_NAME(AudioThread_nativeSetStereoSeparation) (JNIEnv * jniEnv, jobject thiz, jfloat separation) {
+	audio_stereo_separation = separation;
+}
+
+JNIEXPORT void JNICALL JAVA_EXPORT_NAME(AudioThread_nativeSetFilterEnabled) (JNIEnv * jniEnv, jobject thiz, jboolean enabled) {
+	audio_filter_enabled = enabled;
+}
+
 
 JNIEXPORT jint JNICALL JAVA_EXPORT_NAME(AudioThread_nativeAudioInitJavaCallbacks) (JNIEnv * jniEnv, jobject thiz)
 {

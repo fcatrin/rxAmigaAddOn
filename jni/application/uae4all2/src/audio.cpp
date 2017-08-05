@@ -31,6 +31,7 @@
 #include "audio.h"
 #include "debug_uae4all.h"
 #include "menu_config.h"
+#include "retrobox.h"
 
 #define maxhpos MAXHPOS
 
@@ -118,7 +119,6 @@ float filterCoeffB[] = {
 		 0.06827320195368214,
 };
 
-bool filterEnabled = true;
 bool filterInitialized = false;
 
 #define FILTER_SIZE 8
@@ -127,7 +127,7 @@ float filterBuffer1[4][FILTER_SIZE];
 float filterBuffer2[4][FILTER_SIZE];
 
 inline uae_u32 filterSample(int channel, int sample) {
-	if (!filterEnabled) return sample;
+	if (!audio_filter_enabled) return sample;
 	if (!filterInitialized) {
 		memset(filterBuffer1, 0, sizeof(float)*FILTER_SIZE*4);
 		memset(filterBuffer2, 0, sizeof(float)*FILTER_SIZE*4);
@@ -171,8 +171,8 @@ inline uae_u32 filterSample(int channel, int sample) {
 		d2 &= audio_channel_adk_mask[2]; \
 		d3 &= audio_channel_adk_mask[3]; \
 		if (mainMenu_soundStereo) { \
-		   	PUT_SOUND_WORD (((d0+d3)*0.75 + (d1+d2)*0.25)) \
-		   	PUT_SOUND_WORD (((d1+d2)*0.75 + (d0+d3)*0.25)) \
+		   	PUT_SOUND_WORD (((d0+d3)*audio_stereo_separation + (d1+d2)*(1.0-audio_stereo_separation))) \
+		   	PUT_SOUND_WORD (((d1+d2)*audio_stereo_separation + (d0+d3)*(1.0-audio_stereo_separation))) \
 		   	} else { \
 		   	PUT_SOUND_WORD (d0+d1+d2+d3) } \
     CHECK_SOUND_BUFFERS(); \
