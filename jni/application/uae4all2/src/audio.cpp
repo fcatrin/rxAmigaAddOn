@@ -170,13 +170,15 @@ inline uae_u32 filterSample(int channel, int sample) {
 		d1 &= audio_channel_adk_mask[1]; \
 		d2 &= audio_channel_adk_mask[2]; \
 		d3 &= audio_channel_adk_mask[3]; \
+		register uae_u32 a0 = ((d0+d3) * audio_stereo_main + (d1+d2) * audio_stereo_secondary) / AUDIO_STEREO_SEPARATION_BASE; \
+		register uae_u32 a1 = ((d1+d2) * audio_stereo_main + (d0+d3) * audio_stereo_secondary) / AUDIO_STEREO_SEPARATION_BASE; \
 		if (mainMenu_soundStereo) { \
-		   	PUT_SOUND_WORD (((d0+d3)*audio_stereo_separation + (d1+d2)*(1.0-audio_stereo_separation))) \
-		   	PUT_SOUND_WORD (((d1+d2)*audio_stereo_separation + (d0+d3)*(1.0-audio_stereo_separation))) \
-		   	} else { \
+		   	PUT_SOUND_WORD (a0) \
+		   	PUT_SOUND_WORD (a1) \
+	   	} else { \
 		   	PUT_SOUND_WORD (d0+d1+d2+d3) } \
-    CHECK_SOUND_BUFFERS(); \
-	} \
+			CHECK_SOUND_BUFFERS(); \
+		} \
 
 
 #define SCHEDULE_AUDIO(CHN) \

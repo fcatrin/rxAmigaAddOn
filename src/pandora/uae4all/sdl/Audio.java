@@ -158,8 +158,12 @@ class AudioThread
 	}
 
 	private native int nativeAudioInitJavaCallbacks();
+	public static native void nativeSetStereoSeparation(float separation);
+	public static native void nativeSetFilterEnabled(boolean enabled);
+	public static native float nativeGetStereoSeparation();
+	public static native boolean nativeIsFilterEnabled();
 
-	// ----- Audio recording -----
+	// ----- Audio recording ----- 
 
 	private RecordingThread mRecordThread = null;
 	private AudioRecord mRecorder = null;
@@ -305,4 +309,5 @@ class AudioThread
 	}
 
 	private native void nativeAudioRecordCallback();
+	
 }

@@ -44,6 +44,8 @@
 #define _THIS	SDL_AudioDevice *this
 
 float audio_stereo_separation = 0.75;
+unsigned int audio_stereo_main = 0;
+unsigned int audio_stereo_secondary = 0;
 int   audio_filter_enabled = 1;
 
 
@@ -399,10 +401,20 @@ int SDL_ANDROID_ResumeAudioPlayback(void)
 
 JNIEXPORT void JNICALL JAVA_EXPORT_NAME(AudioThread_nativeSetStereoSeparation) (JNIEnv * jniEnv, jobject thiz, jfloat separation) {
 	audio_stereo_separation = separation;
+	audio_stereo_main      =      separation  * AUDIO_STEREO_SEPARATION_BASE;
+	audio_stereo_secondary = (1 - separation) * AUDIO_STEREO_SEPARATION_BASE;
+}
+
+JNIEXPORT jfloat JNICALL JAVA_EXPORT_NAME(AudioThread_nativeGetStereoSeparation) (JNIEnv * jniEnv, jobject thiz) {
+	return audio_stereo_separation;
 }
 
 JNIEXPORT void JNICALL JAVA_EXPORT_NAME(AudioThread_nativeSetFilterEnabled) (JNIEnv * jniEnv, jobject thiz, jboolean enabled) {
 	audio_filter_enabled = enabled;
+}
+
+JNIEXPORT jboolean JNICALL JAVA_EXPORT_NAME(AudioThread_nativeIsFilterEnabled) (JNIEnv * jniEnv, jobject thiz) {
+	return audio_filter_enabled;
 }
 
 

@@ -63,6 +63,7 @@ import retrobox.vinput.overlay.OverlayExtra;
 import xtvapps.core.AndroidFonts;
 import xtvapps.core.Callback;
 import xtvapps.core.SimpleCallback;
+import xtvapps.core.Utils;
 import xtvapps.core.content.KeyValue;
 import android.app.Activity;
 import android.app.NativeActivity;
@@ -72,6 +73,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -107,6 +110,10 @@ public class MainActivity extends Activity
 { 	
 	
 	private static final String LOGTAG = MainActivity.class.getSimpleName();
+	
+	private static final String KEY_AUDIO_FILTER = "audioFilter";
+	private static final String KEY_STEREO_SEPARATION = "stereoSeparation";
+	
 	public static Mapper mapper;
 	static VirtualEventDispatcher vinputDispatcher;
 	
@@ -247,6 +254,8 @@ public class MainActivity extends Activity
 					Log.i("SDL", "libSDL: Loading libraries");
 					p.LoadLibraries();
 					p.mAudioThread = new AudioThread(p);
+					
+					loadAudioSettings();
 					
 					boolean isInvertedRGB = getIntent().getBooleanExtra("invertRGB", false);
 					Log.d("SDL", "libSDL: set isInvertedRGB = " + isInvertedRGB);
@@ -1486,6 +1495,7 @@ public class MainActivity extends Activity
     		options.add(new ListOption("swap", getString(R.string.emu_opt_disk_swap)));
     	}
     	
+    	options.add(new ListOption("audio", "Audio Settings")); // TODO Translate
     	options.add(new ListOption("help", getString(R.string.emu_opt_help)));
     	options.add(new ListOption("quit", getString(R.string.emu_opt_quit)));
     	
@@ -1509,6 +1519,9 @@ public class MainActivity extends Activity
 					uiSwapDisks();
 				} else if (key.equals("quit")) {
 					uiQuit();
+				} else if (key.equals("audio")) {
+					uiOpenAudioOptions();
+					return;
 				} else if (key.equals("help")) {
 					uiHelp();
 					return;
@@ -1524,6 +1537,138 @@ public class MainActivity extends Activity
 		});
 	}
 
+    protected void uiOpenAudioOptions() {
+    	List<ListOption> options = new ArrayList<ListOption>();
+    	options.add(new ListOption("filter", "Filter", getAudioFilterName(getActiveAudioFilter())));
+    	options.add(new ListOption("separation", "Stereo Separation", getAudioStereoSeparationName(getActiveStereoSeparation())));
+
+    	RetroBoxDialog.showListDialog(this, "Audio options", options, new Callback<KeyValue>() {
+
+			@Override
+			public void onResult(KeyValue result) {
+				String option = result.getKey();
+				if (option.equals("filter"))     uiOpenAudioFilterOptions();
+				if (option.equals("separation")) uiOpenAudioSeparationOptions();
+			}
+
+			@Override
+			public void onError() {
+				openRetroBoxMenu();
+			}
+		});
+    }
+    
+    protected void uiOpenAudioFilterOptions() {
+    	boolean active = getActiveAudioFilter();
+    	List<ListOption> options = new ArrayList<ListOption>();
+    	options.add(new ListOption("enabled", getAudioFilterName(true), active?"*":""));
+    	options.add(new ListOption("disabled", getAudioFilterName(false), active?"":"*"));
+    	RetroBoxDialog.showListDialog(this, "Audio filter", options, new Callback<KeyValue>() {
+
+			@Override
+			public void onResult(KeyValue result) {
+				String option = result.getKey();
+				
+				AudioThread.nativeSetFilterEnabled(option.equals("enabled"));
+				saveAudioSettings();
+				
+				uiOpenAudioOptions();
+			}
+			@Override
+			public void onError() {
+				uiOpenAudioOptions();
+			}
+
+    	});
+    }
+    
+    protected void uiOpenAudioSeparationOptions() {
+    	
+    	List<ListOption> options = new ArrayList<ListOption>();
+    	StereoSeparation activeSeparation = getActiveStereoSeparation();
+    	for(int i=0; i<StereoSeparation.values().length; i++) {
+    		StereoSeparation separation = StereoSeparation.values()[i];
+    		String activeText = separation == activeSeparation ? "*":""; 
+    		options.add(new ListOption(String.valueOf(i), getAudioStereoSeparationName(separation), activeText));
+    	}
+    	RetroBoxDialog.showListDialog(this, "Stereo separation", options, new Callback<KeyValue>() {
+
+			@Override
+			public void onResult(KeyValue result) {
+				String option = result.getKey();
+				int optionIndex = Utils.str2i(option);
+				
+				AudioThread.nativeSetStereoSeparation(stereoSeparationValues[optionIndex]);
+				saveAudioSettings();
+				
+				uiOpenAudioOptions();
+			}
+			@Override
+			public void onError() {
+				uiOpenAudioOptions();
+			}
+
+    	});
+    }
+    
+    private String getAudioFilterName(boolean useFilter) {
+    	// TODO Translate
+    	return useFilter?"Amiga Original (Warm)":"No filter (Plain)";
+    }
+    
+    enum StereoSeparation {Original, Medium, Smooth, Subtle};
+    float stereoSeparationValues[] = {1.0f, 0.92f, 0.78f, 0.66f};
+    
+    private String getAudioStereoSeparationName(StereoSeparation separation) {
+    	// TODO Translate
+    	switch (separation) {
+    	case Original: return "Original";
+    	case Medium: return "Medium";
+    	case Smooth: return "Smooth";
+    	case Subtle: return "Subtle";
+    	}
+    	return "Unknown";
+    }
+    
+    private boolean getActiveAudioFilter() {
+    	return AudioThread.nativeIsFilterEnabled();
+    }
+    
+    private StereoSeparation getActiveStereoSeparation() {
+    	float separation = AudioThread.nativeGetStereoSeparation();
+    	for(int i=0; i<stereoSeparationValues.length; i++) {
+    		if (separation == stereoSeparationValues[i]) return StereoSeparation.values()[i];
+    	}
+    	return StereoSeparation.Original;
+    }
+    
+    private SharedPreferences getAudioPreferences() {
+    	return getSharedPreferences("audio", Activity.MODE_PRIVATE);
+    }
+    
+    private void loadAudioSettings() {
+    	SharedPreferences audioPreferences = getAudioPreferences();
+    	boolean filterEnabled = audioPreferences.getBoolean(KEY_AUDIO_FILTER, true);
+    	AudioThread.nativeSetFilterEnabled(filterEnabled);
+    	
+    	String sStereoSeparation = audioPreferences.getString(KEY_STEREO_SEPARATION, StereoSeparation.Smooth.name());
+    	try {
+    		StereoSeparation stereoSeparation = StereoSeparation.valueOf(sStereoSeparation);
+    		AudioThread.nativeSetStereoSeparation(stereoSeparationValues[stereoSeparation.ordinal()]);
+    	} catch (Exception e) {
+    		AudioThread.nativeSetStereoSeparation(stereoSeparationValues[StereoSeparation.Smooth.ordinal()]);
+    	}
+    }
+    
+    private void saveAudioSettings() {
+    	SharedPreferences audioPreferences = getAudioPreferences();
+    	Editor editor = audioPreferences.edit();
+    	
+    	editor.putBoolean(KEY_AUDIO_FILTER, AudioThread.nativeIsFilterEnabled());
+    	editor.putString(KEY_STEREO_SEPARATION, getActiveStereoSeparation().name());
+    	editor.commit();
+    }
+    
     protected void uiHelp() {
 		RetroBoxDialog.showGamepadDialogIngame(this, gamepadInfoDialog, new SimpleCallback() {
 			@Override
