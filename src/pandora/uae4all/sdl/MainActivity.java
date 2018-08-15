@@ -45,7 +45,7 @@ import retrobox.utils.ListOption;
 import retrobox.utils.RetroBoxDialog;
 import retrobox.utils.RetroBoxUtils;
 import retrobox.utils.SaveStateSelectorAdapter;
-import retrobox.v2.pandora.uae4all.sdl.R;
+import xtvapps.prg.pandora.uae4all.sdl.R;
 import retrobox.vinput.GenericGamepad;
 import retrobox.vinput.GenericGamepad.Analog;
 import retrobox.vinput.Mapper;

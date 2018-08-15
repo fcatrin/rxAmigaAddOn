@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RetroX Amiga Add-on</string>
+    <string name="app_name">PRG Amiga Add-on</string>
 	<string name="quit">Quit</string>
 	<string name="swap">Swap Disks</string>
 	<string name="load_state">Load State</string>

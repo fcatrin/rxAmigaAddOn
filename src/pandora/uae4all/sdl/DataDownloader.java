@@ -42,7 +42,7 @@ import org.apache.http.conn.ssl.*;
 import org.apache.http.impl.*;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.SingleClientConnManager;
-import retrobox.v2.pandora.uae4all.sdl.R;
+import xtvapps.prg.pandora.uae4all.sdl.R;
 import java.security.cert.*;
 import java.security.SecureRandom;
 import javax.net.ssl.HostnameVerifier;
