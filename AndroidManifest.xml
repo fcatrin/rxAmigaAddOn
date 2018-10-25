@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="retrobox.v2.pandora.uae4all.sdl"
-      android:versionCode="3041"
-      android:versionName="2.3.5.3-41"
-      android:installLocation="auto"
+      android:versionCode="3042"
+      android:versionName="2.3.5.3-42"
+      android:installLocation="internalOnly"
       android:sharedUserId="psychoworld.retrobox.v2"
 >
     <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="19"/>
