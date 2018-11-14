@@ -70,7 +70,7 @@ import android.util.DisplayMetrics;
 import android.net.Uri;
 import java.util.concurrent.Semaphore;
 import java.util.Arrays;
-import retrobox.v2.pandora.uae4all.sdl.R;
+import xtvapps.res.pandora.uae4all.sdl.R;
 import android.graphics.Color;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorEvent;
