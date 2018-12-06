@@ -1060,7 +1060,7 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
                 while (needToWait()) {
                     //Log.v("SDL", "GLSurfaceView_SDL::run(): paused");
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(800);
                     } catch(Exception e) { }
                 }
                 synchronized (this) {
