@@ -452,6 +452,9 @@ public class MainActivity extends Activity
 		return !Mapper.hasGamepads();
 	}
 	
+	private int lastWidth = 0;
+	private int lastHeight = 0;
+	
 	private void setupGamepadOverlay() {
 		ViewTreeObserver observer = mGLView.getViewTreeObserver();
 		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -459,6 +462,11 @@ public class MainActivity extends Activity
 			public void onGlobalLayout() {
 		    	int w = mGLView.getWidth();
 		    	int h = mGLView.getHeight();
+		    	if (lastWidth == w && lastHeight == h) return;
+		    	
+		    	lastWidth  = w;
+		    	lastHeight = h;
+		    	
 				if (needsOverlay()) {
 			    	String overlayConfig = getIntent().getStringExtra("OVERLAY");
 					float alpha = getIntent().getFloatExtra("OVERLAY_ALPHA", 0.8f);
@@ -506,14 +514,26 @@ public class MainActivity extends Activity
 				downloader.setStatusField(null);
 			}
 		}
-		if( mGLView != null )
+		if( mGLView != null ) {
 			mGLView.onPause();
+			while (!mGLView.isWaiting()) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {}
+			}
+		}		
+		Log.d(LOGTAG, "Emulation Paused");
 	}
 	
 	private void resumeEmulation() {
 		if( mGLView != null )
 		{
 			mGLView.onResume();
+			while (!mGLView.isResumed()) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {}
+			}
 		}
 		else
 		if( downloader != null )
@@ -527,6 +547,7 @@ public class MainActivity extends Activity
 				}
 			}
 		}
+		Log.d(LOGTAG, "Emulation Resumed");
 	}
 
 	@Override

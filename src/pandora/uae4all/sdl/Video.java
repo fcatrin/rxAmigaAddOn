@@ -694,8 +694,10 @@ class DemoRenderer extends GLSurfaceView_SDL.Renderer
 
 		if(mGlContextLost) {
 			mGlContextLost = false;
+			/*
 			Settings.SetupTouchscreenKeyboardGraphics(context); // Reload on-screen buttons graphics
 			DrawLogo(mGl);
+			*/
 			super.SwapBuffers();
 		}
 

@@ -419,7 +419,15 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
     public void onPause() {
         mGLThread.onPause();
     }
+    
+    public boolean isWaiting() {
+    	return mGLThread.isWaiting();
+    }
 
+    public boolean isResumed() {
+    	return mGLThread.isResumed();
+    }
+ 
     /**
      * Inform the view that the activity is resumed. The owner of this view must
      * call this method when the activity is resumed. Calling this method will
@@ -977,7 +985,8 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
      *
      */
     class GLThread extends Thread implements SwapBuffersCallback {
-        GLThread(Renderer renderer) {
+        
+		GLThread(Renderer renderer) {
             super();
             mDone = false;
             mWidth = 0;
@@ -988,8 +997,16 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
             mRenderer.setSwapBuffersCallback(this);
             setName("GLThread");
         }
+		
+		public boolean isWaiting() {
+			return mOnWait;
+		}
 
-        @Override
+		public boolean isResumed() {
+			return mOnResumed;
+		}
+
+		@Override
         public void run() {
             /*
              * When the android framework launches a second instance of
@@ -1057,12 +1074,19 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
                             return false;
                     }
                 }
+                mOnResumed = false;
                 while (needToWait()) {
+                    mOnWait  = true;
                     //Log.v("SDL", "GLSurfaceView_SDL::run(): paused");
-                    try {
-                        Thread.sleep(500);
-                    } catch(Exception e) { }
+                	synchronized(this) {
+                		try {
+							wait(800);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+                	};
                 }
+                mOnWait = false;
                 synchronized (this) {
                     if (mDone) {
                         return false;
@@ -1095,12 +1119,16 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
                      * Once we're done with GL, we need to call swapBuffers()
                      * to instruct the system to display the rendered frame
                      */
-                if( mEglHelper.swap() )
+                if( mEglHelper.swap() ) {
+                	mOnResumed = true;
                     return true;
+                }
                 // We've lost GL context - recreate it
                 mRenderer.onSurfaceDestroyed();
                 mEglHelper.finish();
                 mNeedStart = true;
+            	mOnResumed = true;
+                
                 if( Globals.NonBlockingSwapBuffers )
                     return false;
               }
@@ -1241,6 +1269,9 @@ public class GLSurfaceView_SDL extends SurfaceView implements SurfaceHolder.Call
         private EglHelper mEglHelper;
         private GL10 mGL = null;
         private boolean mNeedStart = false;
+        private boolean mOnWait = false;
+        private boolean mOnResumed = false;
+
     }
 
     static class LogWriter extends Writer {
