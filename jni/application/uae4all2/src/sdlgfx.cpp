@@ -110,7 +110,7 @@ void flush_block ()
 {
 	SDL_UnlockSurface (prSDLScreen);
 #ifdef USE_UAE4ALL_VKBD
-	if (vkbd_mode)
+	if (vkbd_mode && false)
 		vkbd_key=vkbd_process();		
 #endif
 	if (show_inputmode)
