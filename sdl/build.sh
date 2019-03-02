@@ -94,7 +94,7 @@ rm -r -f project/bin/* # New Android SDK introduced some lame-ass optimizations 
 }
 
 APPSETTINGS=jni/application/src/AndroidAppSettings.cfg
-NDK=/Users/fcatrin/devel/android-ndk-r10d
+NDK=/Users/fcatrin/devel/android-ndk-r9
 
 cd project && pwd && ls && env PATH=$NDKBUILDPATH BUILD_NUM_CPUS=$NCPU nice -n19 ndk-build -j$NCPU V=1 && \
 	{	grep "CustomBuildScript=y" $APPSETTINGS > /dev/null && \
