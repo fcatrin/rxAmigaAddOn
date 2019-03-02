@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="xtvapps.res.pandora.uae4all.sdl"
-      android:versionCode="3043"
-      android:versionName="2.3.5.3-43"
-      android:sharedUserId="xtvapps.res.user"
->
+      android:versionCode="3045"
+      android:versionName="2.3.5.3-45"
+      android:sharedUserId="xtvapps.res.user">
+      
     <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="19"/>
     <application android:label="@string/app_name"
                  android:icon="@drawable/ic_prg"
