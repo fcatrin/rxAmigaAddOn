@@ -443,7 +443,7 @@ public class MainActivity extends Activity
 	}
 
 	private boolean needsOverlay() {
-		return !Mapper.hasGamepads();
+		return Mapper.mustDisplayOverlayControllers();
 	}
 	
 	private int lastWidth = 0;
