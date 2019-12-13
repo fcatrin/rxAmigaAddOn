@@ -889,7 +889,7 @@ public class MainActivity extends Activity
 
 			int keyCode     = event.getKeyCode();
 			boolean isDown  = event.getAction() == KeyEvent.ACTION_DOWN;
-			if (mapper.handleKeyEvent(event, keyCode, isDown)) return true;
+			if (mapper.handleKeyEvent(this, event, keyCode, isDown)) return true;
 		}
 
 		return super.dispatchKeyEvent(event);
