@@ -32,10 +32,10 @@ import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
 import retrobox.vinput.AnalogGamepad;
-import retrobox.vinput.GenericGamepad;
 import retrobox.vinput.AnalogGamepad.Axis;
 import retrobox.vinput.overlay.ExtraButtonsView;
 import retrobox.vinput.AnalogGamepadListener;
+import retrobox.vinput.GamepadDevice;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.InputDevice;
@@ -934,7 +934,7 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 		
 		joystickAnalog = new AnalogGamepad(640, 480, new AnalogGamepadListener() {
 			@Override
-			public void onAxisChange(GenericGamepad gamepad, float axisx, float axisy, float hatX, float hatY, float raxisx, float raxisy) {
+			public void onAxisChange(GamepadDevice gamepad, float axisx, float axisy, float hatX, float hatY, float raxisx, float raxisy) {
 				if (Math.abs(axisx) < 0.005) axisx = hatX;
 				if (Math.abs(axisy) < 0.005) axisy = hatY;
 				DemoGLSurfaceView.nativeGamepadAnalogJoystickInput(axisx, axisy, 0, 0, 0, 0, gamepad.player);
@@ -949,18 +949,18 @@ class DemoGLSurfaceView extends GLSurfaceView_SDL {
 			public void onMouseMoveRelative(float mousex, float mousey) {}
 
 			@Override
-			public void onDigitalX(GenericGamepad gamepad, Axis axis, boolean on) {}
+			public void onDigitalX(GamepadDevice gamepad, Axis axis, boolean on) {}
 
 			@Override
-			public void onDigitalY(GenericGamepad gamepad, Axis axis, boolean on) {}
+			public void onDigitalY(GamepadDevice gamepad, Axis axis, boolean on) {}
 
 			@Override
-			public void onTriggers(String deviceDescriptor, int deviceId, boolean left, boolean right) {
-				MainActivity.mapper.handleTriggerEvent(deviceDescriptor, deviceId, left, right); 
+			public void onTriggers(String deviceName, int deviceId, boolean left, boolean right) {
+				MainActivity.mapper.handleTriggerEventByDeviceName(deviceName, deviceId, left, right); 
 			}
 
 			@Override
-			public void onTriggersAnalog(GenericGamepad gamepad, int deviceId, float left, float right) {}
+			public void onTriggersAnalog(GamepadDevice gamepad, int deviceId, float left, float right) {}
 		});
 		
 		String customConfig = context.getIntent().getStringExtra("conf");

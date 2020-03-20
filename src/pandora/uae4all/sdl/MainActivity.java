@@ -39,6 +39,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import retrobox.content.SaveStateInfo;
+import retrobox.keyboard.KeyboardMappingUtils;
 import retrobox.utils.GamepadInfoDialog;
 import retrobox.utils.ImmersiveModeSetter;
 import retrobox.utils.ListOption;
@@ -46,8 +47,8 @@ import retrobox.utils.RetroBoxDialog;
 import retrobox.utils.RetroBoxUtils;
 import retrobox.utils.SaveStateSelectorAdapter;
 import xtvapps.prg.pandora.uae4all.sdl.R;
-import retrobox.vinput.GenericGamepad;
-import retrobox.vinput.GenericGamepad.Analog;
+import retrobox.vinput.GamepadDevice;
+import retrobox.vinput.GamepadMapping.Analog;
 import retrobox.vinput.Mapper;
 import retrobox.vinput.QuitHandler;
 import retrobox.vinput.QuitHandler.QuitHandlerCallback;
@@ -56,10 +57,10 @@ import retrobox.vinput.VirtualEventDispatcher;
 import retrobox.vinput.overlay.ExtraButtons;
 import retrobox.vinput.overlay.ExtraButtonsController;
 import retrobox.vinput.overlay.ExtraButtonsView;
-import retrobox.vinput.overlay.GamepadController;
-import retrobox.vinput.overlay.GamepadView;
 import retrobox.vinput.overlay.Overlay;
 import retrobox.vinput.overlay.OverlayExtra;
+import retrobox.vinput.overlay.OverlayGamepadController;
+import retrobox.vinput.overlay.OverlayGamepadView;
 import xtvapps.core.AndroidFonts;
 import xtvapps.core.Callback;
 import xtvapps.core.SimpleCallback;
@@ -117,8 +118,8 @@ public class MainActivity extends Activity
 	public static Mapper mapper;
 	static VirtualEventDispatcher vinputDispatcher;
 	
-	static GamepadController gamepadController;
-	static GamepadView gamepadView;
+	static OverlayGamepadController overlayGamepadController;
+	static OverlayGamepadView overlayGamepadView;
 	static ExtraButtonsController extraButtonsController;
 	static ExtraButtonsView extraButtonsView;
 	static boolean canOpenRetroBoxMenu = false;
@@ -161,16 +162,9 @@ public class MainActivity extends Activity
 		vinputDispatcher = new VirtualInputDispatcher();
 		mapper = new Mapper(getIntent(), vinputDispatcher);
 		Mapper.initGestureDetector(this);
-		Mapper.joinPorts = getIntent().getBooleanExtra("joinPorts", false);
 
-		for(int i=0; i<2; i++) {
-        	String prefix = "j" + (i+1);
-        	String deviceDescriptor = getIntent().getStringExtra(prefix + "DESCRIPTOR");
-        	Mapper.registerGamepad(i, deviceDescriptor);
-        }
-        
-		gamepadController = new GamepadController();
-		gamepadView = new GamepadView(this, overlay);
+		overlayGamepadController = new OverlayGamepadController();
+		overlayGamepadView = new OverlayGamepadView(this, overlay);
 		
 		extraButtonsController = new ExtraButtonsController();
 		extraButtonsView = new ExtraButtonsView(this);
@@ -449,7 +443,7 @@ public class MainActivity extends Activity
 	}
 
 	private boolean needsOverlay() {
-		return !Mapper.hasGamepads();
+		return Mapper.mustDisplayOverlayControllers();
 	}
 	
 	private int lastWidth = 0;
@@ -479,8 +473,8 @@ public class MainActivity extends Activity
 		});
 
 		if (needsOverlay()) {
-			 gamepadView.addToLayout(_videoLayout);
-			 gamepadView.showPanel();
+			 overlayGamepadView.addToLayout(_videoLayout);
+			 overlayGamepadView.showPanel();
 		}
 		 
 		extraButtonsView.addToLayout(_videoLayout);
@@ -885,36 +879,22 @@ public class MainActivity extends Activity
 		}
 	}
 
-	/*
+	
 	@Override
-	public boolean dispatchKeyEvent(final KeyEvent event)
-	{
-		//Log.i("SDL", "dispatchKeyEvent: action " + event.getAction() + " keycode " + event.getKeyCode() + " unicode " + event.getUnicodeChar() + " getCharacters() " + ((event.getCharacters() != null) ? event.getCharacters() : "none"));
+	public boolean dispatchKeyEvent(KeyEvent event) {
 
-		if( event.getAction() == KeyEvent.ACTION_DOWN )
-			return onKeyDown(event.getKeyCode(), event);
-		if( event.getAction() == KeyEvent.ACTION_UP )
-			return onKeyUp(event.getKeyCode(), event);
-		if( event.getAction() == KeyEvent.ACTION_MULTIPLE && event.getKeyCode() == KeyEvent.KEYCODE_UNKNOWN )
-		{
-			// International text input
-			if( mGLView != null && event.getCharacters() != null )
-			{
-				for(int i = 0; i < event.getCharacters().length(); i++ )
-				{
-					mGLView.nativeKey( event.getKeyCode(), 1, event.getCharacters().codePointAt(i) );
-					mGLView.nativeKey( event.getKeyCode(), 0, event.getCharacters().codePointAt(i) );
-				}
-				return true;
-			}
+		if (!RetroBoxDialog.isDialogVisible(this) && mGLView != null
+//			&& !customKeyboard.isVisible()
+			&& !KeyboardMappingUtils.isKeyMapperVisible()) {
+
+			int keyCode     = event.getKeyCode();
+			boolean isDown  = event.getAction() == KeyEvent.ACTION_DOWN;
+			if (mapper.handleKeyEvent(this, event, keyCode, isDown)) return true;
 		}
-		return true;
-		//return super.dispatchKeyEvent(event);
-	}
-	*/
 
-	
-	
+		return super.dispatchKeyEvent(event);
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
@@ -926,8 +906,6 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyDown(keyCode, event);
 		} else if( mGLView != null ) {
-			if (mapper.handleKeyEvent(event, keyCode, true)) return true;
-
 			if( mGLView.nativeKey( keyCode, 1, event.getUnicodeChar() ) == 0 )
 				return super.onKeyDown(keyCode, event);
 		} else if( keyListener != null ) {
@@ -950,8 +928,6 @@ public class MainActivity extends Activity
 		if(_screenKeyboard != null) {
 			_screenKeyboard.onKeyUp(keyCode, event);
 		} else if( mGLView != null ) {
-			if (mapper.handleKeyEvent(event, keyCode, false)) return true;
-
 			if( mGLView.nativeKey( keyCode, 0, event.getUnicodeChar() ) == 0 )
 				return super.onKeyUp(keyCode, event);
 			if( keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU )
@@ -994,11 +970,11 @@ public class MainActivity extends Activity
 			return super.dispatchTouchEvent(ev);
 		}
 
-    	if (gamepadView.isVisible() && gamepadController.onTouchEvent(ev)) {
+    	if (overlayGamepadView.isVisible() && overlayGamepadController.onTouchEvent(ev)) {
     		// Log.d("TOUCH", "dispatched to gamepadController");
     		if (Overlay.requiresRedraw) {
         		Overlay.requiresRedraw = false;
-    			gamepadView.invalidate();
+    			overlayGamepadView.invalidate();
     		}
     		return true;
     	}
@@ -1691,7 +1667,7 @@ public class MainActivity extends Activity
     }
     
     protected void uiHelp() {
-		RetroBoxDialog.showGamepadDialogIngame(this, gamepadInfoDialog, new SimpleCallback() {
+		RetroBoxDialog.showGamepadDialogIngame(this, gamepadInfoDialog, Mapper.hasGamepads(), new SimpleCallback() {
 			@Override
 			public void onResult() {
 				resumeEmulation();
@@ -1704,7 +1680,7 @@ public class MainActivity extends Activity
 	}
 
 	private void uiToggleOverlay() {
-		gamepadView.toggleView();
+		overlayGamepadView.toggleView();
 	}
 	
 	protected static void sendNativeKey(int keyCode, boolean down) {
@@ -1820,7 +1796,7 @@ public class MainActivity extends Activity
 	class VirtualInputDispatcher implements VirtualEventDispatcher {
 
 		@Override
-		public void sendKey(GenericGamepad gamepad, int keyCode, boolean down) {
+		public void sendKey(GamepadDevice gamepad, int keyCode, boolean down) {
 			if (keyCode == 0) return;
 			
 			if (gamepad.player == 0) {
@@ -1861,9 +1837,7 @@ public class MainActivity extends Activity
 		}
 
 		@Override
-		public void sendAnalog(GenericGamepad gamepad, Analog index, double x,
-				double y, double hatx, double haty) {
-		}
+		public void sendAnalog(GamepadDevice gamepad, Analog index, double x, double y, double hatx, double haty) {}
 	}
 }
 
