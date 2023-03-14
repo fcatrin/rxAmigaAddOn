@@ -1493,7 +1493,7 @@ public class MainActivity extends Activity
     	}
     	
     	options.add(new ListOption("audio", "Audio Settings")); // TODO Translate
-    	// options.add(new ListOption("help", getString(R.string.emu_opt_help)));
+    	options.add(new ListOption("help", getString(R.string.emu_opt_help)));
     	options.add(new ListOption("quit", getString(R.string.emu_opt_quit)));
     	
     	RetroBoxDialog.showListDialog(this, getString(R.string.emu_opt_title), options, new Callback<KeyValue>() {
