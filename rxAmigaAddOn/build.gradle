@@ -1,0 +1,24 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "retrobox.v2.pandora.uae4all.sdl"
+        minSdkVersion 19
+        targetSdkVersion 26
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':xtvApps')
+    implementation project(':retroXUtils')
+}
