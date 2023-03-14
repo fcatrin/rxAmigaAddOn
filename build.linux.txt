@@ -1,32 +1,18 @@
 
-export NDK_HOME=/home/fcatrin/devel/android-ndk-r9
-export PATH=$NDK_HOME:$PATH
+export NDK=~/devel/android-ndk-r9
+export ANDROID_NDK=$NDK
+export ANDROID_NDK_HOME=$NDK
+export PATH=$NDK:$PATH
 
-# Compilar
-
-cd jni/application/src
-./AndroidBuild.sh  armeabi-v7a
-
-# Probado con android-ndk-9b
-
-# Recompilar SDL rapidamente
-
-cd sdl
-./rebuildQuick.sh
-
-
-# Recompilar SDL 100%
-# Respaldar el codigo Java y el AndroidManifest.xml (sera sobreescrito).  Lo mejor es subirlo a SVN 
-
+# Build SDL
 cd sdl
 ./rebuild.sh
 
-# Recuperar respaldo
-# Recompilar uae4all para que vuelva a generar el archivo libapplication.so
+# SDL will create a dummy libapplication.so
+# To build the real application.so
 
-# Cambiar ABI's a compilar
-En jni/Settings.mk
-
-APP_ABI := armeabi-v7a x86
+cd jni/application/src
+./AndroidBuild.sh  armeabi-v7a
+./AndroidBuild.sh  x86
 
 

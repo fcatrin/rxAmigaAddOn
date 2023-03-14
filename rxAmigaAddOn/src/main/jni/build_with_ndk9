@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Get NDK r8e from:
+# https://dl.google.com/android/ndk/android-ndk-r9-linux-x86_64.tar.bz2
+
+export NDK=~/devel/android-ndk-r9
+export ANDROID_NDK=$NDK
+export ANDROID_NDK_HOME=$NDK
+export PATH=$NDK:$PATH
+
+if [ "x$1" = "xclean" ]; then
+  rm -rf ../obj
+  rm -rf ../libs
+  rm -rf ../jniLibs
+  exit
+fi
+
+BASE_DIR=`pwd`
+
+# SDL build
+cd ../sdl
+./rebuild.sh
+cd $BASE_DIR
+
+# UAE build
+cd application/src
+./AndroidBuild.sh x86
+./AndroidBuild.sh armeabi-v7a
+cd $BASE_DIR
+
+# required for gradle build
+cd ..
+rm jniLibs
+ln -sf libs jniLibs
+
+
