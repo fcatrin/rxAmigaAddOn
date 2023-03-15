@@ -60,11 +60,14 @@ public class KeyTranslator {
 		keys.put("KEY_KPPLUS", KeyEvent.KEYCODE_PLUS);
 		keys.put("KEY_KPDOT", KeyEvent.KEYCODE_NUMPAD_DOT);
 
+		keys.put("KEY_ENTER", KeyEvent.KEYCODE_ENTER);
 		keys.put("KEY_BACKSPACE", KeyEvent.KEYCODE_DEL);
 		keys.put("KEY_DOT", KeyEvent.KEYCODE_PERIOD);
 		keys.put("KEY_ESC", KeyEvent.KEYCODE_ESCAPE);
-		
-		
+		keys.put("KEY_TAB", KeyEvent.KEYCODE_TAB);
+		keys.put("KEY_HELP", KeyEvent.KEYCODE_HELP);
+		keys.put("KEY_DEL", KeyEvent.KEYCODE_DEL);
+
 		keys.put("KEY_MOUSE_TOGGLE", KeyEvent.KEYCODE_BUTTON_MODE);
 		
 		for(int i=0; i<10; i++)	keys.put("KEY_KP" + i, KeyEvent.KEYCODE_NUMPAD_0 + i);
