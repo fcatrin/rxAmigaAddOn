@@ -17,7 +17,8 @@
                   android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode|screenSize|smallestScreenSize"
                   android:windowSoftInputMode="stateUnspecified|adjustPan"
                   android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" 
-				android:excludeFromRecents="true" 
+                  android:excludeFromRecents="true"
+                  android:exported="true"
         >
             <intent-filter>
                 <action android:name="retrobox.v2.amiga" />
